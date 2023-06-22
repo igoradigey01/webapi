@@ -15,7 +15,7 @@
                 await context.Response.WriteAsJsonAsync(new { Message = "One todo item" });
             });
 
-            app.MapGet("/about", () => "About Page");
+            
         }
     }
 }
