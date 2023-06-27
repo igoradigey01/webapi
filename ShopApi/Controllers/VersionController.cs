@@ -14,8 +14,8 @@ namespace ShopApi.Controllers
     [ApiController]
     public class VersionController : ControllerBase
     {
-        string _version = "b2.03.23";
-        string _description = "Api shop- вторая редакция ( aspnetcore -net5.0)(24.03.23)";
+        string _version = "b2.06.23";
+        string _description = "Api shop- вторая редакция ( aspnetcore -net7.0)(24.06.23)";
 
 
        

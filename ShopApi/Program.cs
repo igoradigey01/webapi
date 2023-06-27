@@ -1,5 +1,17 @@
 
+using EmailService;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var emailConfig = builder.Configuration.
+ GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>() ;
+
+
+    builder.Services.AddSingleton(emailConfig);
+    builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+
 builder.Services.AddControllers();
 
 builder.Services.AddAuthentication().AddJwtBearer();
@@ -18,7 +30,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();   // добавление middleware аутентификации 
+app.UseAuthorization();   // добавление middleware авторизации 
+app.UseCors();
 
+
+app.Map("/hi", async context => await context.Response.WriteAsync("Hello METANIT.COM!"));
 
 
 //ProductEndpoints.Map(app) ;
