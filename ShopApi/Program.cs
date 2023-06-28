@@ -7,9 +7,11 @@ var emailConfig = builder.Configuration.
  GetSection("EmailConfiguration")
                 .Get<EmailConfiguration>() ;
 
-
+if (emailConfig != null)
+{
     builder.Services.AddSingleton(emailConfig);
     builder.Services.AddScoped<IEmailSender, EmailSender>();
+}
 
 
 builder.Services.AddControllers();
