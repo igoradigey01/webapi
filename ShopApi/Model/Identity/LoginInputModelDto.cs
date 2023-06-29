@@ -1,21 +1,20 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ShopAPI.Model
+namespace ShopApi.Model.Identity
 {
     public class LoginInputModelDto
     {
      
-        public string ReturnUrl { get; set; }
+        public string? ReturnUrl { get; set; }
 
-        [Required]
-        [Display(Name = "email")]
+        [Required(ErrorMessage = "Незадан Email")]       
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
-        [Required]
-        public string Password { get; set; }
+        [Required(ErrorMessage = "Незадан Password")]
+        public string? Password { get; set; }
 
-        [Display(Name = "Запомнить?")]
+        
         public bool RememberMe { get; set; }
     }
 }

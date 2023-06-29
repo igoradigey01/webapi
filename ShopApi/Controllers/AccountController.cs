@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using ShopAPI.Model;
+
 using System;
 using System.Collections.Generic;
 //-----------------
@@ -12,11 +12,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-using AutoMapper;
 using Microsoft.AspNetCore.WebUtilities;
 using NETCore.MailKit.Core;
 using EmailService;
-using X01Api.Models.ViewModel;
+
 using System.Security.Cryptography;
 using Google.Apis.Auth;
 using System.IO;
@@ -24,6 +23,7 @@ using System.Net.Http;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using ShopApi.Model.Identity ;
 
 namespace ShopAPI.Controllers
 {
@@ -35,20 +35,20 @@ namespace ShopAPI.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _loginManager;
-        private readonly IMapper _mapper;
+       
         private readonly IEmailSender _emailSender;
 
 
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IMapper mapper,
+         
             IEmailSender emailSender
                        )
         {
             _userManager = userManager;
             _loginManager = signInManager;
-            _mapper = mapper;
+          
             _emailSender = emailSender;
 
         }
@@ -59,11 +59,15 @@ namespace ShopAPI.Controllers
         public async Task<IActionResult> Login([FromBody] LoginInputModelDto login) //[FromBody] LoginInputModel login
         {
 
-            Console.WriteLine("PassLogInAsync ----", login.Email);
+           // Console.WriteLine("PassLogInAsync ----", login.Email);
 
             if (login == null)
             {
                 return BadRequest(" Неверный запрос клиента");
+            }
+            if(string.IsNullOrEmpty(login.Email))
+            {
+                return BadRequest(" Неверный Email клиента");
             }
 
             // var user = await _userManager.FindByEmailAsync(model.UserName); //??? 
@@ -80,14 +84,20 @@ namespace ShopAPI.Controllers
                 return Unauthorized("Email не подтвержден");
             }
 
+            if(string.IsNullOrEmpty(login.Password ))
+            {
+                return BadRequest(" Неверный Password клиента");
+
+            }
+
             var result = await _loginManager.PasswordSignInAsync(user, login.Password, login.RememberMe, lockoutOnFailure: true);
             if (result.Succeeded)
             {
 
                 var accessToken = GenerateTokenAsync(user).Result;
-                var refreshToken = "";
+              
 
-                return Ok(new TokenModelDto { access_token = accessToken, refresh_token = refreshToken });
+                return Ok(new TokenModelDto { Access_token = accessToken });
             }
 
             // return Unauthorized();
@@ -174,7 +184,7 @@ namespace ShopAPI.Controllers
                     user_tel = new User { FirstName=user.FirstName, UserName =user.UserName,NormalizedUserName= user.Id};
                         await _userManager.CreateAsync(user_tel);
                         //prepare and send an email for the email confirmation
-                        await _userManager.AddToRoleAsync(user_tel, Role.Shopper);
+                        await _userManager.AddToRoleAsync(user_tel,Enum.GetName( Role.Shopper)??"Shopper");
                         await _userManager.AddLoginAsync(user_tel, info);
                     }
                     else
@@ -186,9 +196,9 @@ namespace ShopAPI.Controllers
 
                 //----------------------------------------------
                 var accessToken = GenerateTokenAsync(user_tel).Result;
-                var refreshToken = "";
+                
 
-                return Ok(new TokenModelDto { access_token = accessToken, refresh_token = refreshToken });
+                return Ok(new TokenModelDto { Access_token = accessToken});
             }
 
 
@@ -231,15 +241,14 @@ namespace ShopAPI.Controllers
                         UserName = payload.Email ,
                         FirstName= payload.FamilyName,
                         LastName= payload.Name ,
-                        Address="",
-                        Phone="",
-                        RefreshToken = ""
+                        Address=""
+                        
                     };
                     await _userManager.CreateAsync(user);
 
                     //prepare and send an email for the email confirmation
 
-                    await _userManager.AddToRoleAsync(user, Role.Shopper);
+                    await _userManager.AddToRoleAsync(user, Enum.GetName( Role.Shopper)??"Shopper");
                     await _userManager.AddLoginAsync(user, info);
                 }
                 else
@@ -254,9 +263,9 @@ namespace ShopAPI.Controllers
             //check for the Locked out account
 
             var accessToken = GenerateTokenAsync(user).Result;
-            var refreshToken = "";
+            
 
-            return Ok(new TokenModelDto { access_token = accessToken, refresh_token = refreshToken });
+            return Ok(new TokenModelDto { Access_token = accessToken});
         }
 
 
@@ -295,7 +304,7 @@ namespace ShopAPI.Controllers
 
                     //prepare and send an email for the email confirmation
 
-                    await _userManager.AddToRoleAsync(user, Role.Shopper);
+                    await _userManager.AddToRoleAsync(user,Enum.GetName( Role.Shopper)??"Shopper");
                     await _userManager.AddLoginAsync(user, info);
                 
                 
@@ -311,9 +320,9 @@ namespace ShopAPI.Controllers
             //check for the Locked out account
 
             var accessToken = GenerateTokenAsync(user).Result;
-            var refreshToken = "";
+           
 
-            return Ok(new TokenModelDto { access_token = accessToken, refresh_token = refreshToken });
+            return Ok(new TokenModelDto { Access_token = accessToken});
         }
 
 
@@ -326,7 +335,15 @@ namespace ShopAPI.Controllers
             if (userForRegistration == null || !ModelState.IsValid)
                 return BadRequest("данные не валидны");
 
-            var user = _mapper.Map<User>(userForRegistration);
+            var user =new User{
+                Address=userForRegistration.Address,
+                 Email= userForRegistration.Email,
+                 FirstName=userForRegistration.FirstName,
+                 PhoneNumber=userForRegistration.Phone,
+                 LastName=userForRegistration.LastName
+            };
+            if(String.IsNullOrEmpty(userForRegistration.Password))
+            return BadRequest("не задан Password");
 
             var result = await _userManager.CreateAsync(user, userForRegistration.Password);
             if (!result.Succeeded)
@@ -359,7 +376,7 @@ namespace ShopAPI.Controllers
                 return BadRequest("Токен подтверждения электронной почты неотправлен");
             }
 
-            await _userManager.AddToRoleAsync(user, Role.Shopper);  //'shopper'
+            await _userManager.AddToRoleAsync(user,Enum.GetName( Role.Shopper)??"Shopper");  //'shopper'
 
             return StatusCode(201);
         }
