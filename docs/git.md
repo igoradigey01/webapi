@@ -49,3 +49,7 @@ test: ensure Tayne retains clothing
   https://github.com/igoradigey01/wsv2
   
   ```
+  ## igonore appsettings.json on push gitHub
+   - add file appsettings.json in .gitignore
+   - git rm --cached D:\VS_Prodject\v2\WebApi\ShopApi\appsettings.json
+ 
