@@ -344,6 +344,7 @@ namespace ShopAPI.Controllers
             {
                 Address = userForRegistration.Address,
                 Email = userForRegistration.Email,
+                SpaId=userForRegistration.SpaId,
                 FirstName = userForRegistration.FirstName,
                 PhoneNumber = userForRegistration.Phone,
                 LastName = userForRegistration.LastName

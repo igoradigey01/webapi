@@ -6,6 +6,9 @@ namespace ShopApi.Model.Identity {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         
+        [Required(ErrorMessage = "SpaClientId is required")]
+        public string  SpaId {get;set;} =string.Empty;  //  x-01 ,чей пользователь?,id spa client
+        
         [Required(ErrorMessage = "Незадан Email")]
         [EmailAddress]
         public string? Email { get; set; }

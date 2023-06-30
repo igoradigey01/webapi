@@ -3,6 +3,8 @@
     public class ExternalVkDto
     {
         public string? Provider { get; set; }
+        public string IdSpa {get;set;} =string.Empty; // idspa: x-01, idspa:xl-01
+
         public string? IdUser { get; set; }
         public string? IdApp { get; set; }
         public string? IdToken { get; set; }
