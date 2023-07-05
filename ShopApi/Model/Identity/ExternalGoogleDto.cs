@@ -1,6 +1,7 @@
-﻿namespace ShopApi.Model.Identity
+﻿using System.ComponentModel.DataAnnotations;
+namespace ShopApi.Model.Identity
 {
-    public class ExternalAuthDto
+    public class ExternalGoogleDto
     {
         public string? Provider { get; set; }
         [Required(ErrorMessage = "SpaClientId is required")]

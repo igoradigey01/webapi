@@ -1,29 +1,19 @@
+using EmailService;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-
-using System;
-using System.Collections.Generic;
-//-----------------
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.WebUtilities;
-using NETCore.MailKit.Core;
-using EmailService;
-
-using System.Security.Cryptography;
-using Google.Apis.Auth;
-using System.IO;
-using System.Net.Http;
-using System.Net;
-using Newtonsoft.Json.Linq;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using ShopApi.Model.Identity;
+//-----------------
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ShopAPI.Controllers
 {
@@ -37,15 +27,18 @@ namespace ShopAPI.Controllers
         private readonly SignInManager<UserIdentityX01> _loginManager;
 
         private readonly IEmailSender _emailSender;
+        private readonly IConfiguration Configuration;
 
 
         public AccountController(
+            IConfiguration configuration,
             UserManager<UserIdentityX01> userManager,
             SignInManager<UserIdentityX01> signInManager,
 
             IEmailSender emailSender
                        )
         {
+            Configuration = configuration;
             _userManager = userManager;
             _loginManager = signInManager;
 
@@ -65,13 +58,24 @@ namespace ShopAPI.Controllers
             {
                 return BadRequest(" Неверный запрос клиента");
             }
-            if (string.IsNullOrEmpty(login.Email))
+            if (string.IsNullOrEmpty(login.Email) && string.IsNullOrEmpty(login.Phone))
             {
                 return BadRequest(" Неверный Email клиента");
             }
+            UserIdentityX01? user;
+            if (!string.IsNullOrEmpty(login.Email))
+            {
+                user = await _userManager.FindByEmailAsync(login.Email);
 
+            }
+            else
+            {
+                user = _userManager.Users.FirstOrDefault(u => u.PhoneNumber == login.Phone);
+
+
+            }
             // var user = await _userManager.FindByEmailAsync(model.UserName); //??? 
-            var user = await _userManager.FindByEmailAsync(login.Email);
+
             if (user == null)
             {
                 ModelState.AddModelError("username", "пользователь не найден!");
@@ -95,6 +99,8 @@ namespace ShopAPI.Controllers
             {
 
                 var accessToken = GenerateTokenAsync(user).Result;
+                var refreshToken = GenerateRefreshToken();
+                SetRefreshTokenAsync(refreshToken, user);
 
 
                 return Ok(new TokenModelDto { Access_token = accessToken });
@@ -111,9 +117,7 @@ namespace ShopAPI.Controllers
         public async Task<IActionResult> TelegramExternalLogin([FromBody] UserTelegramDto user)
         {
 
-            //throw new Exception("not Empliment - ExternalLogin");
 
-            // place bot token of your bot here
             //https://xl-01.ru/telelram-callback?id=5384361370&first_name=Igor&username=igor_01ts&auth_date=1663303742&hash=bd734108e0d695bd89a6eaf56e50b3cdc2a5adc8dc4e98a8c777bc66545bebbf
             //https://gist.github.com/anonymous/6516521b1fb3b464534fbc30ea3573c2
             // https://codex.so/telegram-auth?ysclid=l89qryxyrb334407760
@@ -148,11 +152,19 @@ namespace ShopAPI.Controllers
             //     dataStringBuilder.Append('\n');
 
 
-            // byte[] signature = _hmac.ComputeHash(Encoding.UTF8.GetBytes(dataStringBuilder.ToString()));
+            byte[]? secretKey = null;
+            var token_bot = Configuration.GetSection("IdentityX01:Telegram-Tokens-Key").GetChildren().ToList();
 
-            var secretKey = ShaHash(Environment.GetEnvironmentVariable("Telegram_token_bot"));
-
-            var myHash = HashHmac(secretKey, Encoding.UTF8.GetBytes(dataStringBuilder.ToString()));
+            foreach (var token in token_bot)
+            {
+                if (token != null && token.Key == user.SpaId)
+                {
+                    secretKey = ShaHash(token.Value!);
+                }
+            }
+            byte[]? myHash = null;
+            if (secretKey != null)
+                myHash = HashHmac(secretKey, Encoding.UTF8.GetBytes(dataStringBuilder.ToString()));
 
             //php   hash   https://php.ru/manual/function.hash.html?ysclid=l87m3tbcl2736101629
             //php   hash_hmac   https://www.php.net/manual/ru/function.hash-hmac.php
@@ -166,7 +178,7 @@ namespace ShopAPI.Controllers
             {
                 return BadRequest("Data is outdated");
             }
-
+            if (myHash == null) return BadRequest("Hash token =null");
             var myHashStr = String.Concat(myHash.Select(i => i.ToString("x2")));
             var providerKey = user.Id;
             if (myHashStr == user.Hash)
@@ -197,6 +209,8 @@ namespace ShopAPI.Controllers
 
                 //----------------------------------------------
                 var accessToken = GenerateTokenAsync(user_tel).Result;
+                var refreshToken = GenerateRefreshToken();
+                SetRefreshTokenAsync(refreshToken, user_tel);
 
 
                 return Ok(new TokenModelDto { Access_token = accessToken });
@@ -225,11 +239,13 @@ namespace ShopAPI.Controllers
 
         [HttpPost("GoogleExternalLogin")]
         [AllowAnonymous]
-        public async Task<IActionResult> GoogleExternalLogin([FromBody] ExternalAuthDto externalAuth)
+        public async Task<IActionResult> GoogleExternalLogin([FromBody] ExternalGoogleDto externalAuth)
         {
             var payload = await VerifyGoogleToken(externalAuth);
             if (payload == null)
                 return BadRequest("Invalid External Authentication.");
+            if (String.IsNullOrEmpty(externalAuth.Provider))
+                return BadRequest("Invalid External Provider Name.");
 
             var info = new UserLoginInfo(externalAuth.Provider, payload.Subject, externalAuth.Provider);
 
@@ -267,6 +283,8 @@ namespace ShopAPI.Controllers
             //check for the Locked out account
 
             var accessToken = GenerateTokenAsync(user).Result;
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshTokenAsync(refreshToken, user);
 
 
             return Ok(new TokenModelDto { Access_token = accessToken });
@@ -325,6 +343,8 @@ namespace ShopAPI.Controllers
             //check for the Locked out account
 
             var accessToken = GenerateTokenAsync(user).Result;
+            var refreshToken = GenerateRefreshToken();
+            await SetRefreshTokenAsync(refreshToken, user);
 
 
             return Ok(new TokenModelDto { Access_token = accessToken });
@@ -344,7 +364,7 @@ namespace ShopAPI.Controllers
             {
                 Address = userForRegistration.Address,
                 Email = userForRegistration.Email,
-                SpaId=userForRegistration.SpaId,
+                SpaId = userForRegistration.SpaId,
                 FirstName = userForRegistration.FirstName,
                 PhoneNumber = userForRegistration.Phone,
                 LastName = userForRegistration.LastName
@@ -418,10 +438,14 @@ namespace ShopAPI.Controllers
 
         [HttpPost("ResetPasswordMail")]
         [AllowAnonymous]
-        public async Task<IActionResult> ResetPasswordMiall([FromBody] ResetPasswordMailDto resetPasswordDto)
+        public async Task<IActionResult> ResetPasswordMail([FromBody] ResetPasswordMailDto resetPasswordDto)
         {
-            if (!ModelState.IsValid)
+            if (resetPasswordDto==null || !ModelState.IsValid)
                 return BadRequest();
+                if(string.IsNullOrEmpty(resetPasswordDto.Email) || 
+                 string.IsNullOrEmpty(resetPasswordDto.Token)||
+                 string.IsNullOrEmpty(resetPasswordDto.Password)                 
+                 ) return BadRequest();
 
             var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
             if (user == null)
@@ -457,12 +481,12 @@ namespace ShopAPI.Controllers
         }
 
 
-        [HttpGet("IsTokenValid")]
-        [Authorize]
-        public IActionResult IsTokenValid()
+        [HttpGet("x01-token")]
+        // [AllowAnonymous]   //  is test ok()
+        public string X01Token()
         {
 
-            return Ok();
+            return "This action is protected with another named CORS policy";
 
         }
 
@@ -473,9 +497,9 @@ namespace ShopAPI.Controllers
         {
             var refreshToken = Request.Cookies["refreshToken"];
 
-            var user =await getUserIdentity(tokenApiModel);
-            if(user==null)
-            return Unauthorized("Invalid Access Token.");
+            var user = await getUserIdentity(tokenApiModel);
+            if (user == null)
+                return Unauthorized("Invalid Access Token.");
 
             if (!user.RefreshToken.Equals(refreshToken))
             {
@@ -488,7 +512,7 @@ namespace ShopAPI.Controllers
 
             string token = await GenerateTokenAsync(user);
             var newRefreshToken = GenerateRefreshToken();
-            SetRefreshToken(newRefreshToken,user);
+             await     SetRefreshTokenAsync(newRefreshToken, user);
 
             return Ok(token);
         }
@@ -505,7 +529,7 @@ namespace ShopAPI.Controllers
             return refreshToken;
         }
 
-        private void SetRefreshToken(RefreshToken newRefreshToken,UserIdentityX01 user)
+        private async Task SetRefreshTokenAsync(RefreshToken newRefreshToken, UserIdentityX01 user)
         {
             var cookieOptions = new CookieOptions
             {
@@ -517,6 +541,8 @@ namespace ShopAPI.Controllers
             user.RefreshToken = newRefreshToken.Token;
             user.TokenCreated = newRefreshToken.Created;
             user.TokenExpires = newRefreshToken.Expires;
+
+            await _userManager.UpdateAsync(user);
         }
 
 
@@ -540,11 +566,16 @@ namespace ShopAPI.Controllers
 
             //var mySecret = Environment.GetEnvironmentVariable("ClientSecrets"); // ключ для шифрации
             var mySecurityKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("ClientSecrets"))
+                Encoding.UTF8.GetBytes(Configuration.GetSection("IdentityX01:TokenX01-Key").Value!)
                 );
 
             int LIFETIME = 240;//1; //60; // время жизни токена 
-
+            string[]? audence = Configuration.GetSection("Authentication:Schemes:JwtBearer:Audiences").Get<string[]>();
+            string joinedString = String.Empty;
+            if (audence != null)
+            {
+               joinedString = audence.Aggregate((prev, current) => prev + "," + current);
+            }
             var tokenHandler = new JwtSecurityTokenHandler();
             var time = DateTime.UtcNow;
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -552,9 +583,9 @@ namespace ShopAPI.Controllers
                 Subject = new ClaimsIdentity(claims), //Claims
 
                 Expires = time.Add(TimeSpan.FromMinutes(LIFETIME)),
-                Issuer = Environment.GetEnvironmentVariable("Issuer"),// издатель токена
-                Audience = Environment.GetEnvironmentVariable("Audience"),// потребитель токена
-                SigningCredentials = new SigningCredentials(mySecurityKey, SecurityAlgorithms.HmacSha256Signature)
+                Issuer = Configuration.GetSection("Authentication:Schemes:JwtBearer:Issuer").Value,// издатель токена
+                Audience = joinedString,// потребитель токена
+               SigningCredentials = new SigningCredentials(mySecurityKey, SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -562,7 +593,7 @@ namespace ShopAPI.Controllers
             return tokenHandler.WriteToken(token);
         }
 
-        private async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalAuthDto externalAuth)
+        private async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalGoogleDto externalAuth)
         {
 
             //https://console.cloud.google.com/apis/credentials?project=x-01-mystore
@@ -571,7 +602,7 @@ namespace ShopAPI.Controllers
             {
                 var settings = new GoogleJsonWebSignature.ValidationSettings()
                 {
-                    Audience = new List<string>() { Environment.GetEnvironmentVariable("Google_idToken") }
+                    Audience = new List<string>() { Configuration.GetSection("IdentityX01:Google-Token-Key").Value! }
                 };
                 var payload = await GoogleJsonWebSignature.ValidateAsync(externalAuth.IdToken, settings);
 
@@ -597,29 +628,10 @@ namespace ShopAPI.Controllers
         {
             VkProfileDto profile = new VkProfileDto();
 
-            /* old reliz !!!Not work on provider (host)
-              string str = GetRequest("api.vk.com", "https://api.vk.com:443/method/users.get?access_token="
-                + externalAuth.IdToken + "&v=5.131"
-                + "&token=" + Environment.GetEnvironmentVariable("VK_Token") + "&user_ids=" + externalAuth.IdUser);
-            dynamic stuff = JsonConvert.DeserializeObject(str);
-
-            try
-            {
-                Console.WriteLine("VerifyVKToken---" + stuff);
-                profile.FirstName = stuff.response[0].first_name;
-                profile.LastName = stuff.response[0].last_name;
-                profile.UserId = stuff.response[0].id;
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-               
-            }*/
 
 
             //Защищённый ключ--Environment.GetEnvironmentVariable("VK_Token")
-            string s = vkDto.IdApp + vkDto.IdUser + Environment.GetEnvironmentVariable("VK_Token");
+            string s = vkDto.IdApp + vkDto.IdUser + Configuration.GetSection("IdentityX01:VK-Token-Key").Value;
             string hash = MD5HashGet(s);
             Console.WriteLine("--VK-- MD5HashGet--");
             Console.WriteLine(hash);
@@ -654,18 +666,18 @@ namespace ShopAPI.Controllers
             return result;
         }
 
-        private async  Task<UserIdentityX01?> getUserIdentity(TokenModelDto token)
+        private async Task<UserIdentityX01?> getUserIdentity(TokenModelDto token)
         {
-            if(String.IsNullOrEmpty(token.Access_token))
-            return null;
+            if (String.IsNullOrEmpty(token.Access_token))
+                return null;
 
             var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token.Access_token);
             string userId = jwt.Claims.First(c => c.Type == JwtRegisteredClaimNames.NameId).Value;
 
-             var user = await _userManager.FindByIdAsync( userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                
+
                 return null;
             }
             return user;

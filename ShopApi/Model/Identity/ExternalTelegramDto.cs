@@ -1,4 +1,6 @@
-﻿namespace ShopApi.Model.Identity
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ShopApi.Model.Identity
 {
     public class UserTelegramDto
     {

@@ -5,7 +5,7 @@ namespace ShopApi.Model.Identity
     {
         [Required]
         [EmailAddress]
-        public string? Email { get; set; }
+        public string Email { get; set; }=String.Empty;
 
         [Required]
         public string? ClientURI { get; set; }
