@@ -100,7 +100,7 @@ namespace ShopAPI.Controllers
 
                 var accessToken = GenerateTokenAsync(user).Result;
                 var refreshToken = GenerateRefreshToken();
-                SetRefreshTokenAsync(refreshToken, user);
+               await SetRefreshTokenAsync(refreshToken, user);
 
 
                 return Ok(new TokenModelDto { Access_token = accessToken });
@@ -284,7 +284,7 @@ namespace ShopAPI.Controllers
 
             var accessToken = GenerateTokenAsync(user).Result;
             var refreshToken = GenerateRefreshToken();
-            SetRefreshTokenAsync(refreshToken, user);
+           await SetRefreshTokenAsync(refreshToken, user);
 
 
             return Ok(new TokenModelDto { Access_token = accessToken });
@@ -384,7 +384,7 @@ namespace ShopAPI.Controllers
             var param = new Dictionary<string, string>
             {
                 {"token", token },
-                {"email", user.Email }
+                {"email", user.Email ??""}
             };
 
             var callback = QueryHelpers.AddQueryString(userForRegistration.ClientURI, param);
@@ -486,7 +486,7 @@ namespace ShopAPI.Controllers
         public string X01Token()
         {
 
-            return "This action is protected with another named CORS policy";
+            return "This action is OK";
 
         }
 
@@ -593,7 +593,7 @@ namespace ShopAPI.Controllers
             return tokenHandler.WriteToken(token);
         }
 
-        private async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalGoogleDto externalAuth)
+        private async Task<GoogleJsonWebSignature.Payload?> VerifyGoogleToken(ExternalGoogleDto externalAuth)
         {
 
             //https://console.cloud.google.com/apis/credentials?project=x-01-mystore
@@ -624,7 +624,7 @@ namespace ShopAPI.Controllers
         https://kotoff.net/article/39-avtorizacija-na-sajte-s-pomoschju-vk-prostoj-i-ponjatnyj-sposob-na-php.html
         https://babakov.net//blog/netcore/325.html
         */
-        private VkProfileDto VerifyVKToken(ExternalVkDto vkDto)
+        private VkProfileDto? VerifyVKToken(ExternalVkDto vkDto)
         {
             VkProfileDto profile = new VkProfileDto();
 

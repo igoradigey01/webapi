@@ -7,9 +7,13 @@ using ShopApi.Model.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
+
 
 var emailConfig = builder.Configuration.
  GetSection("EmailConfiguration")
@@ -37,22 +41,48 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
-
-var connectStringShop = builder.Configuration.GetSection("ConnectString").Value + "database=ShopDB;";
-var connectStringAppIdentity = builder.Configuration.GetSection("ConnectString").Value + "database=AppIdentityDB;";
+string connectString=builder.Configuration.GetSection("ConnectString").Value!;
+var connectStringShop =connectString  + "database=ShopDB;";
+var connectStringAppIdentity =connectString + "database=AppIdentityDB;";
 
 
 builder.Services.AddDbContext<AppIdentityDbContext>(
     options => options.UseMySql(connectStringAppIdentity, new MySqlServerVersion(new Version(8, 0, 11))
 ));
 
-// затем подключаем сервисы Identity
+
 builder.Services.AddIdentity<UserIdentityX01, IdentityRole>()
     .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<AppIdentityDbContext>()
        .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication().AddJwtBearer();
+   //------------------------ jwt --------------------------------
+
+  var mySecurityKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration.GetSection("IdentityX01:TokenX01-Key").Value!)
+                );    
+  string[]? audence = builder.Configuration.GetSection("Authentication:Schemes:JwtBearer:Audiences").Get<string[]>();
+            string joinedString = String.Empty;
+            if (audence != null)
+            {
+               joinedString = audence.Aggregate((prev, current) => prev + "," + current);
+            }                
+
+builder.Services.AddAuthentication().AddJwtBearer
+    (options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration.GetSection("Authentication:Schemes:JwtBearer:Issuer").Value,
+            ValidAudience = joinedString,
+            IssuerSigningKey = mySecurityKey
+        };
+    });
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();

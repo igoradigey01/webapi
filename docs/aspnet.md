@@ -18,3 +18,4 @@
   - "ASPNETCORE_ENVIRONMENT": "Development" 
   - "ASPNETCORE_ENVIRONMENT": "Production"
   - Production: значение по умолчанию, если DOTNET_ENVIRONMENT и ASPNETCORE_ENVIRONMENT не заданы.
+  - if (app.Environment.IsDevelopment()){}
