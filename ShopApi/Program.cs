@@ -9,10 +9,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
-
-
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 
 var emailConfig = builder.Configuration.
@@ -134,6 +135,12 @@ builder.Services.AddSwaggerGen(
 
 
 var app = builder.Build();
+// for nginx
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
 
 app.UseRouting();
 
