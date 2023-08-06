@@ -14,6 +14,23 @@
 
 
 
-## help
+## help ef
  - https://learn.microsoft.com/ru-ru/ef/core/managing-schemas/scaffolding/?tabs=dotnet-core-cli
  - https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql
+
+## user-secrets 
+1. use
+   1. set
+ - dotnet user-secrets init
+ - dotnet user-secrets set ConnectionStrings:DeveloperX01 "server=127.0.0.1;port=3306;UserId=root;Password=123456;"
+   2. get 
+ - var movieApiKey = builder.Configuration["ConnectionStrings:DeveloperX01"];
+ - var moviesApiKey = _config["ConnectionStrings:DeveloperX01"]; 
+ 2. help
+  - https://learn.microsoft.com/ru-ru/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows
+
+ ## docker-compose secrets
+  - https://nvd.codes/post/use-docker-secrets-in-asp-net-core/ 
+
+## help dbcontext
+ - https://learn.microsoft.com/ru-ru/ef/core/dbcontext-configuration/ 

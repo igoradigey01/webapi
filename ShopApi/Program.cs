@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.HttpOverrides;
+using ShopDB;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,14 +43,30 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
-string connectString=builder.Configuration.GetSection("ConnectString").Value!;
-var connectStringShop =connectString  + "database=ShopDB;";
-var connectStringAppIdentity =connectString + "database=AppIdentityDB;";
+//var connectionString = config.GetSection("DemoApp")["ConnectionString"];
+string connectString = String.Empty;
+
+if (builder.Environment.IsDevelopment())
+{
+    connectString = builder.Configuration["ConnectionStrings:DeveloperX01"]!;
+   // Console.WriteLine(connectString);
+}else{
+    connectString = builder.Configuration.GetSection("ConnectString").Value!;
 
 
+}
+
+var connectStringShop = connectString + "database=ShopDB;";
+var connectStringAppIdentity = connectString + "database=AppIdentityDB;";
 builder.Services.AddDbContext<AppIdentityDbContext>(
-    options => options.UseMySql(connectStringAppIdentity, new MySqlServerVersion(new Version(8, 0, 11))
-));
+    options => options.UseMySql(connectStringAppIdentity, Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.33-mysql"))
+);
+
+builder.Services.AddDbContext<ShopDbContext>(
+    options => options
+        .UseMySql(connectStringShop, new MySqlServerVersion(new Version(8, 0, 11)))
+
+);
 
 
 builder.Services.AddIdentity<UserIdentityX01, IdentityRole>()
@@ -57,17 +74,17 @@ builder.Services.AddIdentity<UserIdentityX01, IdentityRole>()
         .AddEntityFrameworkStores<AppIdentityDbContext>()
        .AddDefaultTokenProviders();
 
-   //------------------------ jwt --------------------------------
+//------------------------ jwt --------------------------------
 
-  var mySecurityKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration.GetSection("IdentityX01:TokenX01-Key").Value!)
-                );    
-  string[]? audence = builder.Configuration.GetSection("Authentication:Schemes:JwtBearer:Audiences").Get<string[]>();
-            string joinedString = String.Empty;
-            if (audence != null)
-            {
-               joinedString = audence.Aggregate((prev, current) => prev + "," + current);
-            }                
+var mySecurityKey = new SymmetricSecurityKey(
+              Encoding.UTF8.GetBytes(builder.Configuration.GetSection("IdentityX01:TokenX01-Key").Value!)
+              );
+string[]? audence = builder.Configuration.GetSection("Authentication:Schemes:JwtBearer:Audiences").Get<string[]>();
+string joinedString = String.Empty;
+if (audence != null)
+{
+    joinedString = audence.Aggregate((prev, current) => prev + "," + current);
+}
 
 builder.Services.AddAuthentication().AddJwtBearer
     (options =>
@@ -144,16 +161,21 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 app.UseRouting();
 
-app.UseSwagger();
-
-
-app.UseSwaggerUI(options =>
+if (app.Environment.IsDevelopment())
 {
-    options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
-
-});
 
 
+
+    app.UseSwagger();
+
+
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
+
+    });
+
+}
 app.UseCors();
 app.UseAuthentication();   // добавление middleware аутентификации 
 app.UseAuthorization();   // добавление middleware авторизации 

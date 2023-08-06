@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration.Json;
-using System;
-using System.Xml.Linq;
+
 
 namespace ShopApi.Model.Identity
 {
