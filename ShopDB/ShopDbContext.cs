@@ -7,40 +7,39 @@ namespace ShopDB;
 
 public partial class ShopDbContext : DbContext
 {
-   private readonly IConfiguration _configuration;
 
     public ShopDbContext(
-        DbContextOptions<ShopDbContext> options,        
-           IConfiguration conf
+        DbContextOptions<ShopDbContext> options       
+       
 )
         : base(options)
     {
-      _configuration=conf;
+      
     }
 
-    public virtual DbSet<Article> Articles { get; set; }
+    public virtual  DbSet<Article>?  Articles { get; set; }
 
-    public virtual DbSet<Brand> Brands { get; set; }
+    public virtual  DbSet<Brand>? Brands { get; set; }
 
-    public virtual DbSet<CategoriaP> CategoriaPs { get; set; }
+    public virtual required DbSet<CategoriaP> CategoriaPs { get; set; }
 
-    public virtual DbSet<Color> Colors { get; set; }
+    public virtual required DbSet<Color> Colors { get; set; }
 
-    public virtual DbSet<ImageP> ImagePs { get; set; }
+    public virtual required DbSet<ImageP> ImagePs { get; set; }
 
-    public virtual DbSet<Katalog> Katalogs { get; set; }
+    public virtual required DbSet<Katalog> Katalogs { get; set; }
 
-    public virtual DbSet<KatalogP> KatalogPs { get; set; }
+    public virtual required DbSet<KatalogP> KatalogPs { get; set; }
 
-    public virtual DbSet<MaterialP> MaterialPs { get; set; }
+    public virtual required DbSet<MaterialP> MaterialPs { get; set; }
 
-    public virtual DbSet<Postavchik> Postavchiks { get; set; }
+    public virtual required DbSet<Postavchik> Postavchiks { get; set; }
 
-    public virtual DbSet<Product> Products { get; set; }
+    public virtual required DbSet<Product> Products { get; set; }
 
-    public virtual DbSet<ProductNomenclature> ProductNomenclatures { get; set; }
+    public virtual required DbSet<ProductNomenclature> ProductNomenclatures { get; set; }
 
-    public virtual DbSet<SubKatalog> SubKatalogs { get; set; }
+    public virtual required DbSet<SubKatalog> SubKatalogs { get; set; }
 
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 

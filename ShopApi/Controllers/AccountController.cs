@@ -197,7 +197,7 @@ namespace ShopAPI.Controllers
                     user_tel = new UserIdentityX01 { FirstName = user.FirstName, UserName = user.UserName, NormalizedUserName = user.Id };
                     await _userManager.CreateAsync(user_tel);
                     //prepare and send an email for the email confirmation
-                    await _userManager.AddToRoleAsync(user_tel, Enum.GetName(Role.Shopper) ?? "Shopper");
+                    await _userManager.AddToRoleAsync(user_tel, X01Roles.Shopper);
                     await _userManager.AddLoginAsync(user_tel, info);
                 }
                 else
@@ -268,7 +268,7 @@ namespace ShopAPI.Controllers
 
                     //prepare and send an email for the email confirmation
 
-                    await _userManager.AddToRoleAsync(user, Enum.GetName(Role.Shopper) ?? "Shopper");
+                    await _userManager.AddToRoleAsync(user, X01Roles.Shopper);
                     await _userManager.AddLoginAsync(user, info);
                 }
                 else
@@ -327,7 +327,7 @@ namespace ShopAPI.Controllers
 
                 //prepare and send an email for the email confirmation
 
-                await _userManager.AddToRoleAsync(user, Enum.GetName(Role.Shopper) ?? "Shopper");
+                await _userManager.AddToRoleAsync(user, X01Roles.Shopper);
                 await _userManager.AddLoginAsync(user, info);
 
 
@@ -403,7 +403,7 @@ namespace ShopAPI.Controllers
                 return BadRequest("Токен подтверждения электронной почты неотправлен");
             }
 
-            await _userManager.AddToRoleAsync(user, Enum.GetName(Role.Shopper) ?? "Shopper");  //'shopper'
+            await _userManager.AddToRoleAsync(user, X01Roles.Shopper);  //'shopper'
 
             return StatusCode(201);
         }

@@ -51,21 +51,21 @@ namespace ShopApi.Model.Identity
                 new IdentityRole
                 {
                     Id = ADMIN_ID,
-                    Name = Enum.GetName(typeof(Role), Role.Admin),            //"admin",
-                    NormalizedName = Enum.GetName(typeof(Role), Role.Admin)
+                    Name = X01Roles.Admin,            //"admin",
+                    NormalizedName = X01Roles.Admin
                 },
                 new IdentityRole
                 {
                     Id = USER_ID,
-                    Name = Enum.GetName(typeof(Role), Role.Shopper),          //"shopper",
-                    NormalizedName = Enum.GetName(typeof(Role), Role.Shopper) //покупатель
+                    Name =X01Roles.Shopper,          //"shopper",
+                    NormalizedName = X01Roles.Shopper //покупатель
 
                 },
                  new IdentityRole
                  {
                      Id = MANAGER_Id,
-                     Name = Enum.GetName(typeof(Role), Role.Manager),           //"manager",
-                     NormalizedName = Enum.GetName(typeof(Role), Role.Manager)
+                     Name = X01Roles.Manager,           //"manager",
+                     NormalizedName = X01Roles.Manager
                  }
 
             );

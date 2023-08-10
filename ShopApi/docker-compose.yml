@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 
 
@@ -35,23 +35,23 @@ services:
       - 80
     restart: always
     
-  
+ 
 
   db:
     image: mysql:8.0
     restart: always
     volumes:
       - ./mysql:/usr/sbin/mysql
-    environment:          
-        MYSQL_ROOT_PASSWORD: # (2)
-              - super_secret
-        MYSQL_DATABASE: Shop_DB
+      
+    environment:   
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}       
+        # cm file .emv
+   
     ports:
       - 3306:3306
          
-  secrets: # (1)
-  super_secret:
-    file: ./my-little-secret.txt
+ 
            
           
 
