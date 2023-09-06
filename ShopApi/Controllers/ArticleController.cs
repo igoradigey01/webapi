@@ -4,90 +4,119 @@ using ShopAPI.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
-using ShopApi.Model.Identity ;
+using ShopApi.Model.Identity;
+using Microsoft.EntityFrameworkCore;
 using ShopDB;
 
 
 namespace ShopAPI.Controllers
 {
-   
-   
+
+
     [ApiController]
     [Authorize(Roles = X01Roles.Admin + "," + X01Roles.Manager)]
     [Route("api/[controller]/[action]")]
     public class ArticleController : ControllerBase
     {
-        private readonly ArticleRepository _repository;
+        private readonly ShopDbContext _db;
 
-        public ArticleController(
-            ArticleRepository repository
-            )
+        public ArticleController(ShopDbContext db)
         {
-            _repository = repository;
+            _db = db;
         }
+
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IEnumerable<Article>> Get()
+        public async Task<IEnumerable<ArticleDto>> GetAll()
+        {
+
+
+
+            var articles = await (from b in _db.Articles!
+                                  select new ArticleDto()
+                                  {
+                                      Id = b.Id,
+                                      Name = b.Name,
+                                      PostavchikId = b.PostavchikId,
+                                      TypeProductId = b.TypeProductId,
+                                      Hidden = b.Hidden
+                                  }).ToListAsync();
+
+            return articles;
+
+
+        }
+
+        [HttpGet("{idPostavchik}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<ArticleDto>>> GetFomPostavchik(string idPostavchik)
         {
             // int i = 0;
-            return await _repository.Get();
+            var articles = await (from item in _db.Articles!
+                                  where item.PostavchikId == idPostavchik
+                                  select new ArticleDto()
+                                  {
+                                      Id = item.Id,
+                                      Name = item.Name,
+                                      PostavchikId = item.PostavchikId,
+                                      TypeProductId = item.TypeProductId,
+                                      Hidden = item.Hidden
+                                  }).ToListAsync();
+            if (articles == null) NotFound();
+
+            return Ok(articles);
         }
 
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<IEnumerable<Article>> GetPostavchik(int id )
+        public async Task<ActionResult<ArticleDto>> GetArticle(int id)
         {
-            // int i = 0;
-            return await _repository.GetPostavchik(id);
-        }
+            var item = await _db.Articles!.Select(d => new ArticleDto
+            {
+                Id = d.Id,
+                Name = d.Name,
+                PostavchikId = d.PostavchikId,
+                TypeProductId = d.TypeProductId,
+                Hidden = d.Hidden
+            }
+            )
+            .SingleOrDefaultAsync(c => c.Id == id);
 
-        [HttpGet("{id}")]
-        [AllowAnonymous]
-        public async Task<Article> Item(int id)
-        {
-            return await _repository.Item(id);
+            if (item == null) NotFound();
+
+            return Ok(item);
             //  throw new Exception("NOt Implimetn Exception");
         }
 
         // POST api/<CategoriaController>
         // api/Material (post) создать
         [HttpPost]
-        public async Task<ActionResult<Article>> Create()
+        public async Task<ActionResult<ArticleDto>> Create(Article item)
         {
-
-
-            Article item = new Article();
-            IFormCollection form = await Request.ReadFormAsync();
-            if (form == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("form data ==null");
+                return BadRequest(ModelState);
             }
 
-            item.Id = int.Parse(form["id"]);
 
 
-            item.Name = form["name"];
-            item.Name = item.Name.Trim();
-
-            item.Hidden = bool.Parse(form["hidden"]);
-            
-            item.PostavchikId = int.Parse(form["postavchikId"]);
+            _db.Articles!.Add(item);
+            await _db.SaveChangesAsync();
 
 
 
-
-
-            // Console.WriteLine("Task< ActionResult<Katalog>> Post(Katalog item)----"+item.Name +"-"+item.Id+"-"+item.Model);
-            var flag = await _repository.Create(item);
-            if (flag.Flag)
+            var dto = new ArticleDto()
             {
-                return Ok(flag.Item as Article);
-            }
-            else
-            {
-                return BadRequest(flag.Message);
-            }
+                Id = item.Id,
+                Name = item.Name,
+                PostavchikId = item.PostavchikId,
+                TypeProductId = item.TypeProductId,
+                Hidden = item.Hidden
+            };
+
+            return CreatedAtRoute("GetArticle", new { id = item.Id }, dto);
+
         }
 
 
@@ -95,55 +124,63 @@ namespace ShopAPI.Controllers
 
         // PUT api/material/3 (put) -изменить
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id)
+        public async Task<ActionResult> Update(int id, Article item)
         {
 
-            Article item = new Article();
-            IFormCollection form = await Request.ReadFormAsync();
-            if (form == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("form data ==null");
+                return BadRequest(ModelState);
             }
 
-            item.Id = int.Parse(form["id"]);
-            if (item.Id != id)
+            if (id != item.Id)
             {
-                return BadRequest("Неверный Id");
+                return BadRequest();
             }
 
-            item.Name = form["name"];
-            item.Name = item.Name.Trim();
-            item.PostavchikId = int.Parse(form["postavchikId"]);
+            _db.Entry(item).State = EntityState.Modified;
 
-            item.Hidden = bool.Parse(form["hidden"]);
-          
-
-
-
-            // if(id!=item.Id) return BadRequest();
-            var flag = await _repository.Update(item);
-            if (flag.Flag)
+            try
             {
-                // Katalog katalog = flag.Item as Katalog;
-                //  Console.WriteLine(katalog.Name + "-----" + katalog.Id);
-                return Ok();
-
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ArticleExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
+            return NoContent(); //204
 
-            return BadRequest(flag.Message);
+
         }
 
         // DELETE api/<CategoriaController>/5       
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult<Article>> Delete(int id)
         {
-            var flagValid = await _repository.Delete(id);
-            if (!flagValid.Flag)
+
+
+            Article? item = await _db.Articles!.FindAsync(id);
+            if (item == null)
             {
-                return BadRequest(flagValid.Message);
+                return NotFound();
             }
-            return Ok();
+
+            _db.Articles.Remove(item);
+            await _db.SaveChangesAsync();
+            return Ok(item);
+
+        }
+
+        private bool ArticleExists(int id)
+        {
+            return _db.Articles!.Count(e => e.Id == id) > 0;
         }
     }
 }

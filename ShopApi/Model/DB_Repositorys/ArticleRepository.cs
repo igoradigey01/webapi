@@ -21,7 +21,7 @@ namespace ShopAPI.Model.DB_Repositorys
             return await _db.Articles!.ToListAsync();
         }
 
-        public async Task<IEnumerable<Article>> GetPostavchik(string idPostavchik)
+        public async Task<IEnumerable<Article>> GetPostavchik(string idPostavchik )
         {
             return await _db.Articles!.Where(a=>a.PostavchikId == idPostavchik).ToListAsync(); 
         }

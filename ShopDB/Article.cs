@@ -14,4 +14,6 @@ public partial class Article
     public int TypeProductId { get; set; }
 
     public required string PostavchikId {get;set;}
+
+  
 }
