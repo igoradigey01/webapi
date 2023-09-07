@@ -7,7 +7,7 @@ public partial class Postavchik
 {
     public int Id { get; set; }
 
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     public bool Hidden { get; set; }
 }

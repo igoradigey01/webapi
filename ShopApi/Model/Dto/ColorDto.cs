@@ -1,6 +1,6 @@
 namespace ShopAPI.Model
 {
-    public class BrandDto
+    public class ColorDto
     {
         public int Id { get; set; }
 

@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShopAPI.Model;
-using ShopApi.Model.Identity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+using ShopApi.Model.Identity;
+using ShopAPI.Model;
 using ShopDB;
+
 
 
 namespace ShopAPI.Controllers
 {
-  
+
     [ApiController]
     [Authorize(Roles = X01Roles.Admin + "," + X01Roles.Manager)]
     [Route("api/[controller]/[action]")]
@@ -28,7 +26,7 @@ namespace ShopAPI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IEnumerable<BrandDto>> GetAll()
+        public async Task< ActionResult< IEnumerable<BrandDto>>> GetAll()
         {
             var brands = await (from b in _db.Brands!
                                   select new BrandDto()
@@ -39,8 +37,10 @@ namespace ShopAPI.Controllers
                                       TypeProductId = b.TypeProductId,
                                       Hidden = b.Hidden
                                   }).ToListAsync();
+             if (brands == null) NotFound();
+                      
 
-            return brands;
+            return Ok( brands);
         }
 
         [HttpGet("{idPostavchik}")]
@@ -85,8 +85,8 @@ namespace ShopAPI.Controllers
             //  throw new Exception("NOt Implimetn Exception");
         }
 
-        // POST api/<CategoriaController>
-        // api/Material (post) создать
+      
+        //  (post) создать
         [HttpPost]
         public async Task<ActionResult<BrandDto>> Create(Brand item)
         {
@@ -102,7 +102,7 @@ namespace ShopAPI.Controllers
 
 
 
-            var dto = new ArticleDto()
+            var dto = new BrandDto()
             {
                 Id = item.Id,
                 Name = item.Name,
@@ -111,14 +111,12 @@ namespace ShopAPI.Controllers
                 Hidden = item.Hidden
             };
 
-            return CreatedAtRoute("GetArticle", new { id = item.Id }, dto);
+            return CreatedAtRoute("GetItem", new { id = item.Id }, dto);
             
         }
 
 
-        // public void Put(int id, [FromBody] string value)     
-
-        // PUT api/material/3 (put) -изменить
+        //  (put) -изменить
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, Brand item)
         {
@@ -155,7 +153,7 @@ namespace ShopAPI.Controllers
 
         }
 
-        // DELETE api/<CategoriaController>/5       
+           
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {

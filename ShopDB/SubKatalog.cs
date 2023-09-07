@@ -7,11 +7,11 @@ public partial class SubKatalog
 {
     public int Id { get; set; }
 
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     public bool Hidden { get; set; }
 
-    public string DecriptSeo { get; set; }
+    public string? DecriptSeo { get; set; }
 
     public int KatalogId { get; set; }
 

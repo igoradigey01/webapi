@@ -1,5 +1,7 @@
 ## Asp net core
-- dotnet run --project  shopapi
+- cd shopapi
+- dotnet run 
+- http://localhost:5010/swagger/index.html
 - dotnet  user-jwts create
 - dotnet  user-jwts print db3caef7 --show-all
 - dotnet  user-jwts key

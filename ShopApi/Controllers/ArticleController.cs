@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc;
-using ShopAPI.Model;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-using ShopApi.Model.Identity;
 using Microsoft.EntityFrameworkCore;
+using ShopApi.Model.Identity;
+using ShopAPI.Model;
 using ShopDB;
+
 
 
 namespace ShopAPI.Controllers
@@ -28,7 +27,7 @@ namespace ShopAPI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IEnumerable<ArticleDto>> GetAll()
+        public async Task<ActionResult<IEnumerable<ArticleDto>>> GetAll()
         {
 
 
@@ -43,7 +42,9 @@ namespace ShopAPI.Controllers
                                       Hidden = b.Hidden
                                   }).ToListAsync();
 
-            return articles;
+            if (articles == null) NotFound();
+
+            return Ok(articles);
 
 
         }
@@ -86,11 +87,11 @@ namespace ShopAPI.Controllers
             if (item == null) NotFound();
 
             return Ok(item);
-            //  throw new Exception("NOt Implimetn Exception");
+            
         }
 
-        // POST api/<CategoriaController>
-        // api/Material (post) создать
+        
+        //  (post) создать
         [HttpPost]
         public async Task<ActionResult<ArticleDto>> Create(Article item)
         {
@@ -115,14 +116,14 @@ namespace ShopAPI.Controllers
                 Hidden = item.Hidden
             };
 
-            return CreatedAtRoute("GetArticle", new { id = item.Id }, dto);
+            return CreatedAtRoute("GetItem", new { id = item.Id }, dto);
 
         }
 
 
-        // public void Put(int id, [FromBody] string value)     
+        
 
-        // PUT api/material/3 (put) -изменить
+        // (put) -изменить
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, Article item)
         {
@@ -159,8 +160,7 @@ namespace ShopAPI.Controllers
 
 
         }
-
-        // DELETE api/<CategoriaController>/5       
+      
         [HttpDelete("{id}")]
         public async Task<ActionResult<Article>> Delete(int id)
         {

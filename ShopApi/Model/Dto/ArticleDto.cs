@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 namespace ShopAPI.Model
 {
     public class ArticleDto
