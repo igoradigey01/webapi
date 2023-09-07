@@ -50,7 +50,7 @@ namespace ShopAPI.Controllers
 
         [HttpGet("{idPostavchik}")]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<ArticleDto>>> GetFomPostavchik(string idPostavchik)
+        public async Task<ActionResult<IEnumerable<ArticleDto>>> GetPostavchik(string idPostavchik)
         {
             // int i = 0;
             var articles = await (from item in _db.Articles!
@@ -70,7 +70,7 @@ namespace ShopAPI.Controllers
 
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<ArticleDto>> GetArticle(int id)
+        public async Task<ActionResult<ArticleDto>> GetItem(int id)
         {
             var item = await _db.Articles!.Select(d => new ArticleDto
             {

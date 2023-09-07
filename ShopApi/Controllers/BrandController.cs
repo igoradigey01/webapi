@@ -4,6 +4,7 @@ using ShopAPI.Model;
 using ShopApi.Model.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using ShopDB;
 
@@ -29,7 +30,7 @@ namespace ShopAPI.Controllers
         [AllowAnonymous]
         public async Task<IEnumerable<BrandDto>> GetAll()
         {
-            var articles = await (from b in _db.Brands!
+            var brands = await (from b in _db.Brands!
                                   select new BrandDto()
                                   {
                                       Id = b.Id,
@@ -39,63 +40,79 @@ namespace ShopAPI.Controllers
                                       Hidden = b.Hidden
                                   }).ToListAsync();
 
-            return articles;
+            return brands;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{idPostavchik}")]
         [AllowAnonymous]
-        public async Task<IEnumerable<BrandN>> GetPostavchik(int id)
+        public async Task<ActionResult<IEnumerable<BrandDto>>> GetPostavchik(string idPostavchik)
         {
             // int i = 0;
-            return await _repository.GetPostavchik(id);
+           var barnds = await (from item in _db.Brands!
+                                  where item.PostavchikId == idPostavchik
+                                  select new BrandDto()
+                                  {
+                                      Id = item.Id,
+                                      Name = item.Name,
+                                      PostavchikId = item.PostavchikId,
+                                      TypeProductId = item.TypeProductId,
+                                      Hidden = item.Hidden
+                                  }).ToListAsync();
+            if (barnds == null) NotFound();
+
+            return Ok(barnds);
         }
 
 
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<BrandN> Item(int id)
+        public async Task<ActionResult< BrandDto>> GetItem(int id)
         {
-            return await _repository.Item(id);
+             var item = await _db.Brands!.Select(d => new BrandDto
+            {
+                Id = d.Id,
+                Name = d.Name,
+                PostavchikId = d.PostavchikId,
+                TypeProductId = d.TypeProductId,
+                Hidden = d.Hidden
+            }
+            )
+            .SingleOrDefaultAsync(c => c.Id == id);
+
+            if (item == null) NotFound();
+
+            return Ok(item);
             //  throw new Exception("NOt Implimetn Exception");
         }
 
         // POST api/<CategoriaController>
         // api/Material (post) создать
         [HttpPost]
-        public async Task<ActionResult<BrandN>> Create()
+        public async Task<ActionResult<BrandDto>> Create(Brand item)
         {
-
-
-            BrandN item = new BrandN();
-            IFormCollection form = await Request.ReadFormAsync();
-            if (form == null)
+              if (!ModelState.IsValid)
             {
-                return BadRequest("form data ==null");
+                return BadRequest(ModelState);
             }
 
-            item.Id = int.Parse(form["id"]);
 
-            item.PostavchikId = int.Parse(form["postavchikId"]);
 
-            item.Name = form["name"];
-            item.Name = item.Name.Trim();
-
-            item.Hidden = bool.Parse(form["hidden"]);
+            _db.Brands!.Add(item);
+            await _db.SaveChangesAsync();
 
 
 
-
-
-            // Console.WriteLine("Task< ActionResult<Katalog>> Post(Katalog item)----"+item.Name +"-"+item.Id+"-"+item.Model);
-            var flag = await _repository.Create(item);
-            if (flag.Flag)
+            var dto = new ArticleDto()
             {
-                return Ok(flag.Item as BrandN);
-            }
-            else
-            {
-                return BadRequest(flag.Message);
-            }
+                Id = item.Id,
+                Name = item.Name,
+                PostavchikId = item.PostavchikId,
+                TypeProductId = item.TypeProductId,
+                Hidden = item.Hidden
+            };
+
+            return CreatedAtRoute("GetArticle", new { id = item.Id }, dto);
+            
         }
 
 
@@ -103,56 +120,61 @@ namespace ShopAPI.Controllers
 
         // PUT api/material/3 (put) -изменить
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id)
+        public async Task<ActionResult> Update(int id, Brand item)
         {
 
-            BrandN item = new BrandN();
-            IFormCollection form = await Request.ReadFormAsync();
-            if (form == null)
+             if (!ModelState.IsValid)
             {
-                return BadRequest("form data ==null");
+                return BadRequest(ModelState);
             }
 
-            item.Id = int.Parse(form["id"]);
-            if (item.Id != id)
+            if (id != item.Id)
             {
-                return BadRequest("Неверный Id");
+                return BadRequest();
             }
 
-            item.PostavchikId = int.Parse(form["postavchikId"]);
+            _db.Entry(item).State = EntityState.Modified;
 
-            item.Name = form["name"];
-            item.Name = item.Name.Trim();
-
-            item.Hidden = bool.Parse(form["hidden"]);
-
-
-
-
-            // if(id!=item.Id) return BadRequest();
-            var flag = await _repository.Update(item);
-            if (flag.Flag)
+            try
             {
-                // Katalog katalog = flag.Item as Katalog;
-                //  Console.WriteLine(katalog.Name + "-----" + katalog.Id);
-                return Ok();
-
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!BrandExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
+            return NoContent(); //204
 
-            return BadRequest(flag.Message);
         }
 
         // DELETE api/<CategoriaController>/5       
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var flagValid = await _repository.Delete(id);
-            if (!flagValid.Flag)
+          
+            Brand? item = await _db.Brands!.FindAsync(id);
+            if (item == null)
             {
-                return BadRequest(flagValid.Message);
+                return NotFound();
             }
-            return Ok();
+
+            _db.Brands.Remove(item);
+            await _db.SaveChangesAsync();
+            return Ok(item);
+        }
+
+
+        private bool BrandExists(int id)
+        {
+            return _db.Brands!.Count(e => e.Id == id) > 0;
         }
     }
 }
