@@ -14,4 +14,5 @@ public partial class Color
 
     public bool Hidden { get; set; }
     
+     public virtual ICollection<Product> Product { get; set; } = new List<Product>();
 }

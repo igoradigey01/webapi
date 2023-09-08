@@ -11,5 +11,6 @@ public partial class Article
     public required string Name { get; set; }
 
     public bool Hidden { get; set; }
+     public virtual ICollection<Product> Product { get; set; } = new List<Product>();
     
 }

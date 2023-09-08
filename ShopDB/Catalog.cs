@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 
 namespace ShopDB;
+
 
 public partial class Catalog
 {
@@ -16,5 +16,6 @@ public partial class Catalog
 
     public string? DecriptSeo { get; set; }
 
-    public virtual ICollection<SubKatalog> SubKatalogs { get; set; } = new List<SubKatalog>();
+    public virtual ICollection<SubCatalog> SubKatalogs { get; set; } = new List<SubCatalog>();
 }
+

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace ShopDB;
 
-public partial class SubKatalog
+public partial class SubCatalog
 {
     public int Id { get; set; }
 
@@ -15,5 +13,7 @@ public partial class SubKatalog
 
     public int CatalogId { get; set; }
 
-    public virtual Catalog? Catalog { get; set; }
+    public virtual Catalog Catalog { get; set; }=null!;
+
+    public virtual ICollection<Product> Product { get; set; } = new List<Product>();
 }
