@@ -13,7 +13,7 @@ public partial class SubKatalog
 
     public string? DecriptSeo { get; set; }
 
-    public int KatalogId { get; set; }
+    public int CatalogId { get; set; }
 
-    public virtual Katalog Katalog { get; set; }
+    public virtual Catalog? Catalog { get; set; }
 }

@@ -17,29 +17,29 @@ public partial class ShopDbContext : DbContext
       
     }
 
+
+    public virtual required DbSet<Postavchik> Postavchiks { get; set; }
+
+    public virtual required DbSet<Catalog> Catalogs { get; set; } 
+
+      public virtual required DbSet<SubKatalog> SubKatalogs { get; set; }    
+
     public virtual  DbSet<Article>?  Articles { get; set; }
 
     public virtual  DbSet<Brand>? Brands { get; set; }
 
-    public virtual required DbSet<CategoriaP> CategoriaPs { get; set; }
-
+    
     public virtual required DbSet<Color> Colors { get; set; }
 
-    public virtual required DbSet<ImageP> ImagePs { get; set; }
-
-    public virtual required DbSet<Katalog> Katalogs { get; set; }
-
-    public virtual required DbSet<KatalogP> KatalogPs { get; set; }
-
-    public virtual required DbSet<MaterialP> MaterialPs { get; set; }
-
-    public virtual required DbSet<Postavchik> Postavchiks { get; set; }
 
     public virtual required DbSet<Product> Products { get; set; }
 
     public virtual required DbSet<ProductNomenclature> ProductNomenclatures { get; set; }
 
-    public virtual required DbSet<SubKatalog> SubKatalogs { get; set; }
+
+     public virtual required DbSet<Photo> Photos { get; set; }
+
+  
 
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
@@ -51,6 +51,50 @@ public partial class ShopDbContext : DbContext
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
 
+
+
+
+         modelBuilder.Entity<Catalog>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("Catalog");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            
+
+            entity.HasIndex(e => e.TypeProductId, "fk_Catalog_TypeProduct1_idx");
+
+            entity.HasIndex(e => e.PostavchikId, "fk_Catalog_Postavchik1_idx");
+            
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnName("name")
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
+
+             entity.Property(e => e.PostavchikId)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnName("Postavchik_id")
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");    
+            
+            entity.Property(e => e.TypeProductId).HasColumnName("TypeProduct_id");
+            
+            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)");
+            
+            entity.Property(e => e.DecriptSeo)
+                .HasColumnName("decriptSEO")
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
+           
+            
+        });
+    
+
+        
         modelBuilder.Entity<Article>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -67,6 +111,8 @@ public partial class ShopDbContext : DbContext
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
             entity.Property(e => e.TypeProductId).HasColumnName("TypeProduct_id");
+
+            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)");
         });
 
         modelBuilder.Entity<Brand>(entity =>
@@ -85,29 +131,10 @@ public partial class ShopDbContext : DbContext
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
             entity.Property(e => e.TypeProductId).HasColumnName("TypeProduct_id");
+            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)");
         });
 
-        modelBuilder.Entity<CategoriaP>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("CategoriaP");
-
-            entity.HasIndex(e => e.Name, "name_UNIQUE3").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Description)
-                .HasMaxLength(400)
-                .HasColumnName("description")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasColumnName("name")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
-        });
+       
 
         modelBuilder.Entity<Color>(entity =>
         {
@@ -125,15 +152,16 @@ public partial class ShopDbContext : DbContext
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
             entity.Property(e => e.TypeProductId).HasColumnName("TypeProduct_id");
+            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)");
         });
 
-        modelBuilder.Entity<ImageP>(entity =>
+        modelBuilder.Entity<Photo>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("ImageP");
+            entity.ToTable("Photo");
 
-            entity.HasIndex(e => e.ProductId, "fk_ImageP_Product1_idx");
+            entity.HasIndex(e => e.ProductId, "fk_Photo_Product1_idx");
 
             entity.HasIndex(e => e.Guid, "name_UNIQUE5").IsUnique();
 
@@ -152,93 +180,11 @@ public partial class ShopDbContext : DbContext
                 .HasConstraintName("fk_ImageP_Product1");
         });
 
-        modelBuilder.Entity<Katalog>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+       
+      
+       
 
-            entity.ToTable("Katalog");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.DecriptSeo)
-                .HasColumnName("decriptSEO")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.FlagHref).HasColumnName("Flag_href");
-            entity.Property(e => e.FlagLink).HasColumnName("Flag_link");
-            entity.Property(e => e.Link).HasColumnName("link");
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("name")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
-        });
-
-        modelBuilder.Entity<KatalogP>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("KatalogP");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.DecriptSeo)
-                .HasMaxLength(400)
-                .HasColumnName("decriptSEO");
-            entity.Property(e => e.FlagHref).HasColumnName("Flag_href");
-            entity.Property(e => e.FlagLink).HasColumnName("Flag_link");
-            entity.Property(e => e.KeywordsSeo)
-                .HasMaxLength(400)
-                .HasColumnName("keywordsSEO");
-            entity.Property(e => e.Link)
-                .HasColumnName("link")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(45)
-                .HasColumnName("name")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
-        });
-
-        modelBuilder.Entity<MaterialP>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("MaterialP");
-
-            entity.HasIndex(e => e.Name, "name_UNIQUE7").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Description)
-                .HasMaxLength(400)
-                .HasColumnName("description")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasColumnName("name")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
-        });
-
-        modelBuilder.Entity<Postavchik>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("Postavchik");
-
-            entity.HasIndex(e => e.Name, "name_UNIQUE9").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(100)
-                .HasColumnName("name")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
-        });
+       
 
         modelBuilder.Entity<Product>(entity =>
         {
@@ -309,12 +255,12 @@ public partial class ShopDbContext : DbContext
             entity.Property(e => e.NomenclatureId).HasColumnName("Nomenclature_id");
             entity.Property(e => e.ProductId).HasColumnName("Product_id");
 
-            entity.HasOne(d => d.Nomenclature).WithMany(p => p.ProductNomenclatureNomenclatures)
+            entity.HasOne(d => d.Nomenclature).WithMany(p => p.ProductNomenclature_Nomenclatures)
                 .HasForeignKey(d => d.NomenclatureId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_ProductNomenclature_Nomenclature1");
 
-            entity.HasOne(d => d.Product).WithMany(p => p.ProductNomenclatureProducts)
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductNomenclature_Products)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_ProductNomenclature_Product1");
@@ -326,14 +272,14 @@ public partial class ShopDbContext : DbContext
 
             entity.ToTable("SubKatalog");
 
-            entity.HasIndex(e => e.KatalogId, "fk_KatalogN_CategoriaN1_idx");
+            entity.HasIndex(e => e.CatalogId, "fk_KatalogN_CategoriaN1_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.DecriptSeo)
                 .HasColumnName("decriptSEO")
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
-            entity.Property(e => e.KatalogId).HasColumnName("katalog_id");
+            entity.Property(e => e.CatalogId).HasColumnName("katalog_id");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(45)
@@ -341,8 +287,8 @@ public partial class ShopDbContext : DbContext
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
 
-            entity.HasOne(d => d.Katalog).WithMany(p => p.SubKatalogs)
-                .HasForeignKey(d => d.KatalogId)
+            entity.HasOne(d => d.Catalog).WithMany(p => p.SubKatalogs)
+                .HasForeignKey(d => d.CatalogId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_KatalogN_CategoriaN1");
         });
