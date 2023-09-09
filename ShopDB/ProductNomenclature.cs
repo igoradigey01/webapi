@@ -11,7 +11,7 @@ public partial class ProductNomenclature
 
     public int NomenclatureId { get; set; }
 
-    public virtual Product? Nomenclature { get; set; }
+    public virtual Product Nomenclature { get; set; }=null!;
 
-    public virtual Product? Product { get; set; }
+    public virtual Product Product { get; set; }=null!;
 }
