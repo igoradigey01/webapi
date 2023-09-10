@@ -36,9 +36,8 @@ namespace ShopAPI.Controllers
                                   select new ArticleDto()
                                   {
                                       Id = b.Id,
-                                      Name = b.Name,
-                                      PostavchikId = b.PostavchikId,
-                                      TypeProductId = b.TypeProductId,
+                                      Name = b.Name,                                     
+                                      Product_type_id = b.Product_typeId,
                                       Hidden = b.Hidden
                                   }).ToListAsync();
 
@@ -49,19 +48,19 @@ namespace ShopAPI.Controllers
 
         }
 
-        [HttpGet("{idPostavchik}")]
+        [HttpGet("{product_type_id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<ArticleDto>>> GetPostavchik(string idPostavchik)
+        public async Task<ActionResult<IEnumerable<ArticleDto>>> GetAll(int product_type_id)
         {
             // int i = 0;
             var articles = await (from item in _db.Articles!
-                                  where item.PostavchikId == idPostavchik
+                                  where item.Product_typeId ==  product_type_id
                                   select new ArticleDto()
                                   {
                                       Id = item.Id,
                                       Name = item.Name,
-                                      PostavchikId = item.PostavchikId,
-                                      TypeProductId = item.TypeProductId,
+                                      
+                                      Product_type_id = item.Product_typeId,
                                       Hidden = item.Hidden
                                   }).ToListAsync();
             if (articles == null) NotFound();
@@ -76,9 +75,8 @@ namespace ShopAPI.Controllers
             var item = await _db.Articles!.Select(d => new ArticleDto
             {
                 Id = d.Id,
-                Name = d.Name,
-                PostavchikId = d.PostavchikId,
-                TypeProductId = d.TypeProductId,
+                Name = d.Name,                
+                Product_type_id = d.Product_typeId,
                 Hidden = d.Hidden
             }
             )
@@ -111,8 +109,8 @@ namespace ShopAPI.Controllers
             {
                 Id = item.Id,
                 Name = item.Name,
-                PostavchikId = item.PostavchikId,
-                TypeProductId = item.TypeProductId,
+               
+                Product_type_id = item.Product_typeId,
                 Hidden = item.Hidden
             };
 

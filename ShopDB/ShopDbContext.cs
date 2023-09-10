@@ -118,7 +118,7 @@ public partial class ShopDbContext : DbContext
 
             entity.ToTable("Article");
 
-            entity.HasIndex(e => e.TypeProductId, "fk_ArticleN_TypeProduct1_idx");
+            entity.HasIndex(e => e.Product_typeId, "fk_ArticleN_TypeProduct1_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name)
@@ -127,7 +127,7 @@ public partial class ShopDbContext : DbContext
                 .HasColumnName("name")
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
-            entity.Property(e => e.TypeProductId).HasColumnName("TypeProduct_id");
+            entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
 
             entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
         });
@@ -138,7 +138,7 @@ public partial class ShopDbContext : DbContext
 
             entity.ToTable("Brand");
 
-            entity.HasIndex(e => e.TypeProductId, "fk_BrandN_TypeProduct1_idx");
+            entity.HasIndex(e => e.Product_typeId, "fk_BrandN_TypeProduct1_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name)
@@ -147,7 +147,7 @@ public partial class ShopDbContext : DbContext
                 .HasColumnName("name")
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
-            entity.Property(e => e.TypeProductId).HasColumnName("TypeProduct_id");
+            entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
             entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
         });
 
@@ -157,7 +157,7 @@ public partial class ShopDbContext : DbContext
 
             entity.ToTable("Color");
 
-            entity.HasIndex(e => e.TypeProductId, "fk_ColorN_TypeProduct1_idx");
+            entity.HasIndex(e => e.Product_typeId, "fk_ColorN_TypeProduct1_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name)
@@ -166,7 +166,7 @@ public partial class ShopDbContext : DbContext
                 .HasColumnName("name")
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
-            entity.Property(e => e.TypeProductId).HasColumnName("TypeProduct_id");
+            entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
             entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
         });
 
@@ -208,7 +208,7 @@ public partial class ShopDbContext : DbContext
 
             entity.HasIndex(e => e.ArticleId, "fk_Product_ArticleId1_idx");
 
-            entity.HasIndex(e => new {e.Name,e.PostavchikId}, "unique_name_postavchikId_idx").IsUnique();
+            entity.HasIndex(e => new {e.Title,e.PostavchikId}, "unique_name_postavchikId_idx").IsUnique();
             //entity.HasAlternateKey(e=>new {e.Name,e.PostavchikId} ); // is UNIQUE
 
             entity.Property(e => e.Id).HasColumnName("id");
@@ -227,10 +227,10 @@ public partial class ShopDbContext : DbContext
             entity.Property(p => p.ArticleId).HasColumnName("article_id");
             entity.Property(p => p.BrandId).HasColumnName("brand_id");
                 
-            entity.Property(e => e.Name)
+            entity.Property(e => e.Title)
                 .IsRequired()
                 .HasMaxLength(200)
-                .HasColumnName("name")
+                .HasColumnName("title")
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3"); 
 

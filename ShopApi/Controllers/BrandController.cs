@@ -33,8 +33,8 @@ namespace ShopAPI.Controllers
                                   {
                                       Id = b.Id,
                                       Name = b.Name,
-                                      PostavchikId = b.PostavchikId,
-                                      TypeProductId = b.TypeProductId,
+                                     // PostavchikId = b.PostavchikId,
+                                      Product_type_id = b.Product_typeId,
                                       Hidden = b.Hidden
                                   }).ToListAsync();
              if (brands == null) NotFound();
@@ -43,19 +43,18 @@ namespace ShopAPI.Controllers
             return Ok( brands);
         }
 
-        [HttpGet("{idPostavchik}")]
+        [HttpGet("{product_type_id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<BrandDto>>> GetPostavchik(string idPostavchik)
+        public async Task<ActionResult<IEnumerable<BrandDto>>> GetAll(int product_type_id)
         {
             // int i = 0;
            var barnds = await (from item in _db.Brands!
-                                  where item.PostavchikId == idPostavchik
+                                  where item.Product_typeId == product_type_id
                                   select new BrandDto()
                                   {
                                       Id = item.Id,
-                                      Name = item.Name,
-                                      PostavchikId = item.PostavchikId,
-                                      TypeProductId = item.TypeProductId,
+                                      Name = item.Name,                                     
+                                      Product_type_id = item.Product_typeId,
                                       Hidden = item.Hidden
                                   }).ToListAsync();
             if (barnds == null) NotFound();
@@ -72,8 +71,8 @@ namespace ShopAPI.Controllers
             {
                 Id = d.Id,
                 Name = d.Name,
-                PostavchikId = d.PostavchikId,
-                TypeProductId = d.TypeProductId,
+                
+                Product_type_id = d.Product_typeId,
                 Hidden = d.Hidden
             }
             )
@@ -105,9 +104,8 @@ namespace ShopAPI.Controllers
             var dto = new BrandDto()
             {
                 Id = item.Id,
-                Name = item.Name,
-                PostavchikId = item.PostavchikId,
-                TypeProductId = item.TypeProductId,
+                Name = item.Name,               
+                Product_type_id = item.Product_typeId,
                 Hidden = item.Hidden
             };
 

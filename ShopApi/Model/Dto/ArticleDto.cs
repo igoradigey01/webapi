@@ -8,8 +8,7 @@ namespace ShopAPI.Model
 
         public bool Hidden { get; set; }
 
-        public int TypeProductId { get; set; }
-
-        public required string PostavchikId { get; set; }
+        public int Product_type_id { get; set; }
+       
     }
 }

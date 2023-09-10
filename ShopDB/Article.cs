@@ -6,7 +6,7 @@ public partial class Article
 {
     public int Id { get; set; }
 
-    public int TypeProductId { get; set; }
+    public int Product_typeId { get; set; }
 
     public required string Name { get; set; }
 
