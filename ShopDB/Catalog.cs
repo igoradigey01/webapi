@@ -6,9 +6,9 @@ namespace ShopDB;
 public partial class Catalog
 {
     public int Id { get; set; }
-    public int TypeProductId { get; set; }
+   
 
-     public required string PostavchikId { get; set; }
+     public required string OwnerId { get; set; } // владелец
 
     public required string Name { get; set; }
 

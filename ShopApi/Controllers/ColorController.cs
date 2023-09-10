@@ -37,7 +37,7 @@ namespace ShopAPI.Controllers
                                     Hidden = b.Hidden
                                 }).ToListAsync();
 
-            if (colors == null) NotFound();
+            if (colors == null)return NotFound();
 
             return Ok(colors);
 
@@ -57,7 +57,7 @@ namespace ShopAPI.Controllers
                                     Product_type_id = item.Product_typeId,
                                     Hidden = item.Hidden
                                 }).ToListAsync();
-            if (colors == null) NotFound();
+            if (colors == null) return NotFound();
 
             return Ok(colors);
         }
@@ -76,7 +76,7 @@ namespace ShopAPI.Controllers
               )
               .SingleOrDefaultAsync(c => c.Id == id);
 
-            if (item == null) NotFound();
+            if (item == null)return NotFound();
 
             return Ok(item);
 

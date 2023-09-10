@@ -21,20 +21,20 @@ namespace ShopAPI.Controllers
            _db = db;
         }
 
-        [HttpGet]
+        [HttpGet("{owner_id}")]
         [AllowAnonymous]
-        public async Task<IEnumerable<CatalogDto>> GetAll()
+        public async Task<ActionResult< IEnumerable<CatalogDto>>> GetAll(string  owner_id )
         {
             var catalogs = await (from b in _db.Catalogs!
+                                    where b.OwnerId == owner_id
                                   select new CatalogDto()
                                   {
                                       Id = b.Id,
                                       Name = b.Name,
-                                      PostavchikId = b.PostavchikId,
-                                      TypeProductId = b.TypeProductId,
+                                      OwnerId = b.OwnerId,                                     
                                       Hidden = b.Hidden
                                   }).ToListAsync();
-             if (catalogs == null) NotFound();
+             if (catalogs == null) return NotFound();
                       
 
             return Ok( catalogs);
@@ -42,116 +42,110 @@ namespace ShopAPI.Controllers
 
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<IEnumerable<CategoriaN>> GetPostavchik(int id)
+        public async Task<ActionResult< CatalogDto>> Item(int id)
         {
-            // int i = 0;
-            return await _repository.GetPostavchik(id);
+            var item = await _db.Catalogs.Select(d => new CatalogDto
+            {
+                Id = d.Id,
+                Name = d.Name,                
+                OwnerId = d.OwnerId,
+                DecriptSEO=d.DecriptSeo,
+                Hidden = d.Hidden
+            }
+            )
+            .SingleOrDefaultAsync(c => c.Id == id);
+
+            if (item == null) return NotFound();
+
+            return Ok(item);
         }
 
-        [HttpGet("{id}")]
-        [AllowAnonymous]
-        public async Task<CategoriaN> Item(int id)
-        {
-            return await _repository.Item(id);
-            //  throw new Exception("NOt Implimetn Exception");
-        }
-
-        // POST api/<CategoriaController>
-        // api/Material (post) создать
+        // (post) создать
         [HttpPost]
-        public async Task<ActionResult<CategoriaN>> Create()
+        public async Task<ActionResult<CatalogDto>> Create(Catalog item)
         {
-
-
-            CategoriaN item = new CategoriaN();
-            IFormCollection form = await Request.ReadFormAsync();
-            if (form == null)
-            {
-                return BadRequest("form data ==null");
-            }
-
-            item.Id = int.Parse(form["id"]);
-
-
-            item.Name = form["name"];
-            item.Name = item.Name.Trim();
-
-            item.Hidden = bool.Parse(form["hidden"]);
-            item.PostavchikId = int.Parse(form["postavchikId"]);
-            item.DecriptSEO = form["decriptSEO"];
             
-
-
-
-
-            // Console.WriteLine("Task< ActionResult<Katalog>> Post(Katalog item)----"+item.Name +"-"+item.Id+"-"+item.Model);
-            var flag = await _repository.Create(item);
-            if (flag.Flag)
+              if (!ModelState.IsValid)
             {
-                return Ok(flag.Item as CategoriaN);
+                return BadRequest(ModelState);
             }
-            else
+
+
+
+            _db.Catalogs.Add(item);
+            await _db.SaveChangesAsync();
+
+
+
+            var dto = new CatalogDto()
             {
-                return BadRequest(flag.Message);
-            }
+                Id = item.Id,
+                Name = item.Name,               
+                OwnerId =item.OwnerId,
+                DecriptSEO=item.DecriptSeo,
+                Hidden =item.Hidden
+            };
+
+            return CreatedAtRoute("GetItem", new { id = item.Id }, dto);   
         }
 
 
-        // public void Put(int id, [FromBody] string value)     
-
-        // PUT api/material/3 (put) -изменить
+        //  (put) -изменить
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id)
+        public async Task<ActionResult> Update(int id, Catalog item)
         {
-
-            CategoriaN item = new CategoriaN();
-            IFormCollection form = await Request.ReadFormAsync();
-            if (form == null)
+           
+              if (!ModelState.IsValid)
             {
-                return BadRequest("form data ==null");
+                return BadRequest(ModelState);
             }
 
-            item.Id = int.Parse(form["id"]);
-            if (item.Id != id)
+            if (id != item.Id)
             {
-                return BadRequest("Неверный Id");
+                return BadRequest();
             }
 
-            item.Name = form["name"];
-            item.Name = item.Name.Trim();
+            _db.Entry(item).State = EntityState.Modified;
 
-            item.Hidden = bool.Parse(form["hidden"]);
-            item.PostavchikId = int.Parse(form["postavchikId"]);
-            item.DecriptSEO = form["decriptSEO"];
-
-
-
-
-
-            // if(id!=item.Id) return BadRequest();
-            var flag = await _repository.Update(item);
-            if (flag.Flag)
+            try
             {
-                // Katalog katalog = flag.Item as Katalog;
-                //  Console.WriteLine(katalog.Name + "-----" + katalog.Id);
-                return Ok();
-
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CatalogdExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
-
-            return BadRequest(flag.Message);
+            return NoContent(); //204         
         }
 
-        // DELETE api/<CategoriaController>/5       
+        
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var flagValid = await _repository.Delete(id);
-            if (!flagValid.Flag)
+          
+            Catalog? item = await _db.Catalogs.FindAsync(id);
+            if (item == null)
             {
-                return BadRequest(flagValid.Message);
+                return NotFound();
             }
-            return Ok();
+
+            _db.Catalogs.Remove(item);
+            await _db.SaveChangesAsync();
+            return Ok(item);
+        }
+
+
+        private bool CatalogdExists(int id){
+             return _db.Catalogs.Count(e => e.Id == id) > 0;
+
         }
     }
 }

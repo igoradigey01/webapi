@@ -8,7 +8,7 @@ namespace ShopAPI.Model
         
         public bool Hidden { get; set; }
         public string? DecriptSEO { get; set; }
-        public required string PostavchikId { get; set; }        
+        public required string   OwnerId { get; set; }       // владелец 
        
     }
 }

@@ -37,7 +37,7 @@ namespace ShopAPI.Controllers
                                       Product_type_id = b.Product_typeId,
                                       Hidden = b.Hidden
                                   }).ToListAsync();
-             if (brands == null) NotFound();
+             if (brands == null)return NotFound();
                       
 
             return Ok( brands);
@@ -57,7 +57,7 @@ namespace ShopAPI.Controllers
                                       Product_type_id = item.Product_typeId,
                                       Hidden = item.Hidden
                                   }).ToListAsync();
-            if (barnds == null) NotFound();
+            if (barnds == null)return NotFound();
 
             return Ok(barnds);
         }
@@ -78,7 +78,7 @@ namespace ShopAPI.Controllers
             )
             .SingleOrDefaultAsync(c => c.Id == id);
 
-            if (item == null) NotFound();
+            if (item == null) return NotFound();
 
             return Ok(item);
             //  throw new Exception("NOt Implimetn Exception");

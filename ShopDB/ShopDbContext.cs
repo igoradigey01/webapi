@@ -55,9 +55,9 @@ public partial class ShopDbContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             
 
-            entity.HasIndex(e => e.TypeProductId, "fk_Catalog_TypeProduct1_idx");
+          
 
-            entity.HasIndex(e => e.PostavchikId, "fk_Catalog_Postavchik1_idx");
+            entity.HasIndex(e => e.OwnerId, "fk_Catalog_Postavchik1_idx");
             
             entity.Property(e => e.Name)
                 .IsRequired()
@@ -66,14 +66,14 @@ public partial class ShopDbContext : DbContext
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
 
-             entity.Property(e => e.PostavchikId)
+             entity.Property(e => e.OwnerId)
                 .IsRequired()
                 .HasMaxLength(50)
                 .HasColumnName("Postavchik_id")
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");    
             
-            entity.Property(e => e.TypeProductId).HasColumnName("TypeProduct_id");
+          
             
             entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
             
