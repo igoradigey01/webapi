@@ -1,4 +1,5 @@
 ﻿
+using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -7,28 +8,28 @@ namespace ShopDB;
 public partial class ShopDbContext : DbContext
 {
 
-    public ShopDbContext( DbContextOptions<ShopDbContext> options ) : base(options)
+    public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options)
     {
 
-         Console.WriteLine("MyshopContext ---------------------- statr60.05.21");
-            Database.SetCommandTimeout(300);
-            //Database.EnsureDeleted();  //03.13.20
-            Database.EnsureCreated();
-      
+        Console.WriteLine("MyshopContext ---------------------- statr60.05.21");
+        Database.SetCommandTimeout(300);
+        //Database.EnsureDeleted();  //03.13.20
+        Database.EnsureCreated();
+
     }
 
 
 
 
-    public virtual required DbSet<Catalog> Catalogs { get; set; } 
+    public virtual required DbSet<Catalog> Catalogs { get; set; }
 
-      public virtual required DbSet<SubCatalog> SubCatalogs { get; set; }    
+    public virtual required DbSet<SubCatalog> SubCatalogs { get; set; }
 
-    public virtual  DbSet<Article>  Articles { get; set; }
+    public virtual DbSet<Article> Articles { get; set; }
 
-    public virtual  DbSet<Brand> Brands { get; set; }
+    public virtual DbSet<Brand> Brands { get; set; }
 
-    
+
     public virtual required DbSet<Color> Colors { get; set; }
 
 
@@ -37,9 +38,9 @@ public partial class ShopDbContext : DbContext
     public virtual required DbSet<ProductNomenclature> ProductNomenclatures { get; set; }
 
 
-     public virtual required DbSet<Photo> Photos { get; set; }
+    public virtual required DbSet<Photo> Photos { get; set; }
 
-  
+
 
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
@@ -51,77 +52,104 @@ public partial class ShopDbContext : DbContext
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
 
-         modelBuilder.Entity<Catalog>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+        modelBuilder.Entity<Catalog>(entity =>
+       {
+           entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("Catalog");
+           entity.ToTable("Catalog");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            
+           entity.Property(e => e.Id).HasColumnName("id");
 
-          
 
-            entity.HasIndex(e => e.OwnerId, "fk_Catalog_Postavchik1_idx");
-            
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("name")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
 
-             entity.Property(e => e.OwnerId)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("Postavchik_id")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");    
-            
-          
-            
-            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
-            
-            entity.Property(e => e.DecriptSeo)
-                .HasColumnName("decriptSEO")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
-           
-            
-        });
-    
-         modelBuilder.Entity<SubCatalog>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("SubKatalog");
+           entity.HasIndex(e => e.OwnerId, "fk_Catalog_Postavchik1_idx");
 
-            entity.HasIndex(e => e.CatalogId, "fk_KatalogN_CategoriaN1_idx");
+           entity.Property(e => e.Name)
+               .IsRequired()
+               .HasMaxLength(50)
+               .HasColumnName("name")
+               .UseCollation("utf8mb3_general_ci")
+               .HasCharSet("utf8mb3");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.DecriptSeo)
-                .HasColumnName("decriptSEO")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
-            entity.Property(e => e.GoogleTypeId)
-                .HasMaxLength(20)
-                .HasColumnName("google_type_id")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");    
-            entity.Property(e => e.CatalogId).HasColumnName("katalog_id");
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(45)
-                .HasColumnName("name")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
+           entity.Property(e => e.OwnerId)
+               .IsRequired()
+               .HasMaxLength(50)
+               .HasColumnName("Postavchik_id")
+               .UseCollation("utf8mb3_general_ci")
+               .HasCharSet("utf8mb3");
 
-            entity.HasOne(d => d.Catalog).WithMany(p => p.SubKatalogs)
-                .HasForeignKey(d => d.CatalogId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_KatalogN_CategoriaN1");
-        });
-        
+
+
+           entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
+
+           entity.Property(e => e.DecriptSeo)
+               .HasColumnName("decriptSEO")
+               .UseCollation("utf8mb3_general_ci")
+               .HasCharSet("utf8mb3");
+
+
+       });
+
+        modelBuilder.Entity<Product_type>(entity =>
+     {
+         entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+         entity.ToTable("Product_Type");
+
+         entity.Property(e => e.Id).HasColumnName("id");
+
+
+         entity.Property(e => e.Name)
+             .IsRequired()
+             .HasMaxLength(50)
+             .HasColumnName("name")
+             .UseCollation("utf8mb3_general_ci")
+             .HasCharSet("utf8mb3");
+
+
+
+
+
+         entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
+
+
+
+
+     });
+
+        modelBuilder.Entity<SubCatalog>(entity =>
+       {
+           entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+           entity.ToTable("SubKatalog");
+
+           entity.HasIndex(e => e.CatalogId, "fk_KatalogN_CategoriaN1_idx");
+
+           entity.Property(e => e.Id).HasColumnName("id");
+           entity.Property(e => e.DecriptSeo)
+               .HasColumnName("decriptSEO")
+               .UseCollation("utf8mb3_general_ci")
+               .HasCharSet("utf8mb3");
+           entity.Property(e => e.GoogleTypeId)
+               .HasMaxLength(20)
+               .HasColumnName("google_type_id")
+               .UseCollation("utf8mb3_general_ci")
+               .HasCharSet("utf8mb3");
+           entity.Property(e => e.CatalogId).HasColumnName("katalog_id");
+           entity.Property(e => e.Name)
+               .IsRequired()
+               .HasMaxLength(45)
+               .HasColumnName("name")
+               .UseCollation("utf8mb3_general_ci")
+               .HasCharSet("utf8mb3");
+
+           entity.HasOne(d => d.Catalog).WithMany(p => p.SubKatalogs)
+               .HasForeignKey(d => d.CatalogId)
+               .OnDelete(DeleteBehavior.ClientSetNull)
+               .HasConstraintName("fk_Catalog_SubKatalogs1");
+       });
+
         modelBuilder.Entity<Article>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -140,6 +168,11 @@ public partial class ShopDbContext : DbContext
             entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
 
             entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
+
+            entity.HasOne(d => d.Product_Type).WithMany(p => p.Articles)
+              .HasForeignKey(d => d.Product_typeId)
+              .OnDelete(DeleteBehavior.ClientSetNull)
+              .HasConstraintName("fk_TypeProduct_Articles1");
         });
 
         modelBuilder.Entity<Brand>(entity =>
@@ -158,7 +191,13 @@ public partial class ShopDbContext : DbContext
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
             entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
+
             entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
+
+            entity.HasOne(d => d.Product_Type).WithMany(p => p.Brands)
+              .HasForeignKey(d => d.Product_typeId)
+              .OnDelete(DeleteBehavior.ClientSetNull)
+              .HasConstraintName("fk_TypeProduct_Brand1");
         });
 
         modelBuilder.Entity<Color>(entity =>
@@ -178,6 +217,11 @@ public partial class ShopDbContext : DbContext
                 .HasCharSet("utf8mb3");
             entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
             entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
+
+            entity.HasOne(d => d.Product_Type).WithMany(p => p.Colors)
+            .HasForeignKey(d => d.Product_typeId)
+            .OnDelete(DeleteBehavior.ClientSetNull)
+            .HasConstraintName("fk_TypeProduct1_Color1");
         });
 
         modelBuilder.Entity<Photo>(entity =>
@@ -206,11 +250,11 @@ public partial class ShopDbContext : DbContext
         });
 
         modelBuilder.Entity<Product>(entity =>
-        {   
-           
-            entity.HasKey(e => e.Id).HasName("PRIMARY");    
+        {
 
-             entity.ToTable("Product");       
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("Product");
 
             entity.HasIndex(e => e.ColorId, "fk_Product_ColorId1_idx");
 
@@ -218,42 +262,42 @@ public partial class ShopDbContext : DbContext
 
             entity.HasIndex(e => e.ArticleId, "fk_Product_ArticleId1_idx");
 
-            entity.HasIndex(e => new {e.Title,e.OwnerId}, "unique_name_postavchikId_idx").IsUnique();
+            entity.HasIndex(e => new { e.Title, e.OwnerId }, "unique_name_postavchikId_idx").IsUnique();
             //entity.HasAlternateKey(e=>new {e.Name,e.PostavchikId} ); // is UNIQUE
 
             entity.Property(e => e.Id).HasColumnName("id");
 
             entity.Property(e => e.Guid).HasDefaultValueSql("UUId()");
 
-               entity.Property(e => e.OwnerId)
-                .HasMaxLength(20)
-                .HasColumnName("owner_id")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
+            entity.Property(e => e.OwnerId)
+             .HasMaxLength(20)
+             .HasColumnName("owner_id")
+             .UseCollation("utf8mb3_general_ci")
+             .HasCharSet("utf8mb3");
 
-            
 
-                
 
-            entity.Property(e => e.SubKatalogId).HasColumnName("sub_katalog_id"); 
+
+
+            entity.Property(e => e.SubKatalogId).HasColumnName("sub_katalog_id");
 
             entity.Property(p => p.ColorId).HasColumnName("color_id");
             entity.Property(p => p.ArticleId).HasColumnName("article_id");
             entity.Property(p => p.BrandId).HasColumnName("brand_id");
-                
+
             entity.Property(e => e.Title)
                 .IsRequired()
                 .HasMaxLength(200)
                 .HasColumnName("title")
                 .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3"); 
+                .HasCharSet("utf8mb3");
 
-           
-           
-            
 
-             
-           
+
+
+
+
+
             entity.HasOne(d => d.SubCatalog)
                    .WithMany(p => p.Product)
                    .HasForeignKey(d => d.SubKatalogId)
@@ -277,30 +321,30 @@ public partial class ShopDbContext : DbContext
               .HasForeignKey(d => d.BrandId)
               .OnDelete(DeleteBehavior.ClientSetNull)
               .HasConstraintName("fk_Product_Brand1");
-                
-            
+
+
             entity.Property(p => p.Sale).HasColumnName("sale").HasColumnType("tinyint(1)").HasDefaultValue(0);
-              entity.Property(p => p.InStock).HasColumnName("inStock").HasColumnType("tinyint(1)").HasDefaultValue(1);
+            entity.Property(p => p.InStock).HasColumnName("inStock").HasColumnType("tinyint(1)").HasDefaultValue(1);
 
             entity.Property(e => e.Markup)
                 .HasComment("торговая наценка")
                 .HasColumnName("markup");
-          
-           
+
+
             entity.Property(e => e.Price).HasColumnName("price");
 
 
-             entity.Property(e => e.Description)
-                .HasMaxLength(500)
-                .HasColumnName("description")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
+            entity.Property(e => e.Description)
+               .HasMaxLength(500)
+               .HasColumnName("description")
+               .UseCollation("utf8mb3_general_ci")
+               .HasCharSet("utf8mb3");
 
-              entity.Property(e => e.DescriptionSeo)
-                .HasMaxLength(500)
-                .HasColumnName("description_seo")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");   
+            entity.Property(e => e.DescriptionSeo)
+              .HasMaxLength(500)
+              .HasColumnName("description_seo")
+              .UseCollation("utf8mb3_general_ci")
+              .HasCharSet("utf8mb3");
 
         });
 
@@ -329,7 +373,7 @@ public partial class ShopDbContext : DbContext
                 .HasConstraintName("fk_ProductNomenclature_Product1");
         });
 
-       
+
 
         OnModelCreatingPartial(modelBuilder);
     }
@@ -337,17 +381,17 @@ public partial class ShopDbContext : DbContext
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
 
-     private void OnModelCatalogCreating(ModelBuilder modelBuilder)
-        {
-           var catalogs = new Catalog[]{
+    private void OnModelCatalogCreating(ModelBuilder modelBuilder)
+    {
+        var catalogs = new Catalog[]{
            new Catalog {Id=0,Name="Base",Hidden=true,OwnerId="x-01",DecriptSeo=""}
            };
-            modelBuilder.Entity<Catalog>().HasData(catalogs);
-            base.OnModelCreating(modelBuilder);
-        }
-       private void OnModelSubCatalogCreating(ModelBuilder modelBuilder)
-        {
-               var subCatalogs = new SubCatalog[]{
+        modelBuilder.Entity<Catalog>().HasData(catalogs);
+        base.OnModelCreating(modelBuilder);
+    }
+    private void OnModelSubCatalogCreating(ModelBuilder modelBuilder)
+    {
+        var subCatalogs = new SubCatalog[]{
           new SubCatalog {Id=1,Name="Комод",Hidden=false ,DecriptSeo="комод стандарт  | комод комби | комод ЛДСП | комод МДФ",CatalogId=0,GoogleTypeId="4205"},
           new SubCatalog{Id=2,Name="Кровать",Hidden=false,DecriptSeo="Кровать 800 | Кровать 900 | Кровать 1400 | Кровать 1600 | Кровать с ящиками|Кровать ЛДСП",CatalogId=0,GoogleTypeId="505764"},
           new SubCatalog{Id=3,Name="Шкаф",Hidden=false,DecriptSeo="Шкаф ДвухДверный | Шкаф ТрехДверный | Шкаф Купе | Шкаф для одежды| Шкаф Ламинат|Шкаф с ящиками|",CatalogId=0,GoogleTypeId="6356"},
@@ -361,8 +405,71 @@ public partial class ShopDbContext : DbContext
           new SubCatalog{Id=11,Name="Комплектующие",Hidden=false,DecriptSeo="Форнитура для корпусной и мягкой мебели : петли | ручки | подлокотник ... ",CatalogId=0,GoogleTypeId="503765"}
 
             };
-            modelBuilder.Entity<SubCatalog>().HasData(subCatalogs);
-            base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<SubCatalog>().HasData(subCatalogs);
+        base.OnModelCreating(modelBuilder);
 
-        }   
+    }
+
+    private void OnModelProduct_typeCreating(ModelBuilder modelBuilder)
+    {
+        var product_types = new Product_type[]{
+           new Product_type{Id=1,Name="мягкая изделие",Hidden=false},
+           new Product_type{Id=2,Name="корпус изделие",Hidden=false},
+           new Product_type{Id=3,Name="мягкая furniture",Hidden=false},
+           new Product_type{Id=4,Name="корпус furniture",Hidden=false},
+           new Product_type{Id=5,Name="мягкая матерьял",Hidden=false},
+           new Product_type{Id=6,Name="корпус матерьял",Hidden=false}
+
+
+        };
+
+         modelBuilder.Entity<Product_type>().HasData(product_types);
+        base.OnModelCreating(modelBuilder);
+
+
+    }
+
+    private void OnModelColorCreating(ModelBuilder modelBuilder)
+    {
+        var colors = new Color[]{
+            new Color {Id=1,Name="none",Product_typeId=1},
+            new Color {Id=2,Name="none",Product_typeId=2},
+            new Color {Id=3,Name="none",Product_typeId=3},
+            new Color {Id=4,Name="none",Product_typeId=4},
+            new Color {Id=5,Name="none",Product_typeId=5},
+            new Color {Id=6,Name="none",Product_typeId=6}
+        };
+         modelBuilder.Entity<Color>().HasData(colors);
+        base.OnModelCreating(modelBuilder);
+
+    }
+     private void OnModelBrandCreating(ModelBuilder modelBuilder)
+    {
+        var brands = new Brand[]{
+            new Brand {Id=1,Name="none",Product_typeId=1},
+            new Brand {Id=2,Name="none",Product_typeId=2},
+            new Brand {Id=3,Name="none",Product_typeId=3},
+            new Brand {Id=4,Name="none",Product_typeId=4},
+            new Brand {Id=5,Name="none",Product_typeId=5},
+            new Brand {Id=6,Name="none",Product_typeId=6}
+        };
+         modelBuilder.Entity<Brand>().HasData(brands);
+        base.OnModelCreating(modelBuilder);
+
+    }
+     private void OnModelArticleCreating(ModelBuilder modelBuilder)
+    {
+        var articles = new Article[]{
+            new Article {Id=1,Name="none",Product_typeId=1},
+            new Article {Id=2,Name="none",Product_typeId=2},
+            new Article {Id=3,Name="none",Product_typeId=3},
+            new Article {Id=4,Name="none",Product_typeId=4},
+            new Article {Id=5,Name="none",Product_typeId=5},
+            new Article {Id=6,Name="none",Product_typeId=6}
+        };
+
+         modelBuilder.Entity<Article>().HasData(articles);
+        base.OnModelCreating(modelBuilder);
+
+    }
 }

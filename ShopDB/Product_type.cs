@@ -11,13 +11,9 @@ public partial class Product_type  // корпус forniture  , мягкая for
     public int Id { get; set; }
 
     public required string Name { get; set; }
-    public required string GoogleTypeId{get;set;}
+    
 
     public bool Hidden { get; set; }
-
-    public string? Description { get; set; }
-
-    public virtual ICollection<Catalog> Catalogs { get; set; } = new List<Catalog>();
 
      public virtual ICollection<Color> Colors { get; set; } = new List<Color>();
 
