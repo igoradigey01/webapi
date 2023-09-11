@@ -9,6 +9,11 @@ public partial class ShopDbContext : DbContext
 
     public ShopDbContext( DbContextOptions<ShopDbContext> options ) : base(options)
     {
+
+         Console.WriteLine("MyshopContext ---------------------- statr60.05.21");
+            Database.SetCommandTimeout(300);
+            //Database.EnsureDeleted();  //03.13.20
+            Database.EnsureCreated();
       
     }
 
@@ -98,6 +103,11 @@ public partial class ShopDbContext : DbContext
                 .HasColumnName("decriptSEO")
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
+            entity.Property(e => e.GoogleTypeId)
+                .HasMaxLength(20)
+                .HasColumnName("google_type_id")
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");    
             entity.Property(e => e.CatalogId).HasColumnName("katalog_id");
             entity.Property(e => e.Name)
                 .IsRequired()
@@ -208,18 +218,22 @@ public partial class ShopDbContext : DbContext
 
             entity.HasIndex(e => e.ArticleId, "fk_Product_ArticleId1_idx");
 
-            entity.HasIndex(e => new {e.Title,e.PostavchikId}, "unique_name_postavchikId_idx").IsUnique();
+            entity.HasIndex(e => new {e.Title,e.OwnerId}, "unique_name_postavchikId_idx").IsUnique();
             //entity.HasAlternateKey(e=>new {e.Name,e.PostavchikId} ); // is UNIQUE
 
             entity.Property(e => e.Id).HasColumnName("id");
 
             entity.Property(e => e.Guid).HasDefaultValueSql("UUId()");
 
-               entity.Property(e => e.PostavchikId)
+               entity.Property(e => e.OwnerId)
                 .HasMaxLength(20)
-                .HasColumnName("postavchik_id")
+                .HasColumnName("owner_id")
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
+
+            
+
+                
 
             entity.Property(e => e.SubKatalogId).HasColumnName("sub_katalog_id"); 
 
@@ -321,4 +335,34 @@ public partial class ShopDbContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+
+     private void OnModelCatalogCreating(ModelBuilder modelBuilder)
+        {
+           var catalogs = new Catalog[]{
+           new Catalog {Id=0,Name="Base",Hidden=true,OwnerId="x-01",DecriptSeo=""}
+           };
+            modelBuilder.Entity<Catalog>().HasData(catalogs);
+            base.OnModelCreating(modelBuilder);
+        }
+       private void OnModelSubCatalogCreating(ModelBuilder modelBuilder)
+        {
+               var subCatalogs = new SubCatalog[]{
+          new SubCatalog {Id=1,Name="Комод",Hidden=false ,DecriptSeo="комод стандарт  | комод комби | комод ЛДСП | комод МДФ",CatalogId=0,GoogleTypeId="4205"},
+          new SubCatalog{Id=2,Name="Кровать",Hidden=false,DecriptSeo="Кровать 800 | Кровать 900 | Кровать 1400 | Кровать 1600 | Кровать с ящиками|Кровать ЛДСП",CatalogId=0,GoogleTypeId="505764"},
+          new SubCatalog{Id=3,Name="Шкаф",Hidden=false,DecriptSeo="Шкаф ДвухДверный | Шкаф ТрехДверный | Шкаф Купе | Шкаф для одежды| Шкаф Ламинат|Шкаф с ящиками|",CatalogId=0,GoogleTypeId="6356"},
+          new SubCatalog{Id=4,Name="Кухонный Уголок",DecriptSeo="  предложение от производителя",CatalogId=0,GoogleTypeId="6850"},
+          new SubCatalog{Id=5,Name="Стол Обеденный",Hidden=false,DecriptSeo="Стол Обеденный в каталоге x-01 -это предложение от производителя",CatalogId=0,GoogleTypeId="4355"} ,
+          new SubCatalog{Id=6,Name="Стол Писменный",Hidden=false,DecriptSeo="Стол Писменный в каталоге x-01 -это предложение от производителя",CatalogId=0,GoogleTypeId="4191"},
+          new SubCatalog{Id=7,Name="Стол Журнальный",Hidden=false,DecriptSeo="Стол Журнальный в каталоге x-01 -это низкие цены от производителя",CatalogId=0,GoogleTypeId="6392"},
+          new SubCatalog{Id=8,Name="Стол Маникюрный",Hidden=false,DecriptSeo="Стол Маникюрный в каталоге x-01 -это предложение от производителя",CatalogId=0,GoogleTypeId="6363"},
+          new SubCatalog{Id=9,Name="Стол Тумба",Hidden=false,DecriptSeo="Стол-Тумба в каталоге x-01 -это низкие цены от производителя",CatalogId=0,GoogleTypeId="4080"},
+          new SubCatalog{Id=10,Name="Кухня",Hidden=false,DecriptSeo="Кухня в каталоге x-01 - это низкие цены от производителя",CatalogId=0,GoogleTypeId="6934"},
+          new SubCatalog{Id=11,Name="Комплектующие",Hidden=false,DecriptSeo="Форнитура для корпусной и мягкой мебели : петли | ручки | подлокотник ... ",CatalogId=0,GoogleTypeId="503765"}
+
+            };
+            modelBuilder.Entity<SubCatalog>().HasData(subCatalogs);
+            base.OnModelCreating(modelBuilder);
+
+        }   
 }

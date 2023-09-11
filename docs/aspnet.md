@@ -1,6 +1,7 @@
 ## Asp net core
 - cd shopapi
 - dotnet run 
+- dotnet publish -c release -o published
 - http://localhost:5010/swagger/index.html
 - dotnet  user-jwts create
 - dotnet  user-jwts print db3caef7 --show-all

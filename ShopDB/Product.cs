@@ -8,9 +8,9 @@ public partial class Product
     public int Id { get; set; }
     public required Guid Guid { get; set; } // set in DB - UUID()
    
-    public required string PostavchikId { get; set; }
+    public required string OwnerId { get; set; }
     public required string Title { get; set; }
-    public string? GoogleTypeId{get;set;}  
+     
     public int SubKatalogId { get; set; }
     public int ColorId { get; set; }
     public int BrandId { get; set; }

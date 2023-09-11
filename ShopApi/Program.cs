@@ -161,8 +161,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 app.UseRouting();
 
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment()){
 
 
 
@@ -175,7 +174,7 @@ if (app.Environment.IsDevelopment())
 
     });
 
-}
+//}
 app.UseCors();
 app.UseAuthentication();   // добавление middleware аутентификации 
 app.UseAuthorization();   // добавление middleware авторизации 
