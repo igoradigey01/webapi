@@ -1,7 +1,7 @@
 ﻿
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+
 
 namespace ShopDB;
 
@@ -269,12 +269,7 @@ public partial class ShopDbContext : DbContext
 
             entity.Property(e => e.Guid).HasDefaultValueSql("UUId()");
 
-            entity.Property(e => e.OwnerId)
-             .HasMaxLength(20)
-             .HasColumnName("owner_id")
-             .UseCollation("utf8mb3_general_ci")
-             .HasCharSet("utf8mb3");
-
+            entity.Property(e => e.Product_typeId).HasColumnName("product_type_id");
 
 
 
@@ -294,15 +289,25 @@ public partial class ShopDbContext : DbContext
 
 
 
-
-
+             entity.Property(e => e.OwnerId)
+             .IsRequired()
+             .HasMaxLength(20)
+             .HasColumnName("owner_id")
+             .UseCollation("utf8mb3_general_ci")
+             .HasCharSet("utf8mb3");
+ 
+             entity.HasOne(d => d.Product_type)
+                   .WithMany(p => p.Products)
+                   .HasForeignKey(d => d.Product_typeId)
+                   .OnDelete(DeleteBehavior.ClientSetNull)
+                   .HasConstraintName("fk_Product_Product_type1");
 
 
             entity.HasOne(d => d.SubCatalog)
                    .WithMany(p => p.Product)
                    .HasForeignKey(d => d.SubKatalogId)
                    .OnDelete(DeleteBehavior.ClientSetNull)
-                   .HasConstraintName("fk_Product_SubCatolgN1");
+                   .HasConstraintName("fk_Product_SubCatolg1");
 
             entity.HasOne(d => d.Color)
                  .WithMany(p => p.Product)

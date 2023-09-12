@@ -15,6 +15,8 @@ public partial class Product_type  // корпус forniture  , мягкая for
 
     public bool Hidden { get; set; }
 
+     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+
      public virtual ICollection<Color> Colors { get; set; } = new List<Color>();
 
      public virtual ICollection<Brand> Brands { get; set; } = new List<Brand>();

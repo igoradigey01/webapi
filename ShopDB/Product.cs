@@ -6,9 +6,11 @@ namespace ShopDB;
 public partial class Product
 {
     public int Id { get; set; }
-    public required Guid Guid { get; set; } // set in DB - UUID()
+    public required string Guid { get; set; } // set in DB - UUID()
    
     public required string OwnerId { get; set; }
+
+    public required int Product_typeId { get; set; }
     public required string Title { get; set; }
      
     public int SubKatalogId { get; set; }
@@ -30,6 +32,7 @@ public partial class Product
     public string? DescriptionSeo { get; set; }
 
     public virtual SubCatalog SubCatalog { get; set; }= null!;
+     public virtual Product_type Product_type { get; set; } = null!;
     public virtual Color Color { get; set; } = null!;
     public virtual Brand Brand { get; set; } = null!;
     public virtual Article Article { get; set; } = null!;

@@ -11,6 +11,7 @@ using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.HttpOverrides;
 using ShopDB;
+using OrderDB;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +58,7 @@ if (builder.Environment.IsDevelopment())
 }
 
 var connectStringShop = connectString + "database=ShopDB;";
+var connectStringOrder = connectString + "database=OrderDB;";
 var connectStringAppIdentity = connectString + "database=AppIdentityDB;";
 builder.Services.AddDbContext<AppIdentityDbContext>(
     options => options.UseMySql(connectStringAppIdentity, Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.33-mysql"))
@@ -65,6 +67,12 @@ builder.Services.AddDbContext<AppIdentityDbContext>(
 builder.Services.AddDbContext<ShopDbContext>(
     options => options
         .UseMySql(connectStringShop, new MySqlServerVersion(new Version(8, 0, 11)))
+
+);
+
+builder.Services.AddDbContext<OrderDbContext>(
+    options => options
+        .UseMySql(connectStringOrder, new MySqlServerVersion(new Version(8, 0, 11)))
 
 );
 
