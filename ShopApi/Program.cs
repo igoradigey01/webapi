@@ -4,11 +4,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopApi.Model.Identity;
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Swashbuckle.AspNetCore.Filters;
+
 using Microsoft.AspNetCore.HttpOverrides;
 using ShopDB;
 using OrderDB;
@@ -189,7 +188,7 @@ app.UseAuthorization();   // добавление middleware авторизац�
 
 
 
-app.Map("/hi", async context => await context.Response.WriteAsync("Hello x-01.ru"));
+
 
 
 //ProductEndpoints.Map(app) ;

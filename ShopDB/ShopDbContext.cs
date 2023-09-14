@@ -8,7 +8,32 @@ namespace ShopDB;
 public partial class ShopDbContext : DbContext
 {
 
-    public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options)
+  
+
+
+
+
+    public virtual  DbSet<Catalog> Catalogs { get; set; }= null!;
+
+    public virtual  DbSet<SubCatalog> SubCatalogs { get; set; }= null!;
+
+    public virtual DbSet<Article> Articles { get; set; }= null!;
+
+    public virtual DbSet<Brand> Brands { get; set; }= null!;
+
+
+    public virtual  DbSet<Color> Colors { get; set; }= null!;
+
+
+    public virtual  DbSet<Product> Products { get; set; }= null!;
+
+    public virtual  DbSet<ProductNomenclature> ProductNomenclatures { get; set; }= null!;
+
+
+    public virtual  DbSet<Photo> Photos { get; set; } = null!;
+
+
+     public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options)
     {
 
         Console.WriteLine("MyshopContext ---------------------- statr60.05.21");
@@ -17,34 +42,6 @@ public partial class ShopDbContext : DbContext
         Database.EnsureCreated();
 
     }
-
-
-
-
-    public virtual required DbSet<Catalog> Catalogs { get; set; }
-
-    public virtual required DbSet<SubCatalog> SubCatalogs { get; set; }
-
-    public virtual DbSet<Article> Articles { get; set; }
-
-    public virtual DbSet<Brand> Brands { get; set; }
-
-
-    public virtual required DbSet<Color> Colors { get; set; }
-
-
-    public virtual required DbSet<Product> Products { get; set; }
-
-    public virtual required DbSet<ProductNomenclature> ProductNomenclatures { get; set; }
-
-
-    public virtual required DbSet<Photo> Photos { get; set; }
-
-
-
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-
-    //     => optionsBuilder.UseMySql(_configuration., Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.33-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
