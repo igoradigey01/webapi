@@ -4,38 +4,44 @@ public partial class Order
 {
     public int Id { get; set; }
 
-    public bool OrderClosed{get;set;}=false;
 
-    public required string OrderNumber {get;set;} 
-    public required string  OrderStartedDate { get; set; }  //coздан
+    public required string OrderNumber { get; set; }
 
-    public  string?  OrderClosedDate { get; set; }  // закрыт
+    public required string OwnerId { get; set; } // владелец clientId
 
-    public string? Adress{get;set;} 
+    public required string OwnerPhone { get; set; }
 
-   public required string OwnerId { get; set; } // владелец clientId
-    
-   public required string OwnerPhone { get; set; }
-   
-   public required string Customer {get;set;}    
+    public DateTime? CreatedAt { get; set; }  //coздан
 
-    public  string? CustomerId {get;set;} 
+    public DateTime? ClosedAt { get; set; }  // закрыт
 
-    public required string CustomerPhone {get;set;}
+    public string? OrderAdress { get; set; }
+    public bool OrderPickup { get; set; } // самовывоз
+    public string? OrderNote { get; set; }
 
-    public string?   CustomerMail {get;set;}
+    public required string CustomerFullName { get; set; }
 
-    public string?   CustomerAdress {get;set;}
- 
-    public  int PaymentStateId {get;set;} 
-    public required float  Payment_total {get;set;} 
+    public string? CustomerId { get; set; }
 
-    public required float  Total {get;set;}
+    public string? CustomerPhone { get; set; }
 
-     public virtual ICollection<OrderDetails> OrderDetail { get; set; } = new List<OrderDetails>();
+    public string? CustomerMail { get; set; }
 
-      public virtual PaymentState Payment {get;set;}=null!;
 
-   
-    
+    public required float Payment_total { get; set; }
+
+    public required float Total { get; set; }
+
+
+    public int PaymentStateId { get; set; }
+    public int OrderStateId { get; set; }
+
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+
+    public virtual PaymentState PaymentState { get; set; } = null!;
+
+    public virtual OrderState OrderState { get; set; } = null!;
+
+
+
 }

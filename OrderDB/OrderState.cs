@@ -10,6 +10,8 @@ public partial class OrderState
 
     public required string Description {get;set;}
 
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
 }
 
 /*

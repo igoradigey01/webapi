@@ -8,32 +8,32 @@ namespace ShopDB;
 public partial class ShopDbContext : DbContext
 {
 
-  
 
 
 
 
-    public virtual  DbSet<Catalog> Catalogs { get; set; }= null!;
 
-    public virtual  DbSet<SubCatalog> SubCatalogs { get; set; }= null!;
+    public virtual DbSet<Catalog> Catalogs { get; set; } = null!;
 
-    public virtual DbSet<Article> Articles { get; set; }= null!;
+    public virtual DbSet<SubCatalog> SubCatalogs { get; set; } = null!;
 
-    public virtual DbSet<Brand> Brands { get; set; }= null!;
+    public virtual DbSet<Article> Articles { get; set; } = null!;
 
-
-    public virtual  DbSet<Color> Colors { get; set; }= null!;
+    public virtual DbSet<Brand> Brands { get; set; } = null!;
 
 
-    public virtual  DbSet<Product> Products { get; set; }= null!;
-
-    public virtual  DbSet<ProductNomenclature> ProductNomenclatures { get; set; }= null!;
+    public virtual DbSet<Color> Colors { get; set; } = null!;
 
 
-    public virtual  DbSet<Photo> Photos { get; set; } = null!;
+    public virtual DbSet<Product> Products { get; set; } = null!;
+
+    public virtual DbSet<ProductNomenclature> ProductNomenclatures { get; set; } = null!;
 
 
-     public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options)
+    public virtual DbSet<Photo> Photos { get; set; } = null!;
+
+
+    public ShopDbContext(DbContextOptions<ShopDbContext> options) : base(options)
     {
 
         Console.WriteLine("MyshopContext ---------------------- statr60.05.21");
@@ -108,7 +108,7 @@ public partial class ShopDbContext : DbContext
 
 
 
-         entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
+         entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(0);
 
 
 
@@ -264,7 +264,13 @@ public partial class ShopDbContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
 
-            entity.Property(e => e.Guid).HasDefaultValueSql("UUId()");
+            entity.Property(e => e.Guid)
+                .IsRequired()
+                .HasMaxLength(36)
+                .HasColumnName("guid")
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3")
+                .HasDefaultValueSql("UUId()");
 
             entity.Property(e => e.Product_typeId).HasColumnName("product_type_id");
 
@@ -286,18 +292,18 @@ public partial class ShopDbContext : DbContext
 
 
 
-             entity.Property(e => e.OwnerId)
-             .IsRequired()
-             .HasMaxLength(20)
-             .HasColumnName("owner_id")
-             .UseCollation("utf8mb3_general_ci")
-             .HasCharSet("utf8mb3");
- 
-             entity.HasOne(d => d.Product_type)
-                   .WithMany(p => p.Products)
-                   .HasForeignKey(d => d.Product_typeId)
-                   .OnDelete(DeleteBehavior.ClientSetNull)
-                   .HasConstraintName("fk_Product_Product_type1");
+            entity.Property(e => e.OwnerId)
+            .IsRequired()
+            .HasMaxLength(20)
+            .HasColumnName("owner_id")
+            .UseCollation("utf8mb3_general_ci")
+            .HasCharSet("utf8mb3");
+
+            entity.HasOne(d => d.Product_type)
+                  .WithMany(p => p.Products)
+                  .HasForeignKey(d => d.Product_typeId)
+                  .OnDelete(DeleteBehavior.ClientSetNull)
+                  .HasConstraintName("fk_Product_Product_type1");
 
 
             entity.HasOne(d => d.SubCatalog)
@@ -425,7 +431,7 @@ public partial class ShopDbContext : DbContext
 
         };
 
-         modelBuilder.Entity<Product_type>().HasData(product_types);
+        modelBuilder.Entity<Product_type>().HasData(product_types);
         base.OnModelCreating(modelBuilder);
 
 
@@ -441,11 +447,11 @@ public partial class ShopDbContext : DbContext
             new Color {Id=5,Name="none",Product_typeId=5},
             new Color {Id=6,Name="none",Product_typeId=6}
         };
-         modelBuilder.Entity<Color>().HasData(colors);
+        modelBuilder.Entity<Color>().HasData(colors);
         base.OnModelCreating(modelBuilder);
 
     }
-     private void OnModelBrandCreating(ModelBuilder modelBuilder)
+    private void OnModelBrandCreating(ModelBuilder modelBuilder)
     {
         var brands = new Brand[]{
             new Brand {Id=1,Name="none",Product_typeId=1},
@@ -455,11 +461,11 @@ public partial class ShopDbContext : DbContext
             new Brand {Id=5,Name="none",Product_typeId=5},
             new Brand {Id=6,Name="none",Product_typeId=6}
         };
-         modelBuilder.Entity<Brand>().HasData(brands);
+        modelBuilder.Entity<Brand>().HasData(brands);
         base.OnModelCreating(modelBuilder);
 
     }
-     private void OnModelArticleCreating(ModelBuilder modelBuilder)
+    private void OnModelArticleCreating(ModelBuilder modelBuilder)
     {
         var articles = new Article[]{
             new Article {Id=1,Name="none",Product_typeId=1},
@@ -470,7 +476,7 @@ public partial class ShopDbContext : DbContext
             new Article {Id=6,Name="none",Product_typeId=6}
         };
 
-         modelBuilder.Entity<Article>().HasData(articles);
+        modelBuilder.Entity<Article>().HasData(articles);
         base.OnModelCreating(modelBuilder);
 
     }

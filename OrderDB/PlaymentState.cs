@@ -9,6 +9,8 @@ public partial class PaymentState
     public required string SmallName{get;set;}
 
     public required string Description {get;set;}
+
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }
 
 
