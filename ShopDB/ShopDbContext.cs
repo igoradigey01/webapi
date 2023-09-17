@@ -66,15 +66,15 @@ public partial class ShopDbContext : DbContext
                .IsRequired()
                .HasMaxLength(50)
                .HasColumnName("name")
-               .UseCollation("utf8mb3_general_ci")
-               .HasCharSet("utf8mb3");
+               .UseCollation("utf8mb4_0900_ai_ci")
+               .HasCharSet("utf8mb4");
 
            entity.Property(e => e.OwnerId)
                .IsRequired()
                .HasMaxLength(50)
                .HasColumnName("Postavchik_id")
-               .UseCollation("utf8mb3_general_ci")
-               .HasCharSet("utf8mb3");
+               .UseCollation("utf8mb4_0900_ai_ci")
+               .HasCharSet("utf8mb4");
 
 
 
@@ -82,8 +82,8 @@ public partial class ShopDbContext : DbContext
 
            entity.Property(e => e.DecriptSeo)
                .HasColumnName("decriptSEO")
-               .UseCollation("utf8mb3_general_ci")
-               .HasCharSet("utf8mb3");
+               .UseCollation("utf8mb4_0900_ai_ci")
+               .HasCharSet("utf8mb4");
 
 
        });
@@ -101,8 +101,8 @@ public partial class ShopDbContext : DbContext
              .IsRequired()
              .HasMaxLength(50)
              .HasColumnName("name")
-             .UseCollation("utf8mb3_general_ci")
-             .HasCharSet("utf8mb3");
+             .UseCollation("utf8mb4_0900_ai_ci")
+             .HasCharSet("utf8mb4");
 
 
 
@@ -126,20 +126,20 @@ public partial class ShopDbContext : DbContext
            entity.Property(e => e.Id).HasColumnName("id");
            entity.Property(e => e.DecriptSeo)
                .HasColumnName("decriptSEO")
-               .UseCollation("utf8mb3_general_ci")
-               .HasCharSet("utf8mb3");
+               .UseCollation("utf8mb4_0900_ai_ci")
+               .HasCharSet("utf8mb4");
            entity.Property(e => e.GoogleTypeId)
                .HasMaxLength(20)
                .HasColumnName("google_type_id")
-               .UseCollation("utf8mb3_general_ci")
-               .HasCharSet("utf8mb3");
+               .UseCollation("utf8mb4_0900_ai_ci")
+               .HasCharSet("utf8mb4");
            entity.Property(e => e.CatalogId).HasColumnName("katalog_id");
            entity.Property(e => e.Name)
                .IsRequired()
                .HasMaxLength(45)
                .HasColumnName("name")
-               .UseCollation("utf8mb3_general_ci")
-               .HasCharSet("utf8mb3");
+               .UseCollation("utf8mb4_0900_ai_ci")
+               .HasCharSet("utf8mb4");
 
            entity.HasOne(d => d.Catalog).WithMany(p => p.SubKatalogs)
                .HasForeignKey(d => d.CatalogId)
@@ -160,8 +160,8 @@ public partial class ShopDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(100)
                 .HasColumnName("name")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
+                .UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4");
             entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
 
             entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
@@ -185,8 +185,8 @@ public partial class ShopDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(100)
                 .HasColumnName("name")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
+                .UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4");
             entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
 
             entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
@@ -210,8 +210,8 @@ public partial class ShopDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(100)
                 .HasColumnName("name")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
+                .UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4");
             entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
             entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
 
@@ -236,8 +236,8 @@ public partial class ShopDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(45)
                 .HasColumnName("guid")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
+                .UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4");
             entity.Property(e => e.ProductId).HasColumnName("Product_id");
 
             entity.HasOne(d => d.Product).WithMany(p => p.ImagePs)
@@ -266,11 +266,11 @@ public partial class ShopDbContext : DbContext
 
             entity.Property(e => e.Guid)
                 .IsRequired()
-                .HasMaxLength(36)
+             //   .HasMaxLength(255)
                 .HasColumnName("guid")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3")
-                .HasDefaultValueSql("UUId()");
+                .UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4")
+                .HasDefaultValueSql("UUID()");
 
             entity.Property(e => e.Product_typeId).HasColumnName("product_type_id");
 
@@ -287,8 +287,8 @@ public partial class ShopDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(200)
                 .HasColumnName("title")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
+                .UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4");
 
 
 
@@ -296,8 +296,8 @@ public partial class ShopDbContext : DbContext
             .IsRequired()
             .HasMaxLength(20)
             .HasColumnName("owner_id")
-            .UseCollation("utf8mb3_general_ci")
-            .HasCharSet("utf8mb3");
+            .UseCollation("utf8mb4_0900_ai_ci")
+            .HasCharSet("utf8mb4");
 
             entity.HasOne(d => d.Product_type)
                   .WithMany(p => p.Products)
@@ -345,14 +345,14 @@ public partial class ShopDbContext : DbContext
             entity.Property(e => e.Description)
                .HasMaxLength(500)
                .HasColumnName("description")
-               .UseCollation("utf8mb3_general_ci")
-               .HasCharSet("utf8mb3");
+               .UseCollation("utf8mb4_0900_ai_ci")
+               .HasCharSet("utf8mb4");
 
             entity.Property(e => e.DescriptionSeo)
               .HasMaxLength(500)
               .HasColumnName("description_seo")
-              .UseCollation("utf8mb3_general_ci")
-              .HasCharSet("utf8mb3");
+              .UseCollation("utf8mb4_0900_ai_ci")
+              .HasCharSet("utf8mb4");
 
         });
 
@@ -388,11 +388,21 @@ public partial class ShopDbContext : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
+    
+   partial void OnModelCreatingPartial(ModelBuilder modelBuilder){
+            OnModelCatalogCreating(modelBuilder);
+            OnModelSubCatalogCreating(modelBuilder);
+            OnModelProduct_typeCreating(modelBuilder);
+            OnModelColorCreating(modelBuilder);
+            OnModelBrandCreating(modelBuilder);
+            OnModelArticleCreating(modelBuilder);
+   }
+
 
     private void OnModelCatalogCreating(ModelBuilder modelBuilder)
     {
         var catalogs = new Catalog[]{
-           new Catalog {Id=0,Name="Base",Hidden=true,OwnerId="x-01",DecriptSeo=""}
+           new () {Id=1,Name="Base",Hidden=true,OwnerId="x-01",DecriptSeo=""}
            };
         modelBuilder.Entity<Catalog>().HasData(catalogs);
         base.OnModelCreating(modelBuilder);
@@ -400,17 +410,17 @@ public partial class ShopDbContext : DbContext
     private void OnModelSubCatalogCreating(ModelBuilder modelBuilder)
     {
         var subCatalogs = new SubCatalog[]{
-          new SubCatalog {Id=1,Name="Комод",Hidden=false ,DecriptSeo="комод стандарт  | комод комби | комод ЛДСП | комод МДФ",CatalogId=0,GoogleTypeId="4205"},
-          new SubCatalog{Id=2,Name="Кровать",Hidden=false,DecriptSeo="Кровать 800 | Кровать 900 | Кровать 1400 | Кровать 1600 | Кровать с ящиками|Кровать ЛДСП",CatalogId=0,GoogleTypeId="505764"},
-          new SubCatalog{Id=3,Name="Шкаф",Hidden=false,DecriptSeo="Шкаф ДвухДверный | Шкаф ТрехДверный | Шкаф Купе | Шкаф для одежды| Шкаф Ламинат|Шкаф с ящиками|",CatalogId=0,GoogleTypeId="6356"},
-          new SubCatalog{Id=4,Name="Кухонный Уголок",DecriptSeo="  предложение от производителя",CatalogId=0,GoogleTypeId="6850"},
-          new SubCatalog{Id=5,Name="Стол Обеденный",Hidden=false,DecriptSeo="Стол Обеденный в каталоге x-01 -это предложение от производителя",CatalogId=0,GoogleTypeId="4355"} ,
-          new SubCatalog{Id=6,Name="Стол Писменный",Hidden=false,DecriptSeo="Стол Писменный в каталоге x-01 -это предложение от производителя",CatalogId=0,GoogleTypeId="4191"},
-          new SubCatalog{Id=7,Name="Стол Журнальный",Hidden=false,DecriptSeo="Стол Журнальный в каталоге x-01 -это низкие цены от производителя",CatalogId=0,GoogleTypeId="6392"},
-          new SubCatalog{Id=8,Name="Стол Маникюрный",Hidden=false,DecriptSeo="Стол Маникюрный в каталоге x-01 -это предложение от производителя",CatalogId=0,GoogleTypeId="6363"},
-          new SubCatalog{Id=9,Name="Стол Тумба",Hidden=false,DecriptSeo="Стол-Тумба в каталоге x-01 -это низкие цены от производителя",CatalogId=0,GoogleTypeId="4080"},
-          new SubCatalog{Id=10,Name="Кухня",Hidden=false,DecriptSeo="Кухня в каталоге x-01 - это низкие цены от производителя",CatalogId=0,GoogleTypeId="6934"},
-          new SubCatalog{Id=11,Name="Комплектующие",Hidden=false,DecriptSeo="Форнитура для корпусной и мягкой мебели : петли | ручки | подлокотник ... ",CatalogId=0,GoogleTypeId="503765"}
+          new () {Id=1,Name="Комод",Hidden=false ,DecriptSeo="комод стандарт  | комод комби | комод ЛДСП | комод МДФ",CatalogId=1,GoogleTypeId="4205"},
+          new (){Id=2,Name="Кровать",Hidden=false,DecriptSeo="Кровать 800 | Кровать 900 | Кровать 1400 | Кровать 1600 | Кровать с ящиками|Кровать ЛДСП",CatalogId=1,GoogleTypeId="505764"},
+          new (){Id=3,Name="Шкаф",Hidden=false,DecriptSeo="Шкаф ДвухДверный | Шкаф ТрехДверный | Шкаф Купе | Шкаф для одежды| Шкаф Ламинат|Шкаф с ящиками|",CatalogId=1,GoogleTypeId="6356"},
+          new (){Id=4,Name="Кухонный Уголок",DecriptSeo="  предложение от производителя",CatalogId=1,GoogleTypeId="6850"},
+          new (){Id=5,Name="Стол Обеденный",Hidden=false,DecriptSeo="Стол Обеденный в каталоге x-01 -это предложение от производителя",CatalogId=1,GoogleTypeId="4355"} ,
+          new (){Id=6,Name="Стол Писменный",Hidden=false,DecriptSeo="Стол Писменный в каталоге x-01 -это предложение от производителя",CatalogId=1,GoogleTypeId="4191"},
+          new (){Id=7,Name="Стол Журнальный",Hidden=false,DecriptSeo="Стол Журнальный в каталоге x-01 -это низкие цены от производителя",CatalogId=1,GoogleTypeId="6392"},
+          new (){Id=8,Name="Стол Маникюрный",Hidden=false,DecriptSeo="Стол Маникюрный в каталоге x-01 -это предложение от производителя",CatalogId=1,GoogleTypeId="6363"},
+          new (){Id=9,Name="Стол Тумба",Hidden=false,DecriptSeo="Стол-Тумба в каталоге x-01 -это низкие цены от производителя",CatalogId=1,GoogleTypeId="4080"},
+          new (){Id=10,Name="Кухня",Hidden=false,DecriptSeo="Кухня в каталоге x-01 - это низкие цены от производителя",CatalogId=1,GoogleTypeId="6934"},
+          new (){Id=11,Name="Комплектующие",Hidden=false,DecriptSeo="Форнитура для корпусной и мягкой мебели : петли | ручки | подлокотник ... ",CatalogId=1,GoogleTypeId="503765"}
 
             };
         modelBuilder.Entity<SubCatalog>().HasData(subCatalogs);
@@ -421,12 +431,12 @@ public partial class ShopDbContext : DbContext
     private void OnModelProduct_typeCreating(ModelBuilder modelBuilder)
     {
         var product_types = new Product_type[]{
-           new Product_type{Id=1,Name="мягкая изделие",Hidden=false},
-           new Product_type{Id=2,Name="корпус изделие",Hidden=false},
-           new Product_type{Id=3,Name="мягкая furniture",Hidden=false},
-           new Product_type{Id=4,Name="корпус furniture",Hidden=false},
-           new Product_type{Id=5,Name="мягкая матерьял",Hidden=false},
-           new Product_type{Id=6,Name="корпус матерьял",Hidden=false}
+           new (){Id=1,Name="мягкая изделие",Hidden=false},
+           new (){Id=2,Name="корпус изделие",Hidden=false},
+           new (){Id=3,Name="мягкая furniture",Hidden=false},
+           new (){Id=4,Name="корпус furniture",Hidden=false},
+           new (){Id=5,Name="мягкая матерьял",Hidden=false},
+           new (){Id=6,Name="корпус матерьял",Hidden=false}
 
 
         };
@@ -440,12 +450,12 @@ public partial class ShopDbContext : DbContext
     private void OnModelColorCreating(ModelBuilder modelBuilder)
     {
         var colors = new Color[]{
-            new Color {Id=1,Name="none",Product_typeId=1},
-            new Color {Id=2,Name="none",Product_typeId=2},
-            new Color {Id=3,Name="none",Product_typeId=3},
-            new Color {Id=4,Name="none",Product_typeId=4},
-            new Color {Id=5,Name="none",Product_typeId=5},
-            new Color {Id=6,Name="none",Product_typeId=6}
+            new() {Id=1,Name="none",Product_typeId=1},
+            new () {Id=2,Name="none",Product_typeId=2},
+            new () {Id=3,Name="none",Product_typeId=3},
+            new () {Id=4,Name="none",Product_typeId=4},
+            new () {Id=5,Name="none",Product_typeId=5},
+            new () {Id=6,Name="none",Product_typeId=6}
         };
         modelBuilder.Entity<Color>().HasData(colors);
         base.OnModelCreating(modelBuilder);
@@ -454,12 +464,12 @@ public partial class ShopDbContext : DbContext
     private void OnModelBrandCreating(ModelBuilder modelBuilder)
     {
         var brands = new Brand[]{
-            new Brand {Id=1,Name="none",Product_typeId=1},
-            new Brand {Id=2,Name="none",Product_typeId=2},
-            new Brand {Id=3,Name="none",Product_typeId=3},
-            new Brand {Id=4,Name="none",Product_typeId=4},
-            new Brand {Id=5,Name="none",Product_typeId=5},
-            new Brand {Id=6,Name="none",Product_typeId=6}
+            new () {Id=1,Name="none",Product_typeId=1},
+            new () {Id=2,Name="none",Product_typeId=2},
+            new () {Id=3,Name="none",Product_typeId=3},
+            new () {Id=4,Name="none",Product_typeId=4},
+            new () {Id=5,Name="none",Product_typeId=5},
+            new () {Id=6,Name="none",Product_typeId=6}
         };
         modelBuilder.Entity<Brand>().HasData(brands);
         base.OnModelCreating(modelBuilder);
@@ -468,12 +478,12 @@ public partial class ShopDbContext : DbContext
     private void OnModelArticleCreating(ModelBuilder modelBuilder)
     {
         var articles = new Article[]{
-            new Article {Id=1,Name="none",Product_typeId=1},
-            new Article {Id=2,Name="none",Product_typeId=2},
-            new Article {Id=3,Name="none",Product_typeId=3},
-            new Article {Id=4,Name="none",Product_typeId=4},
-            new Article {Id=5,Name="none",Product_typeId=5},
-            new Article {Id=6,Name="none",Product_typeId=6}
+            new () {Id=1,Name="none",Product_typeId=1},
+            new () {Id=2,Name="none",Product_typeId=2},
+            new () {Id=3,Name="none",Product_typeId=3},
+            new () {Id=4,Name="none",Product_typeId=4},
+            new () {Id=5,Name="none",Product_typeId=5},
+            new () {Id=6,Name="none",Product_typeId=6}
         };
 
         modelBuilder.Entity<Article>().HasData(articles);

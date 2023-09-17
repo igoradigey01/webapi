@@ -12,9 +12,7 @@ public partial class Order
     public required string OwnerPhone { get; set; }
 
     public DateTime? CreatedAt { get; set; }  //coздан
-
     public DateTime? ClosedAt { get; set; }  // закрыт
-
     public string? OrderAdress { get; set; }
     public bool OrderPickup { get; set; } // самовывоз
     public string? OrderNote { get; set; }
@@ -29,7 +27,6 @@ public partial class Order
 
 
     public required float Payment_total { get; set; }
-
     public required float Total { get; set; }
 
 

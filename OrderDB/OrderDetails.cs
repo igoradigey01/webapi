@@ -4,7 +4,7 @@ public partial class OrderDetail
 {
     public int Id { get; set; }
 
-    public required string OrderId {get;set;} 
+    public required int OrderId {get;set;} 
 
      public required int  NomenclatureId{ get; set; }
 

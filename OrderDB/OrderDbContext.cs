@@ -58,7 +58,7 @@ public partial class OrderDbContext : DbContext
 
         entity.Property(e => e.Description)
            .IsRequired()
-           .HasMaxLength(50)
+           .HasMaxLength(100)
            .HasColumnName("description")
            .UseCollation("utf8mb3_general_ci")
            .HasCharSet("utf8mb3");
@@ -92,7 +92,7 @@ public partial class OrderDbContext : DbContext
 
             entity.Property(e => e.Description)
            .IsRequired()
-           .HasMaxLength(50)
+           .HasMaxLength(100)
            .HasColumnName("description")
            .UseCollation("utf8mb3_general_ci")
            .HasCharSet("utf8mb3");
@@ -146,9 +146,10 @@ public partial class OrderDbContext : DbContext
 
 
            entity.Property(u => u.CreatedAt)
+           .IsRequired()
            .HasColumnName("create_at")
            .HasColumnType("datetime")
-           .HasDefaultValueSql("'current_timestamp()'");
+           .HasDefaultValueSql("current_timestamp()");
 
 
            entity.Property(u => u.ClosedAt)
@@ -220,11 +221,14 @@ public partial class OrderDbContext : DbContext
               .OnDelete(DeleteBehavior.ClientSetNull)
               .HasConstraintName("fk_Order_PaymentState1");
 
-           entity.HasOne(d => d.OrderState)
+            entity.HasOne(d => d.OrderState)
           .WithMany(p => p.Orders)
           .HasForeignKey(d => d.OrderStateId)
           .OnDelete(DeleteBehavior.ClientSetNull)
           .HasConstraintName("fk_Order_OrderState1");
+
+
+         
 
        }
         );
@@ -265,16 +269,110 @@ public partial class OrderDbContext : DbContext
            entity.HasOne(d => d.Order)
                 .WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_OrderDetail_Order");
 
 
      });
 
-
+      
+        OnModelCreatingPartial(modelBuilder);
 
     }
 
+  
+   partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+
+   partial void OnModelCreatingPartial(ModelBuilder modelBuilder){
+            OnModelOrderStateCreating(modelBuilder);
+            OnModelPaymentStateCreating(modelBuilder);
+   }
+
+
+    private void OnModelOrderStateCreating(ModelBuilder modelBuilder)
+    {
+        var orderStates = new OrderState[]{
+           new() {
+            Id=1,
+            StateName="ORDER_STATE_STARTED",
+            SmallName="не принят",
+            Description="Ордер проверен на корректность, но еще не принят брокером"
+            },
+             new() {
+            Id=2,
+            StateName="ORDER_STATE_PLACED",
+            SmallName="принят",
+            Description="Ордер принят"
+            },
+             new() {
+            Id=3,
+            StateName="ORDER_STATE_CANCELED",
+            SmallName="снят",
+            Description="Ордер снят клиентом"
+            },
+             new() {
+            Id=4,
+            StateName="ORDER_STATE_PARTIAL",
+            SmallName="выполнен частично",
+            Description="Ордер выполнен частично"
+            },
+             new() {
+            Id=5,
+            StateName="ORDER_STATE_FILLED",
+            SmallName="выполнен полностью",
+            Description="Ордер выполнен полностью"
+            },
+             new() {
+            Id=6,
+            StateName="ORDER_STATE_REJECTED",
+            SmallName="отклонен",
+            Description="Ордер отклонен"
+            }
+           };
+        modelBuilder.Entity<OrderState>().HasData( orderStates);
+        base.OnModelCreating(modelBuilder);
+    }
+
+
+
+    private void OnModelPaymentStateCreating(ModelBuilder modelBuilder)
+    {
+        var paymentState = new PaymentState[]{
+            new() {
+            Id=1,
+            StateName="PAYMENT_STATE_STARTED",
+            SmallName="не принят",
+            Description="Платеж не принят  pay_total равен нулю"
+            },
+             new() {
+            Id=2,
+            StateName="PAYMENT_STATE_BALANCE_DUE",
+            SmallName="Задаток",
+            Description="Платеж подтвержден Payment_total меньше общей суммы"
+            },
+             new() {
+            Id=3,
+            StateName="PAYMENT_STATE_FAILED",
+            SmallName="сбой платежа",
+            Description="платеж находится в состоянии сбоя"
+            },
+             new() {
+            Id=4,
+            StateName="PAYMENT_STATE_PAID",
+            SmallName="оплачено",
+            Description="оплачено - pay_total равен итогу"
+            },
+             new() {
+            Id=5,
+            StateName="PAYMENT_STATE_VOID",
+            SmallName="заказ отменен",
+            Description="заказ отменен и pay_total равен нулю"
+            }
+        };
+         modelBuilder.Entity<PaymentState>().HasData( paymentState);
+        base.OnModelCreating(modelBuilder);
+    }
 
 
 
