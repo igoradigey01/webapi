@@ -14,7 +14,7 @@ public partial class OrderDetail
 
      public required int  NomenclatureQuantity {get;set;}
 
-     public virtual Order Order { get; set; }=null!;
+     public virtual Order? Order { get; set; }
    
     
 }

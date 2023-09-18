@@ -42,7 +42,7 @@ namespace ShopAPI.Controllers
 
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult< CatalogDto>> Item(int id)
+        public async Task<ActionResult< CatalogDto>> GetItem(int id)
         {
             var item = await _db.Catalogs.Select(d => new CatalogDto
             {

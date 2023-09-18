@@ -116,18 +116,19 @@ public partial class OrderDbContext : DbContext
 
 
 
-           entity.HasIndex(e => new { e.OrderNumber, e.OwnerId }, "unique_OrderNumber_OwnerId_idx").IsUnique();
+           entity.HasIndex(e => new { e.OrderNo, e.OwnerId }, "unique_OrderNumber_OwnerId_idx").IsUnique();
            //entity.HasAlternateKey(e=>new {e.Name,e.PostavchikId} ); // is UNIQUE
 
            entity.Property(e => e.Id).HasColumnName("id");
 
 
-           entity.Property(e => e.OrderNumber)
+           entity.Property(e => e.OrderNo)
            .IsRequired()
-           .HasMaxLength(20)
+           .HasMaxLength(50)
            .HasColumnName("order_number")
            .UseCollation("utf8mb3_general_ci")
-           .HasCharSet("utf8mb3");
+           .HasCharSet("utf8mb3")
+            .HasDefaultValueSql("[OwnerId] + '-2310-'");;
 
            entity.Property(e => e.OwnerId)
            .IsRequired()
@@ -146,10 +147,9 @@ public partial class OrderDbContext : DbContext
 
 
            entity.Property(u => u.CreatedAt)
-           .IsRequired()
            .HasColumnName("create_at")
-           .HasColumnType("datetime")
-           .HasDefaultValueSql("current_timestamp()");
+           .HasColumnType("datetime");
+          // .HasDefaultValueSql("current_timestamp()");
 
 
            entity.Property(u => u.ClosedAt)
@@ -373,6 +373,8 @@ public partial class OrderDbContext : DbContext
          modelBuilder.Entity<PaymentState>().HasData( paymentState);
         base.OnModelCreating(modelBuilder);
     }
+
+    
 
 
 

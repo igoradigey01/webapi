@@ -5,7 +5,7 @@ public partial class Order
     public int Id { get; set; }
 
 
-    public required string OrderNumber { get; set; }
+    public required string OrderNo { get; set; }
 
     public required string OwnerId { get; set; } // владелец clientId
 
@@ -35,9 +35,9 @@ public partial class Order
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
-    public virtual PaymentState PaymentState { get; set; } = null!;
+    public virtual PaymentState?  PaymentState { get; set; } 
 
-    public virtual OrderState OrderState { get; set; } = null!;
+    public virtual OrderState? OrderState { get; set; } 
 
 
 

@@ -57,7 +57,7 @@ namespace ShopApi.Model.Identity
                 new IdentityRole
                 {
                     Id = USER_ID,
-                    Name =X01Roles.Shopper,          //"shopper",
+                    Name = X01Roles.Shopper,          //"shopper",
                     NormalizedName = X01Roles.Shopper //покупатель
 
                 },
@@ -76,13 +76,15 @@ namespace ShopApi.Model.Identity
 
             var passHash = new PasswordHasher<UserIdentityX01>();
 
+            
+            var spaClients = Configuration.GetSection("IdentityX01:DbContext:SpaClients").GetChildren().ToList();
 
-            var spaClients = Configuration.GetSection("DbContext:SpaClients").GetChildren().ToList();
+            Console.WriteLine("Configuration count-" + spaClients.Count);
             if (spaClients != null)
             {
                 foreach (var item in spaClients)
                 {
-                    var spaclient = Configuration.GetSection("DbContext:SpaClients:" + item.Key).Get<SpaOption>();
+                    var spaclient = Configuration.GetSection("IdentityX01:DbContext:SpaClients:" + item.Key).Get<SpaOption>();
                     var guid_admin = Guid.NewGuid().ToString();
                     var guid_manager = Guid.NewGuid().ToString();
 
@@ -120,7 +122,11 @@ namespace ShopApi.Model.Identity
 
                     user_admin.PasswordHash = passHash.HashPassword(user_admin, spaclient.Admin.Pass);
                     user_manager.PasswordHash = passHash.HashPassword(user_manager, spaclient.Manager.Pass);
-                    builder.Entity<UserIdentityX01>().HasData(user_admin, user_manager);
+                   
+                   
+                    builder.Entity<UserIdentityX01>().HasData(user_admin);
+
+                     builder.Entity<UserIdentityX01>().HasData(user_manager);
 
                     //  Console.WriteLine(item.Key);
 
@@ -130,23 +136,21 @@ namespace ShopApi.Model.Identity
 
                     builder.Entity<IdentityUserRole<string>>().HasData(
 
-                 new IdentityUserRole<string>[] {
+                     new IdentityUserRole<string>[] {
 
-                new IdentityUserRole<string>
-            {
-                RoleId = ADMIN_ID,
-                UserId = guid_admin
+                          new() {
+                                         RoleId = ADMIN_ID,
+                                         UserId = guid_admin
 
-            },
-              new IdentityUserRole<string>
-            {
-                RoleId = MANAGER_Id,
-                UserId = guid_manager
+                                },
+                           new() {
+                                         RoleId = MANAGER_Id,
+                                         UserId = guid_manager
 
-            }
+                                 }
 
-                 }
-             );
+                        }
+                    );
 
 
                 }

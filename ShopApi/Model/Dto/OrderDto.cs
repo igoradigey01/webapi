@@ -8,7 +8,7 @@ namespace ShopAPI.Model
         public required string OwnerId { get; set; } // владелец clientId
         public required string OwnerPhone { get; set; }
 
-        public required DateTime? CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
         public DateTime? ClosedAt { get; set; } 
         public string? OrderAdress { get; set; }
         public bool OrderPickup { get; set; } // самовывоз
