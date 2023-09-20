@@ -14,6 +14,8 @@ public partial class OrderDbContext : DbContext
 
     public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
 
+    public virtual DbSet<Sequence> Sequences { get; set; } = null!;
+
     public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options)
     {
 
@@ -45,23 +47,23 @@ public partial class OrderDbContext : DbContext
             .IsRequired()
             .HasMaxLength(50)
             .HasColumnName("name_state")
-            .UseCollation("utf8mb3_general_ci")
-            .HasCharSet("utf8mb3");
+            .UseCollation("utf8mb4_0900_ai_ci")
+            .HasCharSet("utf8mb4");
 
 
         entity.Property(e => e.SmallName)
             .IsRequired()
             .HasMaxLength(50)
             .HasColumnName("small_name")
-            .UseCollation("utf8mb3_general_ci")
-            .HasCharSet("utf8mb3");
+            .UseCollation("utf8mb4_0900_ai_ci")
+            .HasCharSet("utf8mb4");
 
         entity.Property(e => e.Description)
            .IsRequired()
            .HasMaxLength(100)
            .HasColumnName("description")
-           .UseCollation("utf8mb3_general_ci")
-           .HasCharSet("utf8mb3");
+           .UseCollation("utf8mb4_0900_ai_ci")
+           .HasCharSet("utf8mb4");
 
     });
 
@@ -79,23 +81,23 @@ public partial class OrderDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(50)
                 .HasColumnName("name_state")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
+                .UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4");
 
 
             entity.Property(e => e.SmallName)
             .IsRequired()
             .HasMaxLength(50)
             .HasColumnName("small_name")
-            .UseCollation("utf8mb3_general_ci")
-            .HasCharSet("utf8mb3");
+            .UseCollation("utf8mb4_0900_ai_ci")
+            .HasCharSet("utf8mb4");
 
             entity.Property(e => e.Description)
            .IsRequired()
            .HasMaxLength(100)
            .HasColumnName("description")
-           .UseCollation("utf8mb3_general_ci")
-           .HasCharSet("utf8mb3");
+           .UseCollation("utf8mb4_0900_ai_ci")
+           .HasCharSet("utf8mb4");
 
         });
 
@@ -126,30 +128,30 @@ public partial class OrderDbContext : DbContext
            .IsRequired()
            .HasMaxLength(50)
            .HasColumnName("order_number")
-           .UseCollation("utf8mb3_general_ci")
-           .HasCharSet("utf8mb3")
-            .HasDefaultValueSql("[OwnerId] + '-2310-'");;
+           .UseCollation("utf8mb4_0900_ai_ci")
+           .HasCharSet("utf8mb4");
+          //  .HasDefaultValueSql("CONCAT(123,456)");;
 
            entity.Property(e => e.OwnerId)
            .IsRequired()
            .HasMaxLength(20)
            .HasColumnName("owner_id")
-           .UseCollation("utf8mb3_general_ci")
-           .HasCharSet("utf8mb3");
+           .UseCollation("utf8mb4_0900_ai_ci")
+           .HasCharSet("utf8mb4");
 
            entity.Property(e => e.OwnerPhone)
            .IsRequired()
            .HasMaxLength(20)
            .HasColumnName("name_state")
-           .UseCollation("utf8mb3_general_ci")
-           .HasCharSet("utf8mb3");
+           .UseCollation("utf8mb4_0900_ai_ci")
+           .HasCharSet("utf8mb4");
 
 
 
            entity.Property(u => u.CreatedAt)
            .HasColumnName("create_at")
            .HasColumnType("datetime");
-          // .HasDefaultValueSql("current_timestamp()");
+          // .HasDefaultValueSql("GetUtcDate()");
 
 
            entity.Property(u => u.ClosedAt)
@@ -161,8 +163,8 @@ public partial class OrderDbContext : DbContext
           .IsRequired()
           .HasMaxLength(200)
           .HasColumnName("order_adress")
-          .UseCollation("utf8mb3_general_ci")
-          .HasCharSet("utf8mb3");
+          .UseCollation("utf8mb4_0900_ai_ci")
+          .HasCharSet("utf8mb4");
 
 
            entity.Property(p => p.OrderPickup)
@@ -174,37 +176,37 @@ public partial class OrderDbContext : DbContext
           .IsRequired()
           .HasMaxLength(500)
           .HasColumnName("order_note")
-          .UseCollation("utf8mb3_general_ci")
-          .HasCharSet("utf8mb3");
+          .UseCollation("utf8mb4_0900_ai_ci")
+          .HasCharSet("utf8mb4");
 
 
            entity.Property(e => e.CustomerFullName)
           .IsRequired()
           .HasMaxLength(100)
           .HasColumnName("customer_full_name")
-          .UseCollation("utf8mb3_general_ci")
-          .HasCharSet("utf8mb3");
+          .UseCollation("utf8mb4_0900_ai_ci")
+          .HasCharSet("utf8mb4");
 
            entity.Property(e => e.CustomerId)
            .IsRequired()
            .HasMaxLength(50)
            .HasColumnName("customer_id")
-           .UseCollation("utf8mb3_general_ci")
-           .HasCharSet("utf8mb3");
+           .UseCollation("utf8mb4_0900_ai_ci")
+           .HasCharSet("utf8mb4");
 
            entity.Property(e => e.CustomerPhone)
            .IsRequired()
            .HasMaxLength(50)
            .HasColumnName("customer_phone")
-           .UseCollation("utf8mb3_general_ci")
-           .HasCharSet("utf8mb3");
+           .UseCollation("utf8mb4_0900_ai_ci")
+           .HasCharSet("utf8mb4");
 
            entity.Property(e => e.CustomerMail)
            .IsRequired()
            .HasMaxLength(50)
            .HasColumnName("customer_mail")
-           .UseCollation("utf8mb3_general_ci")
-           .HasCharSet("utf8mb3");
+           .UseCollation("utf8mb4_0900_ai_ci")
+           .HasCharSet("utf8mb4");
 
            entity.Property(e => e.Payment_total).HasColumnName("payment_total");
 
@@ -248,16 +250,16 @@ public partial class OrderDbContext : DbContext
                      .IsRequired()
                       .HasMaxLength(200)
                       .HasColumnName("nomenclature_name")
-                      .UseCollation("utf8mb3_general_ci")
-                      .HasCharSet("utf8mb3");
+                      .UseCollation("utf8mb4_0900_ai_ci")
+                      .HasCharSet("utf8mb4");
 
 
          entity.Property(e => e.NomenclatureGuid)
                  .IsRequired()
                 .HasMaxLength(36)
                 .HasColumnName("title")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
+                .UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4");
 
 
 
@@ -275,6 +277,26 @@ public partial class OrderDbContext : DbContext
 
      });
 
+          modelBuilder.Entity<Sequence>(entity =>
+     {
+
+
+         entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+         entity.ToTable("Sequence");
+         entity.Property(e => e.Id).HasColumnName("id");
+          entity.Property(e => e.OwnerId)
+           .IsRequired()
+           .HasMaxLength(20)
+           .HasColumnName("owner_id")
+           .UseCollation("utf8mb4_0900_ai_ci")
+           .HasCharSet("utf8mb4");
+         entity.Property(e => e.NoOrder).HasColumnName("no_order");
+        
+
+     });
+     
+
       
         OnModelCreatingPartial(modelBuilder);
 
@@ -287,6 +309,7 @@ public partial class OrderDbContext : DbContext
    partial void OnModelCreatingPartial(ModelBuilder modelBuilder){
             OnModelOrderStateCreating(modelBuilder);
             OnModelPaymentStateCreating(modelBuilder);
+            OnModelSequenceCreating(modelBuilder);
    }
 
 
@@ -374,6 +397,53 @@ public partial class OrderDbContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
+
+
+      private void OnModelSequenceCreating(ModelBuilder modelBuilder)
+    {
+        var sequence = new Sequence[]{
+            new() {
+            Id=1,
+            OwnerId="mh-01",
+            NoOrder=1
+            },
+             new() {
+            Id=2,
+            OwnerId="sh.x-01",
+            NoOrder=1
+            },
+             new() {
+             Id=3,
+            OwnerId="x-01",
+            NoOrder=1
+            },
+             new() {
+             Id=4,
+            OwnerId="xf-01",
+            NoOrder=1
+            },
+             new() {
+             Id=5,
+            OwnerId="sh.x-01",
+            NoOrder=1
+            },
+             new() {
+             Id=6,
+            OwnerId="xl-01",
+            NoOrder=1
+            }
+            ,
+             new() {
+             Id=7,
+            OwnerId="fv.x-01",
+            NoOrder=1
+            }
+
+        };
+
+            modelBuilder.Entity<Sequence>().HasData( sequence);
+            base.OnModelCreating(modelBuilder);
+    }
     
 
 

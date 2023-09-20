@@ -170,7 +170,7 @@ namespace ShopAPI.Controllers
             //php   hash_hmac   https://www.php.net/manual/ru/function.hash-hmac.php
             //php    time()  https://www.php.net/manual/ru/function.time.php
 
-            var teltime = int.Parse(user.AuthDate);
+            var teltime = int.Parse(user.AuthDate!);
             var time = DateTimeOffset.Now.ToUnixTimeSeconds();
 
 
@@ -187,7 +187,7 @@ namespace ShopAPI.Controllers
                 //ProviderKey — это уникальный ключ Facebook, связанный с пользователем на Facebook.
 
 
-                var info = new UserLoginInfo("Telegram", providerKey, "Telegram");
+                var info = new UserLoginInfo("Telegram", providerKey!, "Telegram");
 
                 var user_tel = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
 
@@ -210,7 +210,7 @@ namespace ShopAPI.Controllers
                 //----------------------------------------------
                 var accessToken = GenerateTokenAsync(user_tel).Result;
                 var refreshToken = GenerateRefreshToken();
-                SetRefreshTokenAsync(refreshToken, user_tel);
+                _ = SetRefreshTokenAsync(refreshToken, user_tel);
 
 
                 return Ok(new TokenModelDto { Access_token = accessToken });
@@ -315,7 +315,7 @@ namespace ShopAPI.Controllers
             if (payload == null)
                 return BadRequest("Invalid External Authentication.");
 
-            var info = new UserLoginInfo(externalAuth.Provider, payload.UserId.ToString(), externalAuth.Provider);
+            var info = new UserLoginInfo(externalAuth.Provider!, payload.UserId!.ToString(), externalAuth.Provider);
 
             var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
             if (user == null)
@@ -387,12 +387,17 @@ namespace ShopAPI.Controllers
                 {"email", user.Email ??""}
             };
 
-            var callback = QueryHelpers.AddQueryString(userForRegistration.ClientURI, param);
+            if(String.IsNullOrEmpty( userForRegistration.ClientURI)){
+                 userForRegistration.ClientURI="";
+
+            }
+
+            var callback = QueryHelpers.AddQueryString(userForRegistration.ClientURI, param!);
 
             try
             {
 
-                var message = new Message(new string[] { user.Email }, "Токен подтверждения электронной почты,Возможно Почта недействительна", callback, null);
+                var message = new Message(new string[] { user.Email! }, "Токен подтверждения электронной почты,Возможно Почта недействительна", callback, null);
                 await _emailSender.SendEmailAsync(message);
             }
             catch
@@ -426,8 +431,12 @@ namespace ShopAPI.Controllers
                 {"token", token },
                 {"email", forgotPasswordDto.Email }
             };
+            if(String.IsNullOrEmpty( forgotPasswordDto.ClientURI)){
+                 forgotPasswordDto.ClientURI="";
 
-            var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param);
+            }
+
+            var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param!);
 
             var message = new Message(new string[] { forgotPasswordDto.Email }, "сбросить  пароль ", callback, null);
             await _emailSender.SendEmailAsync(message);
@@ -695,7 +704,7 @@ namespace ShopAPI.Controllers
 
             var Vk = new HttpClient();
             Vk.DefaultRequestHeaders.Add("Connection", "close");
-
+           
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(req);
             request.UseDefaultCredentials = true;
             request.PreAuthenticate = true;

@@ -4,7 +4,7 @@ namespace ShopAPI.Model
     {
         public int Id { get; set; }
 
-        public required string OrderNumber { get; set; }
+        public required string OrderNo { get; set; }
         public required string OwnerId { get; set; } // владелец clientId
         public required string OwnerPhone { get; set; }
 

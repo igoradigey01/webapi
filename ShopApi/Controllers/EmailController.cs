@@ -27,7 +27,10 @@ namespace ShopApi.Controllers
         [HttpPost]
         [Authorize]
         public IActionResult Post(EmailMessageDto mess)
-        {    // {"кому"} ,"тема письма" ,"содержание письма"
+        {   
+            
+            
+             // {"кому"} ,"тема письма" ,"содержание письма"
             var message = new Message(new string[] { mess.To }, mess.Subject,mess.Content, null);
             _emailSender.SendEmail(message);
 
