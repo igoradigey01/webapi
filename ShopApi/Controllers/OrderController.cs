@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Authorization;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OrderDB;
-using ShopApi.Model.Identity;
-using ShopAPI.Model;
 
+using OrderDB;
+using ShopAPI.Model;
+using ShopApi.Model.Identity;
+using System.Data;
 using System.Security.Claims;
 
 
@@ -28,7 +29,7 @@ namespace ShopAPI.Controllers
 
 
         [HttpGet]
-        //[Authorize(Roles = X01Roles.Admin + "," + X01Roles.Manager)]
+        [Authorize(Roles = X01Roles.Admin + "," + X01Roles.Manager)]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetAll()
         {
 
@@ -72,8 +73,6 @@ namespace ShopAPI.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<OrderDto>> GetItem(int id)
         {
-
-
             int v = id;
             var item = await _db.Orders.Select(d => new OrderDto
             {
@@ -104,10 +103,7 @@ namespace ShopAPI.Controllers
 
             return Ok(item);
 
-
-
         }
-
 
         [HttpGet]
         [AllowAnonymous]
@@ -129,7 +125,6 @@ namespace ShopAPI.Controllers
             return Ok(paymentStates);
         }
 
-
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<PaymentStateDto>>> GetOrderStateAll()
@@ -149,9 +144,6 @@ namespace ShopAPI.Controllers
             return Ok(orderStates);
         }
 
-
-
-
         [HttpPost]
         public async Task<ActionResult<CatalogDto>> CreateOrder(Order item)
         {
@@ -163,48 +155,28 @@ namespace ShopAPI.Controllers
             string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var cloneItemOrder = item.OrderDetails.ToArray().Clone();
             // item.OrderDetails.Clear();
-            item.OrderDetails = new List<OrderDetail>();
+            var products = item.OrderDetails;
+            if (products.Count > 0)
+            {
+                int id_last = GetLastIdOrderDetails();
+                foreach (var p in products)
+                {
+                    p.Id = ++id_last;
+                }
+            }
             item.CustomerId = userId;
             item.CreatedAt = DateTime.Now;
             item.ClosedAt = DateTime.MinValue;
             //  "closedAt": "0001-01-01T00:00:00",
-            
-
-            /*  Script  SqlProcedure  : CREATE DEFINER=`root`@`%` PROCEDURE `next_order_no`(
-in  owner_id  VARCHAR(50),
-out order_no int
-)
-BEGIN
-declare  order_new int;
-SELECT     `Sequence`.`no_order`   
-FROM `OrderDB`.`Sequence`
- where    `Sequence`.`owner_id`=owner_id
-  ORDER BY id DESC LIMIT 1
-  INTO order_no  ;
-  set  order_new = order_no+1;
-  
-  INSERT INTO `OrderDB`.`Sequence`
-(`id`,
-`owner_id`,
-`no_order`)
-VALUES
-(0,
-owner_id,
-order_new);
 
 
-END
-            */
+            GetOrdrNO(item.OwnerId, out int count);
+            item.OrderNo = DateTime.Now.Day.ToString() + DateTime.Now.Month.ToString() + "-" + count.ToString();
+            Console.WriteLine("Order_NO : " + item.OrderNo);
 
-            // item.OrderNo=item.OwnerId+item.CreatedAt.ToString();// reset  on 
 
-            //  SqliteParameter param = new SqliteParameter("@name", "%Tom%");
 
-            // var no_owner = _db.Sequences.FromSqlRaw("SELECT     `Sequence`.`no_order`" +
-            //                                         "FROM `OrderDB`.`Sequence`" +
-            //                                       "where    `Sequence`.`owner_id`='x-01'" +
-            //                                        " ORDER BY id DESC LIMIT 1;");
-            //Console.WriteLine("no_owner--" + no_owner[0]);
+            //Console.WriteLine("id_last : "+id_last);
 
             _db.Orders.Add(item);
             await _db.SaveChangesAsync();
@@ -238,6 +210,41 @@ END
             };
 
             return CreatedAtRoute(nameof(GetItem), new { id = item.Id }, dto);
+        }
+
+        private void GetOrdrNO(string owner_id, out int no_order)
+        {
+            // if use using on con -- con.close() end error for ef
+
+            var con = _db.Database.GetDbConnection();
+            var cmd = con.CreateCommand();
+            cmd.CommandText = "select  OrderDB.new_order_no('x-01');";
+            if (cmd.Connection!.State != ConnectionState.Open)
+            {
+                cmd.Connection.Open();
+            }
+            no_order = (int)cmd.ExecuteScalar()!;
+            // cmd.Connection.Close();
+
+        }
+
+        private int GetLastIdOrderDetails()
+        {
+
+            int id_last;
+
+
+            var con = _db.Database.GetDbConnection();
+            var cmd = con.CreateCommand();
+            cmd.CommandText = "select OrderDB.last_id_order_detail();";
+
+            if (cmd.Connection!.State != ConnectionState.Open)
+            {
+                cmd.Connection.Open();
+            }
+            id_last = (int)cmd.ExecuteScalar()!;
+            // cmd.Connection.Close();
+            return id_last;
         }
 
 
