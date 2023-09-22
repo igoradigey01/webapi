@@ -29,12 +29,9 @@ namespace ShopAPI.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = X01Roles.Admin + "," + X01Roles.Manager)]
+        [Authorize(Roles = X01Roles.Admin)]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetAll()
         {
-
-
-
             var orders = await (from o in _db.Orders
                                 select new OrderDto()
                                 {
@@ -69,8 +66,162 @@ namespace ShopAPI.Controllers
 
         }
 
+
+        [HttpGet("{owner_id}")]
+        [Authorize(Roles = X01Roles.Admin + "," + X01Roles.Manager)]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetAll(string owner_id, DateTime start)
+        {
+            // int i = 0;
+            var orders = await (from item in _db.Orders!
+                                where item.OwnerId == owner_id && item.CreatedAt >= start
+                                select new OrderDto()
+                                {
+                                    Id = item.Id,
+                                    OrderNo = item.OrderNo,
+                                    OwnerId = item.OwnerId,
+                                    OwnerPhone = item.OwnerPhone,
+                                    CreatedAt = item.CreatedAt,
+                                    ClosedAt = item.ClosedAt,
+                                    OrderAdress = item.OrderAdress,
+                                    OrderPickup = item.OrderPickup,
+                                    OrderNote = item.OrderNote,
+                                    CustomerFullName = item.CustomerFullName,
+                                    CustomerId = item.CustomerId,
+                                    CustomerPhone = item.CustomerPhone,
+                                    CustomerMail = item.CustomerMail,
+
+                                    Payment_total = item.Payment_total,
+                                    Total = item.Total,
+
+                                    PaymentStateId = item.PaymentStateId,
+                                    OrderStateId = item.OrderStateId
+
+
+
+                                }).ToListAsync();
+            if (orders == null) return NotFound();
+
+            return Ok(orders);
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetAllForCustomer()
+        {
+            // int i = 0;
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var orders = await (from item in _db.Orders!
+                                where item.CustomerId == userId
+                                select new OrderDto()
+                                {
+                                    Id = item.Id,
+                                    OrderNo = item.OrderNo,
+                                    OwnerId = item.OwnerId,
+                                    OwnerPhone = item.OwnerPhone,
+                                    CreatedAt = item.CreatedAt,
+                                    ClosedAt = item.ClosedAt,
+                                    OrderAdress = item.OrderAdress,
+                                    OrderPickup = item.OrderPickup,
+                                    OrderNote = item.OrderNote,
+                                    CustomerFullName = item.CustomerFullName,
+                                    CustomerId = item.CustomerId,
+                                    CustomerPhone = item.CustomerPhone,
+                                    CustomerMail = item.CustomerMail,
+
+                                    Payment_total = item.Payment_total,
+                                    Total = item.Total,
+
+                                    PaymentStateId = item.PaymentStateId,
+                                    OrderStateId = item.OrderStateId
+
+
+
+                                }).ToListAsync();
+            if (orders == null) return NotFound();
+
+            return Ok(orders);
+        }
+
+
+
+        [HttpGet("{no_order}")]
+        [Authorize(Roles = X01Roles.Admin + "," + X01Roles.Manager)]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetForOrderNO(string no_order)
+        {
+            // int i = 0;
+            //  string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var orders = await (from item in _db.Orders!
+                                where item.OrderNo == no_order
+                                select new OrderDto()
+                                {
+                                    Id = item.Id,
+                                    OrderNo = item.OrderNo,
+                                    OwnerId = item.OwnerId,
+                                    OwnerPhone = item.OwnerPhone,
+                                    CreatedAt = item.CreatedAt,
+                                    ClosedAt = item.ClosedAt,
+                                    OrderAdress = item.OrderAdress,
+                                    OrderPickup = item.OrderPickup,
+                                    OrderNote = item.OrderNote,
+                                    CustomerFullName = item.CustomerFullName,
+                                    CustomerId = item.CustomerId,
+                                    CustomerPhone = item.CustomerPhone,
+                                    CustomerMail = item.CustomerMail,
+
+                                    Payment_total = item.Payment_total,
+                                    Total = item.Total,
+
+                                    PaymentStateId = item.PaymentStateId,
+                                    OrderStateId = item.OrderStateId
+
+
+
+                                }).ToListAsync();
+            if (orders == null) return NotFound();
+
+            return Ok(orders);
+        }
+
+        [HttpGet("{no_order}")]
+        [Authorize(Roles = X01Roles.Admin + "," + X01Roles.Manager)]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetForCustomerPhone(string phone)
+        {
+            // int i = 0;
+            // string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var orders = await (from item in _db.Orders!
+                                where item.CustomerPhone == phone
+                                select new OrderDto()
+                                {
+                                    Id = item.Id,
+                                    OrderNo = item.OrderNo,
+                                    OwnerId = item.OwnerId,
+                                    OwnerPhone = item.OwnerPhone,
+                                    CreatedAt = item.CreatedAt,
+                                    ClosedAt = item.ClosedAt,
+                                    OrderAdress = item.OrderAdress,
+                                    OrderPickup = item.OrderPickup,
+                                    OrderNote = item.OrderNote,
+                                    CustomerFullName = item.CustomerFullName,
+                                    CustomerId = item.CustomerId,
+                                    CustomerPhone = item.CustomerPhone,
+                                    CustomerMail = item.CustomerMail,
+
+                                    Payment_total = item.Payment_total,
+                                    Total = item.Total,
+
+                                    PaymentStateId = item.PaymentStateId,
+                                    OrderStateId = item.OrderStateId
+
+
+
+                                }).ToListAsync();
+            if (orders == null) return NotFound();
+
+            return Ok(orders);
+        }
+
+
         [HttpGet("{id}", Name = nameof(GetItem))]
-        [AllowAnonymous]
         public async Task<ActionResult<OrderDto>> GetItem(int id)
         {
             int v = id;
@@ -145,7 +296,7 @@ namespace ShopAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CatalogDto>> CreateOrder(Order item)
+        public async Task<ActionResult<OrderDto>> CreateOrder(Order item)
         {
 
             if (!ModelState.IsValid)
@@ -212,6 +363,43 @@ namespace ShopAPI.Controllers
             return CreatedAtRoute(nameof(GetItem), new { id = item.Id }, dto);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateOrder(int id, Order item)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != item.Id)
+            {
+                return BadRequest();
+            }
+
+            _db.Entry(item).State = EntityState.Modified;
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OrderExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent(); //204         
+        }
+
+
+
         private void GetOrdrNO(string owner_id, out int no_order)
         {
             // if use using on con -- con.close() end error for ef
@@ -247,6 +435,12 @@ namespace ShopAPI.Controllers
             return id_last;
         }
 
+
+        private bool OrderExists(int id)
+        {
+            return _db.Orders.Count(e => e.Id == id) > 0;
+
+        }
 
     }
 }

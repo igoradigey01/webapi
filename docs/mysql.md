@@ -33,3 +33,14 @@ order_new);
 RETURN  order_no;
 END
 ```
+
+```
+CREATE DEFINER=`root`@`%` FUNCTION `last_id_order_detail`() RETURNS int
+    DETERMINISTIC
+BEGIN
+declare  last_id int;
+SELECT id FROM OrderDB.OrderDetail ORDER BY id DESC LIMIT 1
+  INTO  last_id  ;
+RETURN last_id;
+END
+```
