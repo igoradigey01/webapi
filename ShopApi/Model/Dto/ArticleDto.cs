@@ -8,7 +8,7 @@ namespace ShopAPI.Model
 
         public bool Hidden { get; set; }
 
-        public int Product_type_id { get; set; }
+        public int Product_typeId { get; set; }
        
     }
 }

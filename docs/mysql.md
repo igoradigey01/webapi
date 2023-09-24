@@ -1,4 +1,4 @@
-## Story_procekdure
+## Stored_procedure
 - https://oracleplsql.ru/procedures-mysql.html
 - https://www.mysqltutorial.org/mysql-stored-procedure-tutorial.aspx
 - https://dev.mysql.com/doc/connector-net/en/connector-net-programming-stored-proc.html

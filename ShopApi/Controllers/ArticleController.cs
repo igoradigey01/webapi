@@ -37,7 +37,7 @@ namespace ShopAPI.Controllers
                                   {
                                       Id = b.Id,
                                       Name = b.Name,                                     
-                                      Product_type_id = b.Product_typeId,
+                                      Product_typeId = b.Product_typeId,
                                       Hidden = b.Hidden
                                   }).ToListAsync();
 
@@ -60,7 +60,7 @@ namespace ShopAPI.Controllers
                                       Id = item.Id,
                                       Name = item.Name,
                                       
-                                      Product_type_id = item.Product_typeId,
+                                      Product_typeId = item.Product_typeId,
                                       Hidden = item.Hidden
                                   }).ToListAsync();
             if (articles == null)return NotFound();
@@ -76,7 +76,7 @@ namespace ShopAPI.Controllers
             {
                 Id = d.Id,
                 Name = d.Name,                
-                Product_type_id = d.Product_typeId,
+                Product_typeId = d.Product_typeId,
                 Hidden = d.Hidden
             }
             )
@@ -110,7 +110,7 @@ namespace ShopAPI.Controllers
                 Id = item.Id,
                 Name = item.Name,
                
-                Product_type_id = item.Product_typeId,
+                Product_typeId = item.Product_typeId,
                 Hidden = item.Hidden
             };
 

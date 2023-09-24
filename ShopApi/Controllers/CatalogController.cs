@@ -32,7 +32,8 @@ namespace ShopAPI.Controllers
                                       Id = b.Id,
                                       Name = b.Name,
                                       OwnerId = b.OwnerId,                                     
-                                      Hidden = b.Hidden
+                                      Hidden = b.Hidden,
+                                      DecriptSEO=b.DecriptSeo
                                   }).ToListAsync();
              if (catalogs == null) return NotFound();
                       

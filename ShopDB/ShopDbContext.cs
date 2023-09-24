@@ -60,7 +60,7 @@ public partial class ShopDbContext : DbContext
 
 
 
-           entity.HasIndex(e => e.OwnerId, "fk_Catalog_Postavchik1_idx");
+           entity.HasIndex(e => e.OwnerId, "fk_Catalog_OwnerId1_idx");
 
            entity.Property(e => e.Name)
                .IsRequired()
@@ -72,7 +72,7 @@ public partial class ShopDbContext : DbContext
            entity.Property(e => e.OwnerId)
                .IsRequired()
                .HasMaxLength(50)
-               .HasColumnName("Postavchik_id")
+               .HasColumnName("Owner_id")
                .UseCollation("utf8mb4_0900_ai_ci")
                .HasCharSet("utf8mb4");
 
@@ -121,9 +121,18 @@ public partial class ShopDbContext : DbContext
 
            entity.ToTable("SubKatalog");
 
-           entity.HasIndex(e => e.CatalogId, "fk_KatalogN_CategoriaN1_idx");
+           entity.HasIndex(e => e.CatalogId, "fk_SubCatalog_Catalog1_idx");
+             entity.HasIndex(e => e.OwnerId, "fk_SubCatalog_OwnerId1_idx");
 
            entity.Property(e => e.Id).HasColumnName("id");
+
+            entity.Property(e => e.OwnerId)
+               .IsRequired()
+               .HasMaxLength(50)
+               .HasColumnName("Owner_id")
+               .UseCollation("utf8mb4_0900_ai_ci")
+               .HasCharSet("utf8mb4");  
+
            entity.Property(e => e.DecriptSeo)
                .HasColumnName("decriptSEO")
                .UseCollation("utf8mb4_0900_ai_ci")
@@ -164,7 +173,7 @@ public partial class ShopDbContext : DbContext
                 .HasCharSet("utf8mb4");
             entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
 
-            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
+            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(0);
 
             entity.HasOne(d => d.Product_Type).WithMany(p => p.Articles)
               .HasForeignKey(d => d.Product_typeId)
@@ -410,17 +419,17 @@ public partial class ShopDbContext : DbContext
     private void OnModelSubCatalogCreating(ModelBuilder modelBuilder)
     {
         var subCatalogs = new SubCatalog[]{
-          new () {Id=1,Name="Комод",Hidden=false ,DecriptSeo="комод стандарт  | комод комби | комод ЛДСП | комод МДФ",CatalogId=1,GoogleTypeId="4205"},
-          new (){Id=2,Name="Кровать",Hidden=false,DecriptSeo="Кровать 800 | Кровать 900 | Кровать 1400 | Кровать 1600 | Кровать с ящиками|Кровать ЛДСП",CatalogId=1,GoogleTypeId="505764"},
-          new (){Id=3,Name="Шкаф",Hidden=false,DecriptSeo="Шкаф ДвухДверный | Шкаф ТрехДверный | Шкаф Купе | Шкаф для одежды| Шкаф Ламинат|Шкаф с ящиками|",CatalogId=1,GoogleTypeId="6356"},
-          new (){Id=4,Name="Кухонный Уголок",DecriptSeo="  предложение от производителя",CatalogId=1,GoogleTypeId="6850"},
-          new (){Id=5,Name="Стол Обеденный",Hidden=false,DecriptSeo="Стол Обеденный в каталоге x-01 -это предложение от производителя",CatalogId=1,GoogleTypeId="4355"} ,
-          new (){Id=6,Name="Стол Писменный",Hidden=false,DecriptSeo="Стол Писменный в каталоге x-01 -это предложение от производителя",CatalogId=1,GoogleTypeId="4191"},
-          new (){Id=7,Name="Стол Журнальный",Hidden=false,DecriptSeo="Стол Журнальный в каталоге x-01 -это низкие цены от производителя",CatalogId=1,GoogleTypeId="6392"},
-          new (){Id=8,Name="Стол Маникюрный",Hidden=false,DecriptSeo="Стол Маникюрный в каталоге x-01 -это предложение от производителя",CatalogId=1,GoogleTypeId="6363"},
-          new (){Id=9,Name="Стол Тумба",Hidden=false,DecriptSeo="Стол-Тумба в каталоге x-01 -это низкие цены от производителя",CatalogId=1,GoogleTypeId="4080"},
-          new (){Id=10,Name="Кухня",Hidden=false,DecriptSeo="Кухня в каталоге x-01 - это низкие цены от производителя",CatalogId=1,GoogleTypeId="6934"},
-          new (){Id=11,Name="Комплектующие",Hidden=false,DecriptSeo="Форнитура для корпусной и мягкой мебели : петли | ручки | подлокотник ... ",CatalogId=1,GoogleTypeId="503765"}
+          new () {Id=1,OwnerId="x-01", Name="Комод",Hidden=false ,DecriptSeo="комод стандарт  | комод комби | комод ЛДСП | комод МДФ",CatalogId=1,GoogleTypeId="4205"},
+          new (){Id=2,OwnerId="x-01", Name="Кровать",Hidden=false,DecriptSeo="Кровать 800 | Кровать 900 | Кровать 1400 | Кровать 1600 | Кровать с ящиками|Кровать ЛДСП",CatalogId=1,GoogleTypeId="505764"},
+          new (){Id=3,OwnerId="x-01",Name="Шкаф",Hidden=false,DecriptSeo="Шкаф ДвухДверный | Шкаф ТрехДверный | Шкаф Купе | Шкаф для одежды| Шкаф Ламинат|Шкаф с ящиками|",CatalogId=1,GoogleTypeId="6356"},
+          new (){Id=4,OwnerId="x-01",Name="Кухонный Уголок",DecriptSeo="  предложение от производителя",CatalogId=1,GoogleTypeId="6850"},
+          new (){Id=5,OwnerId="x-01",Name="Стол Обеденный",Hidden=false,DecriptSeo="Стол Обеденный в каталоге x-01 -это предложение от производителя",CatalogId=1,GoogleTypeId="4355"} ,
+          new (){Id=6,OwnerId="x-01",Name="Стол Писменный",Hidden=false,DecriptSeo="Стол Писменный в каталоге x-01 -это предложение от производителя",CatalogId=1,GoogleTypeId="4191"},
+          new (){Id=7,OwnerId="x-01",Name="Стол Журнальный",Hidden=false,DecriptSeo="Стол Журнальный в каталоге x-01 -это низкие цены от производителя",CatalogId=1,GoogleTypeId="6392"},
+          new (){Id=8,OwnerId="x-01",Name="Стол Маникюрный",Hidden=false,DecriptSeo="Стол Маникюрный в каталоге x-01 -это предложение от производителя",CatalogId=1,GoogleTypeId="6363"},
+          new (){Id=9,OwnerId="x-01",Name="Стол Тумба",Hidden=false,DecriptSeo="Стол-Тумба в каталоге x-01 -это низкие цены от производителя",CatalogId=1,GoogleTypeId="4080"},
+          new (){Id=10,OwnerId="x-01",Name="Кухня",Hidden=false,DecriptSeo="Кухня в каталоге x-01 - это низкие цены от производителя",CatalogId=1,GoogleTypeId="6934"},
+          new (){Id=11,OwnerId="x-01",Name="Комплектующие",Hidden=false,DecriptSeo="Форнитура для корпусной и мягкой мебели : петли | ручки | подлокотник ... ",CatalogId=1,GoogleTypeId="503765"}
 
             };
         modelBuilder.Entity<SubCatalog>().HasData(subCatalogs);
