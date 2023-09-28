@@ -5,6 +5,8 @@ public partial class Brand
 {
     public int Id { get; set; }
 
+    public required string OwnerId { get; set; }  
+
     public int Product_typeId { get; set; }   // fornityre mm korpus-mebel
 
     public required  string Name { get; set; }

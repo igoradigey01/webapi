@@ -2,7 +2,8 @@
 - cd shopapi
 - dotnet run 
 - dotnet publish -c release -o published
-- http://localhost:5010/swagger/index.html
+- 
+      Microsoft.AspNetCore.Routing.Matching.AmbiguousMatchException: The request matched multiple endpoints. Matc
 - dotnet  user-jwts create
 - dotnet  user-jwts print db3caef7 --show-all
 - dotnet  user-jwts key
@@ -24,3 +25,7 @@
   - if (app.Environment.IsDevelopment()){}
 ## aspnet7.0 docker for  dockerfile
   -docker pull mcr.microsoft.com/dotnet/aspnet
+
+##   Photo api
+
+- https://code-maze.com/upload-files-dot-net-core-angular/

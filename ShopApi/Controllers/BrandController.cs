@@ -24,14 +24,16 @@ namespace ShopAPI.Controllers
           _db = db;
         }
 
-        [HttpGet]
+        [HttpGet("{owner_id}")]
         [AllowAnonymous]
-        public async Task< ActionResult< IEnumerable<BrandDto>>> GetAll()
+        public async Task< ActionResult< IEnumerable<BrandDto>>> GetAll(string  owner_id)
         {
-            var brands = await (from b in _db.Brands!
+            var brands = await (from b in _db.Brands
+                                  where b.OwnerId == owner_id
                                   select new BrandDto()
                                   {
                                       Id = b.Id,
+                                       OwnerId=b.OwnerId,
                                       Name = b.Name,
                                      // PostavchikId = b.PostavchikId,
                                       Product_type_id = b.Product_typeId,
@@ -43,16 +45,17 @@ namespace ShopAPI.Controllers
             return Ok( brands);
         }
 
-        [HttpGet("{product_type_id}")]
+        [HttpGet("{owner_id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<BrandDto>>> GetAll(int product_type_id)
+        public async Task<ActionResult<IEnumerable<BrandDto>>> GetForProduct_type(  string  owner_id, int product_type_id)
         {
             // int i = 0;
-           var barnds = await (from item in _db.Brands!
-                                  where item.Product_typeId == product_type_id
+           var barnds = await (from item in _db.Brands
+                                  where item.OwnerId==owner_id &&  item.Product_typeId == product_type_id
                                   select new BrandDto()
                                   {
                                       Id = item.Id,
+                                       OwnerId=item.OwnerId,
                                       Name = item.Name,                                     
                                       Product_type_id = item.Product_typeId,
                                       Hidden = item.Hidden
@@ -70,6 +73,7 @@ namespace ShopAPI.Controllers
              var item = await _db.Brands!.Select(d => new BrandDto
             {
                 Id = d.Id,
+                 OwnerId=d.OwnerId,
                 Name = d.Name,
                 
                 Product_type_id = d.Product_typeId,
@@ -104,6 +108,7 @@ namespace ShopAPI.Controllers
             var dto = new BrandDto()
             {
                 Id = item.Id,
+                 OwnerId=item.OwnerId,
                 Name = item.Name,               
                 Product_type_id = item.Product_typeId,
                 Hidden = item.Hidden

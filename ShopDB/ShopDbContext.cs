@@ -122,16 +122,16 @@ public partial class ShopDbContext : DbContext
            entity.ToTable("SubKatalog");
 
            entity.HasIndex(e => e.CatalogId, "fk_SubCatalog_Catalog1_idx");
-             entity.HasIndex(e => e.OwnerId, "fk_SubCatalog_OwnerId1_idx");
+           entity.HasIndex(e => e.OwnerId, "fk_SubCatalog_OwnerId1_idx");
 
            entity.Property(e => e.Id).HasColumnName("id");
 
-            entity.Property(e => e.OwnerId)
-               .IsRequired()
-               .HasMaxLength(50)
-               .HasColumnName("Owner_id")
-               .UseCollation("utf8mb4_0900_ai_ci")
-               .HasCharSet("utf8mb4");  
+           entity.Property(e => e.OwnerId)
+              .IsRequired()
+              .HasMaxLength(50)
+              .HasColumnName("Owner_id")
+              .UseCollation("utf8mb4_0900_ai_ci")
+              .HasCharSet("utf8mb4");
 
            entity.Property(e => e.DecriptSeo)
                .HasColumnName("decriptSEO")
@@ -165,6 +165,14 @@ public partial class ShopDbContext : DbContext
             entity.HasIndex(e => e.Product_typeId, "fk_ArticleN_TypeProduct1_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.OwnerId)
+                          .IsRequired()
+                          .HasMaxLength(50)
+                          .HasColumnName("Owner_id")
+                          .UseCollation("utf8mb4_0900_ai_ci")
+                          .HasCharSet("utf8mb4");
+
+
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100)
@@ -190,6 +198,14 @@ public partial class ShopDbContext : DbContext
             entity.HasIndex(e => e.Product_typeId, "fk_BrandN_TypeProduct1_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.OwnerId)
+                          .IsRequired()
+                          .HasMaxLength(50)
+                          .HasColumnName("Owner_id")
+                          .UseCollation("utf8mb4_0900_ai_ci")
+                          .HasCharSet("utf8mb4");
+
+
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100)
@@ -215,6 +231,14 @@ public partial class ShopDbContext : DbContext
             entity.HasIndex(e => e.Product_typeId, "fk_ColorN_TypeProduct1_idx");
 
             entity.Property(e => e.Id).HasColumnName("id");
+
+            entity.Property(e => e.OwnerId)
+              .IsRequired()
+              .HasMaxLength(50)
+              .HasColumnName("Owner_id")
+              .UseCollation("utf8mb4_0900_ai_ci")
+              .HasCharSet("utf8mb4");
+
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100)
@@ -275,7 +299,7 @@ public partial class ShopDbContext : DbContext
 
             entity.Property(e => e.Guid)
                 .IsRequired()
-             //   .HasMaxLength(255)
+                //   .HasMaxLength(255)
                 .HasColumnName("guid")
                 .UseCollation("utf8mb4_0900_ai_ci")
                 .HasCharSet("utf8mb4")
@@ -397,15 +421,16 @@ public partial class ShopDbContext : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
-    
-   partial void OnModelCreatingPartial(ModelBuilder modelBuilder){
-            OnModelCatalogCreating(modelBuilder);
-            OnModelSubCatalogCreating(modelBuilder);
-            OnModelProduct_typeCreating(modelBuilder);
-            OnModelColorCreating(modelBuilder);
-            OnModelBrandCreating(modelBuilder);
-            OnModelArticleCreating(modelBuilder);
-   }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
+    {
+        OnModelCatalogCreating(modelBuilder);
+        OnModelSubCatalogCreating(modelBuilder);
+        OnModelProduct_typeCreating(modelBuilder);
+        OnModelColorCreating(modelBuilder);
+        OnModelBrandCreating(modelBuilder);
+        OnModelArticleCreating(modelBuilder);
+    }
 
 
     private void OnModelCatalogCreating(ModelBuilder modelBuilder)
@@ -459,12 +484,42 @@ public partial class ShopDbContext : DbContext
     private void OnModelColorCreating(ModelBuilder modelBuilder)
     {
         var colors = new Color[]{
-            new() {Id=1,Name="none",Product_typeId=1},
-            new () {Id=2,Name="none",Product_typeId=2},
-            new () {Id=3,Name="none",Product_typeId=3},
-            new () {Id=4,Name="none",Product_typeId=4},
-            new () {Id=5,Name="none",Product_typeId=5},
-            new () {Id=6,Name="none",Product_typeId=6}
+             new () {Id=1,OwnerId="x-01",Name="none",Product_typeId=1},
+            new () {Id=2,OwnerId="x-01",Name="none",Product_typeId=2},
+            new () {Id=3,OwnerId="x-01",Name="none",Product_typeId=3},
+            new () {Id=4,OwnerId="x-01",Name="none",Product_typeId=4},
+            new () {Id=5,OwnerId="x-01",Name="none",Product_typeId=5},
+            new () {Id=6,OwnerId="x-01",Name="none",Product_typeId=6},
+
+
+
+            new () {Id=7,OwnerId="xl-01",Name="none",Product_typeId=1},
+            new () {Id=8,OwnerId="xl-01",Name="none",Product_typeId=2},
+            new () {Id=9,OwnerId="xl-01",Name="none",Product_typeId=3},
+            new () {Id=10,OwnerId="xl-01",Name="none",Product_typeId=4},
+            new () {Id=11,OwnerId="xl-01",Name="none",Product_typeId=5},
+            new () {Id=12,OwnerId="xl-01",Name="none",Product_typeId=6},
+
+            new () {Id=13,OwnerId="sh.x-01",Name="none",Product_typeId=1},
+            new () {Id=14,OwnerId="sh.x-01",Name="none",Product_typeId=2},
+            new () {Id=15,OwnerId="sh.x-01",Name="none",Product_typeId=3},
+            new () {Id=16,OwnerId="sh.x-01",Name="none",Product_typeId=4},
+            new () {Id=17,OwnerId="sh.x-01",Name="none",Product_typeId=5},
+            new () {Id=18,OwnerId="sh.x-01",Name="none",Product_typeId=6},
+
+            new () {Id=19,OwnerId="mh-01",Name="none",Product_typeId=1},
+            new () {Id=20,OwnerId="mh-01",Name="none",Product_typeId=2},
+            new () {Id=21,OwnerId="mh-01",Name="none",Product_typeId=3},
+            new () {Id=22,OwnerId="mh-01",Name="none",Product_typeId=4},
+            new () {Id=23,OwnerId="mh-01",Name="none",Product_typeId=5},
+            new () {Id=24,OwnerId="mh-01",Name="none",Product_typeId=6},
+
+            new () {Id=25,OwnerId="xf-01",Name="none",Product_typeId=1},
+            new () {Id=26,OwnerId="xf-01",Name="none",Product_typeId=2},
+            new () {Id=27,OwnerId="xf-01",Name="none",Product_typeId=3},
+            new () {Id=28,OwnerId="xf-01",Name="none",Product_typeId=4},
+            new () {Id=29,OwnerId="xf-01",Name="none",Product_typeId=5},
+            new () {Id=30,OwnerId="xf-01",Name="none",Product_typeId=6}
         };
         modelBuilder.Entity<Color>().HasData(colors);
         base.OnModelCreating(modelBuilder);
@@ -473,12 +528,42 @@ public partial class ShopDbContext : DbContext
     private void OnModelBrandCreating(ModelBuilder modelBuilder)
     {
         var brands = new Brand[]{
-            new () {Id=1,Name="none",Product_typeId=1},
-            new () {Id=2,Name="none",Product_typeId=2},
-            new () {Id=3,Name="none",Product_typeId=3},
-            new () {Id=4,Name="none",Product_typeId=4},
-            new () {Id=5,Name="none",Product_typeId=5},
-            new () {Id=6,Name="none",Product_typeId=6}
+
+
+            new () {Id=1,OwnerId="x-01",Name="none",Product_typeId=1},
+            new () {Id=2,OwnerId="x-01",Name="none",Product_typeId=2},
+            new () {Id=3,OwnerId="x-01",Name="none",Product_typeId=3},
+            new () {Id=4,OwnerId="x-01",Name="none",Product_typeId=4},
+            new () {Id=5,OwnerId="x-01",Name="none",Product_typeId=5},
+            new () {Id=6,OwnerId="x-01",Name="none",Product_typeId=6},
+
+            new () {Id=7,OwnerId="xl-01",Name="none",Product_typeId=1},
+            new () {Id=8,OwnerId="xl-01",Name="none",Product_typeId=2},
+            new () {Id=9,OwnerId="xl-01",Name="none",Product_typeId=3},
+            new () {Id=10,OwnerId="xl-01",Name="none",Product_typeId=4},
+            new () {Id=11,OwnerId="xl-01",Name="none",Product_typeId=5},
+            new () {Id=12,OwnerId="xl-01",Name="none",Product_typeId=6},
+
+            new () {Id=13,OwnerId="sh.x-01",Name="none",Product_typeId=1},
+            new () {Id=14,OwnerId="sh.x-01",Name="none",Product_typeId=2},
+            new () {Id=15,OwnerId="sh.x-01",Name="none",Product_typeId=3},
+            new () {Id=16,OwnerId="sh.x-01",Name="none",Product_typeId=4},
+            new () {Id=17,OwnerId="sh.x-01",Name="none",Product_typeId=5},
+            new () {Id=18,OwnerId="sh.x-01",Name="none",Product_typeId=6},
+
+            new () {Id=19,OwnerId="mh-01",Name="none",Product_typeId=1},
+            new () {Id=20,OwnerId="mh-01",Name="none",Product_typeId=2},
+            new () {Id=21,OwnerId="mh-01",Name="none",Product_typeId=3},
+            new () {Id=22,OwnerId="mh-01",Name="none",Product_typeId=4},
+            new () {Id=23,OwnerId="mh-01",Name="none",Product_typeId=5},
+            new () {Id=24,OwnerId="mh-01",Name="none",Product_typeId=6},
+
+            new () {Id=25,OwnerId="xf-01",Name="none",Product_typeId=1},
+            new () {Id=26,OwnerId="xf-01",Name="none",Product_typeId=2},
+            new () {Id=27,OwnerId="xf-01",Name="none",Product_typeId=3},
+            new () {Id=28,OwnerId="xf-01",Name="none",Product_typeId=4},
+            new () {Id=29,OwnerId="xf-01",Name="none",Product_typeId=5},
+            new () {Id=30,OwnerId="xf-01",Name="none",Product_typeId=6}
         };
         modelBuilder.Entity<Brand>().HasData(brands);
         base.OnModelCreating(modelBuilder);
@@ -487,12 +572,41 @@ public partial class ShopDbContext : DbContext
     private void OnModelArticleCreating(ModelBuilder modelBuilder)
     {
         var articles = new Article[]{
-            new () {Id=1,Name="none",Product_typeId=1},
-            new () {Id=2,Name="none",Product_typeId=2},
-            new () {Id=3,Name="none",Product_typeId=3},
-            new () {Id=4,Name="none",Product_typeId=4},
-            new () {Id=5,Name="none",Product_typeId=5},
-            new () {Id=6,Name="none",Product_typeId=6}
+
+            new () {Id=1,OwnerId="x-01",Name="none",Product_typeId=1},
+            new () {Id=2,OwnerId="x-01",Name="none",Product_typeId=2},
+            new () {Id=3,OwnerId="x-01",Name="none",Product_typeId=3},
+            new () {Id=4,OwnerId="x-01",Name="none",Product_typeId=4},
+            new () {Id=5,OwnerId="x-01",Name="none",Product_typeId=5},
+            new () {Id=6,OwnerId="x-01",Name="none",Product_typeId=6},
+
+            new () {Id=7,OwnerId="xl-01",Name="none",Product_typeId=1},
+            new () {Id=8,OwnerId="xl-01",Name="none",Product_typeId=2},
+            new () {Id=9,OwnerId="xl-01",Name="none",Product_typeId=3},
+            new () {Id=10,OwnerId="xl-01",Name="none",Product_typeId=4},
+            new () {Id=11,OwnerId="xl-01",Name="none",Product_typeId=5},
+            new () {Id=12,OwnerId="xl-01",Name="none",Product_typeId=6},
+
+            new () {Id=13,OwnerId="sh.x-01",Name="none",Product_typeId=1},
+            new () {Id=14,OwnerId="sh.x-01",Name="none",Product_typeId=2},
+            new () {Id=15,OwnerId="sh.x-01",Name="none",Product_typeId=3},
+            new () {Id=16,OwnerId="sh.x-01",Name="none",Product_typeId=4},
+            new () {Id=17,OwnerId="sh.x-01",Name="none",Product_typeId=5},
+            new () {Id=18,OwnerId="sh.x-01",Name="none",Product_typeId=6},
+
+            new () {Id=19,OwnerId="mh-01",Name="none",Product_typeId=1},
+            new () {Id=20,OwnerId="mh-01",Name="none",Product_typeId=2},
+            new () {Id=21,OwnerId="mh-01",Name="none",Product_typeId=3},
+            new () {Id=22,OwnerId="mh-01",Name="none",Product_typeId=4},
+            new () {Id=23,OwnerId="mh-01",Name="none",Product_typeId=5},
+            new () {Id=24,OwnerId="mh-01",Name="none",Product_typeId=6},
+
+            new () {Id=25,OwnerId="xf-01",Name="none",Product_typeId=1},
+            new () {Id=26,OwnerId="xf-01",Name="none",Product_typeId=2},
+            new () {Id=27,OwnerId="xf-01",Name="none",Product_typeId=3},
+            new () {Id=28,OwnerId="xf-01",Name="none",Product_typeId=4},
+            new () {Id=29,OwnerId="xf-01",Name="none",Product_typeId=5},
+            new () {Id=30,OwnerId="xf-01",Name="none",Product_typeId=6}
         };
 
         modelBuilder.Entity<Article>().HasData(articles);

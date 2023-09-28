@@ -25,7 +25,7 @@ namespace ShopAPI.Controllers
         [AllowAnonymous]
         public async Task<ActionResult< IEnumerable<CatalogDto>>> GetAll(string  owner_id )
         {
-            var catalogs = await (from b in _db.Catalogs!
+            var catalogs = await (from b in _db.Catalogs
                                     where b.OwnerId == owner_id
                                   select new CatalogDto()
                                   {

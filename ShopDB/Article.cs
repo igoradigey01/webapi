@@ -6,6 +6,8 @@ public partial class Article
 {
     public int Id { get; set; }
 
+    public required string OwnerId { get; set; }  
+
     public int Product_typeId { get; set; }
 
     public required string Name { get; set; }

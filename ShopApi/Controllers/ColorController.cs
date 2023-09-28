@@ -22,15 +22,17 @@ namespace ShopAPI.Controllers
             _db = db;
         }
 
-        [HttpGet]
+        [HttpGet("{owner_id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<ColorDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<ColorDto>>> GetForProduct_type(string  owner_id)
         {
             // int i = 0;
-            var colors = await (from b in _db.Colors!
+            var colors = await (from b in _db.Colors
+                                 where b.OwnerId == owner_id
                                 select new ColorDto()
                                 {
                                     Id = b.Id,
+                                     OwnerId=b.OwnerId,
                                     Name = b.Name,
                                    
                                     Product_type_id = b.Product_typeId,
@@ -43,16 +45,17 @@ namespace ShopAPI.Controllers
 
         }
 
-        [HttpGet("{product_type_id}")]
+        [HttpGet("{owner_id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<ColorDto>>> GetAll(int product_type_id)
+        public async Task<ActionResult<IEnumerable<ColorDto>>> GetAll( string  owner_id, int product_type_id)
         {
             // int i = 0;
-            var colors = await (from item in _db.Colors!
-                                where item.Product_typeId == product_type_id
+            var colors = await (from item in _db.Colors
+                                where item.OwnerId==owner_id && item.Product_typeId == product_type_id
                                 select new ColorDto()
                                 {
                                     Id = item.Id,
+                                     OwnerId=item.OwnerId,
                                     Name = item.Name,                                   
                                     Product_type_id = item.Product_typeId,
                                     Hidden = item.Hidden
@@ -69,6 +72,7 @@ namespace ShopAPI.Controllers
             var item = await _db.Colors!.Select(d => new ColorDto
             {
                 Id = d.Id,
+                 OwnerId=d.OwnerId,
                 Name = d.Name,                
                 Product_type_id = d.Product_typeId,
                 Hidden = d.Hidden
@@ -104,6 +108,7 @@ namespace ShopAPI.Controllers
             var dto = new ColorDto()
             {
                 Id = item.Id,
+                 OwnerId=item.OwnerId,
                 Name = item.Name,
                 Product_type_id = item.Product_typeId,
                 Hidden = item.Hidden
