@@ -36,7 +36,7 @@ public partial class Product
     public virtual Brand Brand { get; set; } = null!;
     public virtual Article Article { get; set; } = null!;
 
-    public virtual ICollection<Photo> ImagePs { get; set; } = new List<Photo>();
+    public virtual ICollection<Photo> Photos { get; set; } = new List<Photo>();
 
     public virtual ICollection<ProductNomenclature> ProductNomenclature_Nomenclatures { get; set; } = new List<ProductNomenclature>();
 

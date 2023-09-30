@@ -29,3 +29,5 @@
 ##   Photo api
 
 - https://code-maze.com/upload-files-dot-net-core-angular/
+- https://makolyte.com/aspnetcore-receive-a-file-in-the-request/
+- https://code-maze.com/file-upload-aspnetcore-mvc/

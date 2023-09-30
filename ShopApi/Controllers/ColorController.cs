@@ -24,7 +24,7 @@ namespace ShopAPI.Controllers
 
         [HttpGet("{owner_id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<ColorDto>>> GetForProduct_type(string  owner_id)
+        public async Task<ActionResult<IEnumerable<ColorDto>>>  GetAll(string  owner_id)
         {
             // int i = 0;
             var colors = await (from b in _db.Colors
@@ -47,7 +47,7 @@ namespace ShopAPI.Controllers
 
         [HttpGet("{owner_id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<ColorDto>>> GetAll( string  owner_id, int product_type_id)
+        public async Task<ActionResult<IEnumerable<ColorDto>>>  GetForProduct_type( string  owner_id, int product_type_id)
         {
             // int i = 0;
             var colors = await (from item in _db.Colors

@@ -273,7 +273,7 @@ public partial class ShopDbContext : DbContext
                 .HasCharSet("utf8mb4");
             entity.Property(e => e.ProductId).HasColumnName("Product_id");
 
-            entity.HasOne(d => d.Product).WithMany(p => p.ImagePs)
+            entity.HasOne(d => d.Product).WithMany(p => p.Photos)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_ImageP_Product1");

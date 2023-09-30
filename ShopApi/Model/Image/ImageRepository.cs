@@ -1,29 +1,13 @@
-using System;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using System.IO;
 using ImageMagick;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-
 
 namespace ShopAPI.Model;
 
-    //------------------------------------Magick.net croup img file----------------
-    // https://github.com/dlemstra/Magick.NET/blob/main/docs/ReadingImages.md
-
- 
-   
-
-    
     public class ImageRepository
     {
 
         private readonly string _imgDir;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly ImageConst _syfficsImg = new();
-
 
 
         // dir host img wwwroot/images
@@ -35,9 +19,7 @@ namespace ShopAPI.Model;
                 return System.IO.Path.Combine(wwwroot, _imgDir);
             }
         }
-       
-       
-
+    
         public string RamdomName
         {
             get
@@ -68,7 +50,7 @@ namespace ShopAPI.Model;
 
 
         }
-        
+       
    
         public void Update(string imgName, Stream fileStream)
         {
