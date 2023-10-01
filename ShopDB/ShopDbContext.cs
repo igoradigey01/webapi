@@ -299,11 +299,11 @@ public partial class ShopDbContext : DbContext
 
             entity.Property(e => e.Guid)
                 .IsRequired()
-                //   .HasMaxLength(255)
+                .HasMaxLength(36)
                 .HasColumnName("guid")
                 .UseCollation("utf8mb4_0900_ai_ci")
-                .HasCharSet("utf8mb4")
-                .HasDefaultValueSql("UUID()");
+                .HasCharSet("utf8mb4");
+            //    .HasDefaultValueSql("UUID()");
 
             entity.Property(e => e.Product_typeId).HasColumnName("product_type_id");
 

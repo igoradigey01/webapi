@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 
 using Microsoft.AspNetCore.HttpOverrides;
+using ShopAPI.Model;
 using ShopDB;
 using OrderDB;
 
@@ -43,7 +44,10 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
-//var connectionString = config.GetSection("DemoApp")["ConnectionString"];
+
+builder.Services.AddTransient<ImageRepository>();
+
+
 string connectString = String.Empty;
 
 if (builder.Environment.IsDevelopment())
@@ -188,7 +192,7 @@ app.UseAuthorization();   // добавление middleware авторизац�
 
 
 
-
+app.UseStaticFiles();
 
 
 //ProductEndpoints.Map(app) ;

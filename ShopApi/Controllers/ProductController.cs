@@ -196,6 +196,7 @@ namespace ShopAPI.Controllers
 
 
         [HttpPost] // (post) создать из [FromBody]
+        
         public async Task<ActionResult<ProductDto>> Create([FromForm] ProductRequestDto item)
         {
             // throw new NotImplementedException();
@@ -207,11 +208,12 @@ namespace ShopAPI.Controllers
 
             if (item.File!.Length <= 0)
                 return BadRequest("Пустой файл Фото");
-
+            if(ProductNameExist(item.OwnerId,item.Title))
+                return BadRequest("Такое имя товара уже существует!");
             Product product = new()
             {
                 Id = 0,
-                Guid = String.Empty,
+                Guid = Guid.NewGuid().ToString(),
                 OwnerId = item.OwnerId,
                 Product_typeId = item.Product_typeId,
                 Title = item.Title,
@@ -302,6 +304,9 @@ namespace ShopAPI.Controllers
             if (item_c.File.Length <= 0)
                 return BadRequest("Пустой файл Фото");
 
+            if(ProductNameExist(item_c.OwnerId,item_c.Title))
+                return BadRequest("Такое имя товара уже существует!");    
+
             Product product = new()
             {
                 Id = item_c.Id,
@@ -376,6 +381,9 @@ namespace ShopAPI.Controllers
                 return BadRequest();
             }
 
+            if(ProductNameExist(item.OwnerId,item.Title))
+                return BadRequest("Такое имя товара уже существует!");
+
             _db.Entry(item).State = EntityState.Modified;
 
             try
@@ -446,6 +454,10 @@ namespace ShopAPI.Controllers
         private bool ProductExists(int id)
         {
             return _db.Products.Count(e => e.Id == id) > 0;
+        }
+        private bool ProductNameExist(string ownerId,string title){
+             return _db.Products.Count(e => e.OwnerId == ownerId && e.Title ==title) > 0;
+
         }
     }
 }

@@ -34,7 +34,7 @@ RETURN  order_no;
 END
 ```
 
-```
+```  create fuction  last_id()
 CREATE DEFINER=`root`@`%` FUNCTION `last_id_order_detail`() RETURNS int
     DETERMINISTIC
 BEGIN
@@ -44,3 +44,9 @@ SELECT id FROM OrderDB.OrderDetail ORDER BY id DESC LIMIT 1
 RETURN last_id;
 END
 ```
+
+##   reset  id in table  
+     -  mssql
+      * DBCC CHECKIDENT ([Номенклатура],RESEED,1)
+     -  mysql 
+      * ALTER TABLE ShopDB.Product  AUTO_INCREMENT = 1;
