@@ -3,7 +3,8 @@ namespace ShopAPI.Model;
 public class ProductRequestDto
 {
       public int Id { get; set; }
-      public  string? Guid { get; set; } // set in DB - UUID()
+      public  string? Guid { get; set; }
+      public bool Hidden { get; set; }
       public required string OwnerId { get; set; }
 
       public required int Product_typeId { get; set; }

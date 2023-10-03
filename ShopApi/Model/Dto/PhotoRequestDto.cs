@@ -1,7 +1,8 @@
 namespace ShopAPI.Model;
 
-public class ImageRequestDto
-{
+public class PhotoRequestDto
+{     
+      public int Id {get;set;}
       public int IdProduct { get; set; }
       public  string? Guid { get; set; } 
 

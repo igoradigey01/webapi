@@ -246,7 +246,7 @@ public partial class ShopDbContext : DbContext
                 .UseCollation("utf8mb4_0900_ai_ci")
                 .HasCharSet("utf8mb4");
             entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
-            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
+            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(0);
 
             entity.HasOne(d => d.Product_Type).WithMany(p => p.Colors)
             .HasForeignKey(d => d.Product_typeId)
@@ -308,7 +308,7 @@ public partial class ShopDbContext : DbContext
             entity.Property(e => e.Product_typeId).HasColumnName("product_type_id");
 
 
-
+            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(0);
 
             entity.Property(e => e.SubKatalogId).HasColumnName("sub_katalog_id");
 

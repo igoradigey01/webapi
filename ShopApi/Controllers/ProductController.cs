@@ -207,12 +207,14 @@ namespace ShopAPI.Controllers
 
             if (item.File!.Length <= 0)
                 return BadRequest("Пустой файл Фото");
+                
             if(ProductNameExist(item.OwnerId,item.Title))
                 return BadRequest("Такое имя товара уже существует!");
             Product product = new()
             {
                 Id = 0,
                 Guid = Guid.NewGuid().ToString(),
+                Hidden=item.Hidden,
                 OwnerId = item.OwnerId,
                 Product_typeId = item.Product_typeId,
                 Title = item.Title,
@@ -249,7 +251,7 @@ namespace ShopAPI.Controllers
             var dto = new ProductDto
             {
 
-                Id = item.Id,
+                Id = product.Id,
                 Guid = product.Guid,
                 OwnerId = product.OwnerId,
                 Product_typeId = product.Product_typeId,
@@ -283,7 +285,7 @@ namespace ShopAPI.Controllers
 
 
             //-------------new ----------------------
-            return CreatedAtRoute("GetItem", new { id = item.Id }, dto);
+            return CreatedAtRoute("GetItem", new { id = product.Id }, dto);
         }
 
 
@@ -306,10 +308,22 @@ namespace ShopAPI.Controllers
             if(ProductNameExist(item_c.OwnerId,item_c.Title))
                 return BadRequest("Такое имя товара уже существует!");    
 
+             var guid = await (from puducts in _db.Products
+                              where puducts.Id == id && puducts.Guid == item_c.Guid
+                              select puducts.Guid).FirstOrDefaultAsync();
+
+            if (String.IsNullOrEmpty(guid))
+            {
+
+                return BadRequest("guid неравны");
+
+            }    
+
             Product product = new()
             {
                 Id = item_c.Id,
                 Guid = item_c.Guid!,
+                Hidden=item_c.Hidden,
                 OwnerId = item_c.OwnerId,
                 Product_typeId = item_c.Product_typeId,
                 Title = item_c.Title,
@@ -406,7 +420,7 @@ namespace ShopAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateOnlyImg(int id, [FromForm] ImageRequestDto item)
+        public async Task<ActionResult> UpdateOnlyImg(int id, [FromForm] PhotoRequestDto item)
         {
 
             if (!ModelState.IsValid)
@@ -416,7 +430,7 @@ namespace ShopAPI.Controllers
 
             if (id != item.IdProduct)
             {
-                return BadRequest("id неравны");
+                return BadRequest("id товара неравны");
             }
 
             var guid = await (from puducts in _db.Products

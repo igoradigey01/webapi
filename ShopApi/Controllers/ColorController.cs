@@ -69,7 +69,7 @@ namespace ShopAPI.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<ColorDto>> GetItem(int id)
         {
-            var item = await _db.Colors!.Select(d => new ColorDto
+            var item = await _db.Colors.Select(d => new ColorDto
             {
                 Id = d.Id,
                  OwnerId=d.OwnerId,
