@@ -224,7 +224,7 @@ namespace ShopAPI.Controllers
         [HttpGet("{id}", Name = nameof(GetItem))]
         public async Task<ActionResult<OrderDto>> GetItem(int id)
         {
-            int v = id;
+            
             var item = await _db.Orders.Select(d => new OrderDto
             {
                 Id = d.Id,

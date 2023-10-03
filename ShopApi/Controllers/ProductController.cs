@@ -195,8 +195,7 @@ namespace ShopAPI.Controllers
 
 
 
-        [HttpPost] // (post) создать из [FromBody]
-        
+        [HttpPost] // (post) создать из [FromBody]        
         public async Task<ActionResult<ProductDto>> Create([FromForm] ProductRequestDto item)
         {
             // throw new NotImplementedException();
@@ -415,7 +414,7 @@ namespace ShopAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != item.Id)
+            if (id != item.IdProduct)
             {
                 return BadRequest("id неравны");
             }
