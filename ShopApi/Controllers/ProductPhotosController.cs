@@ -177,7 +177,7 @@ public class ProductPhotosController : ControllerBase // Соств Product
             }
         }
 
-           _imageRepository.Save(photo.Guid, item.File.OpenReadStream());
+        _imageRepository.Save(photo.Guid, item.File.OpenReadStream());
 
         return NoContent(); //204
 
@@ -214,15 +214,15 @@ public class ProductPhotosController : ControllerBase // Соств Product
 
         }
 
-       
-         _imageRepository.Save(item_c.Guid!, item_c.File.OpenReadStream());
+
+        _imageRepository.Save(item_c.Guid!, item_c.File.OpenReadStream());
 
         return NoContent(); //204
 
 
     }
 
-
+    [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(int id)
     {
         Photo? item = await _db.Photos.FindAsync(id);

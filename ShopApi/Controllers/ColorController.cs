@@ -158,7 +158,7 @@ namespace ShopAPI.Controllers
 
         }
 
-        // DELETE api/<CategoriaController>/5       
+          
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {

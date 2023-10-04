@@ -1,9 +1,8 @@
 namespace ShopAPI.Model;
 
-public class ProductСonsistDto
+public class ProductNomenclatureDto
 {
-
-   public int Id { get; set; }
+    public int Id { get; set; }
 
     public int ProductId { get; set; }
 
