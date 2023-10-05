@@ -1,8 +1,11 @@
-## Asp net core
+## swagger
+ - https://s.x-01.ru/swg/swagger.html
+
+## dotnet publish
 - cd shopapi
 - dotnet run 
 - dotnet publish -c release -o published
-- 
+## user-jwts
       Microsoft.AspNetCore.Routing.Matching.AmbiguousMatchException: The request matched multiple endpoints. Matc
 - dotnet  user-jwts create
 - dotnet  user-jwts print db3caef7 --show-all
