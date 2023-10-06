@@ -119,7 +119,7 @@ public partial class ShopDbContext : DbContext
        {
            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-           entity.ToTable("SubKatalog");
+           entity.ToTable("SubCatalog");
 
            entity.HasIndex(e => e.CatalogId, "fk_SubCatalog_Catalog1_idx");
            entity.HasIndex(e => e.OwnerId, "fk_SubCatalog_OwnerId1_idx");
@@ -150,10 +150,10 @@ public partial class ShopDbContext : DbContext
                .UseCollation("utf8mb4_0900_ai_ci")
                .HasCharSet("utf8mb4");
 
-           entity.HasOne(d => d.Catalog).WithMany(p => p.SubKatalogs)
+           entity.HasOne(d => d.Catalog).WithMany(p => p.SubCatalogs)
                .HasForeignKey(d => d.CatalogId)
                .OnDelete(DeleteBehavior.ClientSetNull)
-               .HasConstraintName("fk_Catalog_SubKatalogs1");
+               .HasConstraintName("fk_Catalog_SubCatalogs1");
        });
 
         modelBuilder.Entity<Article>(entity =>
@@ -310,7 +310,7 @@ public partial class ShopDbContext : DbContext
 
             entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(0);
 
-            entity.Property(e => e.SubKatalogId).HasColumnName("sub_katalog_id");
+            entity.Property(e => e.SubCatalogId).HasColumnName("sub_catalog_id");
 
             entity.Property(p => p.ColorId).HasColumnName("color_id");
             entity.Property(p => p.ArticleId).HasColumnName("article_id");
@@ -341,7 +341,7 @@ public partial class ShopDbContext : DbContext
 
             entity.HasOne(d => d.SubCatalog)
                    .WithMany(p => p.Product)
-                   .HasForeignKey(d => d.SubKatalogId)
+                   .HasForeignKey(d => d.SubCatalogId)
                    .OnDelete(DeleteBehavior.ClientSetNull)
                    .HasConstraintName("fk_Product_SubCatolg1");
 

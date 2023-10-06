@@ -42,7 +42,7 @@ namespace ShopAPI.Controllers
                                       Product_typeId = item.Product_typeId,
                                       Title = item.Title,
 
-                                      SubKatalogId = item.SubKatalogId,
+                                      SubCatalogId = item.SubCatalogId,
                                       ColorId = item.ColorId,
                                       BrandId = item.BrandId,
                                       ArticleId = item.ArticleId,
@@ -82,7 +82,7 @@ namespace ShopAPI.Controllers
                                       Product_typeId = item.Product_typeId,
                                       Title = item.Title,
 
-                                      SubKatalogId = item.SubKatalogId,
+                                      SubCatalogId = item.SubCatalogId,
                                       ColorId = item.ColorId,
                                       BrandId = item.BrandId,
                                       ArticleId = item.ArticleId,
@@ -114,7 +114,7 @@ namespace ShopAPI.Controllers
         {
             // int i = 0; 
             var products = await (from item in _db.Products
-                                  where item.OwnerId == owner_id && item.SubKatalogId == idSubCatalog
+                                  where item.OwnerId == owner_id && item.SubCatalogId == idSubCatalog
                                   select new ProductDto()
                                   {
                                       Id = item.Id,
@@ -123,7 +123,7 @@ namespace ShopAPI.Controllers
                                       Product_typeId = item.Product_typeId,
                                       Title = item.Title,
 
-                                      SubKatalogId = item.SubKatalogId,
+                                      SubCatalogId = item.SubCatalogId,
                                       ColorId = item.ColorId,
                                       BrandId = item.BrandId,
                                       ArticleId = item.ArticleId,
@@ -165,7 +165,7 @@ namespace ShopAPI.Controllers
                                      Product_typeId = item.Product_typeId,
                                      Title = item.Title,
 
-                                     SubKatalogId = item.SubKatalogId,
+                                     SubCatalogId = item.SubCatalogId,
                                      ColorId = item.ColorId,
                                      BrandId = item.BrandId,
                                      ArticleId = item.ArticleId,
@@ -219,7 +219,7 @@ namespace ShopAPI.Controllers
                 Product_typeId = item.Product_typeId,
                 Title = item.Title,
 
-                SubKatalogId = item.SubKatalogId,
+                SubCatalogId = item.SubCatalogId,
                 ColorId = item.ColorId,
                 BrandId = item.BrandId,
                 ArticleId = item.ArticleId,
@@ -257,7 +257,7 @@ namespace ShopAPI.Controllers
                 Product_typeId = product.Product_typeId,
                 Title = product.Title,
 
-                SubKatalogId = product.SubKatalogId,
+                SubCatalogId = product.SubCatalogId,
                 ColorId = product.ColorId,
                 BrandId = product.BrandId,
                 ArticleId = product.ArticleId,
@@ -328,7 +328,7 @@ namespace ShopAPI.Controllers
                 Product_typeId = item_c.Product_typeId,
                 Title = item_c.Title,
 
-                SubKatalogId = item_c.SubKatalogId,
+                SubCatalogId = item_c.SubCatalogId,
                 ColorId = item_c.ColorId,
                 BrandId = item_c.BrandId,
                 ArticleId = item_c.ArticleId,

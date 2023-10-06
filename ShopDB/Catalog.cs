@@ -16,6 +16,6 @@ public partial class Catalog
 
     public string? DecriptSeo { get; set; }
 
-    public virtual ICollection<SubCatalog> SubKatalogs { get; set; } = new List<SubCatalog>();
+    public virtual ICollection<SubCatalog> SubCatalogs { get; set; } = new List<SubCatalog>();
 }
 

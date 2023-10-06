@@ -10,7 +10,7 @@ public class ProductRequestDto
       public required int Product_typeId { get; set; }
       public required string Title { get; set; }
 
-      public int SubKatalogId { get; set; }
+      public int SubCatalogId { get; set; }
       public int ColorId { get; set; }
       public int BrandId { get; set; }
       public int ArticleId { get; set; }
