@@ -41,8 +41,8 @@ BEGIN
 declare  last_id int;
 SELECT id FROM OrderDB.OrderDetail ORDER BY id DESC LIMIT 1
   INTO  last_id  ;
-RETURN last_id;
-END
+RETURN  ifnull(last_id,0);
+
 ```
 
 ##   reset  id in table  

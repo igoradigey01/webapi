@@ -430,9 +430,14 @@ namespace ShopAPI.Controllers
             {
                 cmd.Connection.Open();
             }
-            id_last = (int)cmd.ExecuteScalar()!;
-            // cmd.Connection.Close();
-            return id_last;
+            var i = cmd.ExecuteScalar() ;
+            if(i==null) {
+                return id_last=1;
+            }
+            else
+            {
+                return id_last=(int)i;
+            }
         }
 
 
