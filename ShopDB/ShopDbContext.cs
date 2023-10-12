@@ -436,7 +436,12 @@ public partial class ShopDbContext : DbContext
     private void OnModelCatalogCreating(ModelBuilder modelBuilder)
     {
         var catalogs = new Catalog[]{
-           new () {Id=1,Name="Base",Hidden=true,OwnerId="x-01",DecriptSeo=""}
+           new () {Id=1,Name="Base",Hidden=true,OwnerId="x-01",DecriptSeo=""},
+            new () {Id=2,Name="Base",Hidden=true,OwnerId="sh.x-01",DecriptSeo=""},
+             new () {Id=3,Name="Base",Hidden=true,OwnerId="xf-01",DecriptSeo=""},
+              new () {Id=4,Name="Base",Hidden=true,OwnerId="xl-01",DecriptSeo=""},
+               new () {Id=5,Name="Base",Hidden=true,OwnerId="mh-01",DecriptSeo=""}
+                
            };
         modelBuilder.Entity<Catalog>().HasData(catalogs);
         base.OnModelCreating(modelBuilder);

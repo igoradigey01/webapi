@@ -194,7 +194,7 @@ namespace ShopAPI.Controllers
 
                 if (user_tel == null)
                 {
-                    user_tel = new UserIdentityX01 { FirstName = user.FirstName, UserName = user.UserName, NormalizedUserName = user.Id };
+                    user_tel = new UserIdentityX01 { FirstName = user.FirstName, UserName = user.UserName, NormalizedUserName = user.Id,SpaId=user.SpaId };
                     await _userManager.CreateAsync(user_tel);
                     //prepare and send an email for the email confirmation
                     await _userManager.AddToRoleAsync(user_tel, X01Roles.Shopper);
@@ -261,7 +261,8 @@ namespace ShopAPI.Controllers
                         UserName = payload.Email,
                         FirstName = payload.FamilyName,
                         LastName = payload.Name,
-                        Address = ""
+                        Address = "",
+                        SpaId=externalAuth.SpaId
 
                     };
                     await _userManager.CreateAsync(user);
@@ -322,7 +323,13 @@ namespace ShopAPI.Controllers
             {
                 //  user = await _userManager.FindByEmailAsync(payload.Email);
 
-                user = new UserIdentityX01 { UserName = payload.UserId.ToString(), NormalizedUserName = payload.UserId.ToString(), FirstName = payload.FirstName, LastName = payload.LastName };
+                user = new UserIdentityX01 { 
+                    UserName = payload.UserId.ToString(), 
+                    NormalizedUserName = payload.UserId.ToString(),
+                    FirstName = payload.FirstName, 
+                    LastName = payload.LastName,
+                    SpaId=externalAuth.IdSpa
+                    };
                 await _userManager.CreateAsync(user);
 
                 //prepare and send an email for the email confirmation
