@@ -213,7 +213,7 @@ namespace ShopAPI.Controllers
                 _ = SetRefreshTokenAsync(refreshToken, user_tel);
 
 
-                return Ok(new TokenModelDto { Access_token = accessToken });
+                return Ok(new TokenModelDto { Access_token = accessToken });;
             }
 
 
@@ -239,8 +239,16 @@ namespace ShopAPI.Controllers
 
         [HttpPost("GoogleExternalLogin")]
         [AllowAnonymous]
-        public async Task<IActionResult> GoogleExternalLogin([FromBody] ExternalGoogleDto externalAuth)
+        public async Task<IActionResult> GoogleExternalLogin( ExternalGoogleDto externalAuth)
         {
+            Console.WriteLine("gooleSpaId" +externalAuth.SpaId);
+
+              if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+           
             var payload = await VerifyGoogleToken(externalAuth);
             if (payload == null)
                 return BadRequest("Invalid External Authentication.");
@@ -509,7 +517,7 @@ namespace ShopAPI.Controllers
 
         [HttpPost("refresh-token")]
         [AllowAnonymous]
-        public async Task<ActionResult<string>> RefreshToken(TokenModelDto tokenApiModel)
+        public async Task<ActionResult<TokenModelDto>> RefreshToken(TokenModelDto tokenApiModel)
         {
             var refreshToken = Request.Cookies["refreshToken"];
 
@@ -530,7 +538,7 @@ namespace ShopAPI.Controllers
             var newRefreshToken = GenerateRefreshToken();
              await     SetRefreshTokenAsync(newRefreshToken, user);
 
-            return Ok(token);
+            return Ok(new TokenModelDto { Access_token = token });
         }
 
         private RefreshToken GenerateRefreshToken()
@@ -542,7 +550,7 @@ namespace ShopAPI.Controllers
                 Created = DateTime.Now
             };
 
-            return refreshToken;
+            return  refreshToken;
         }
 
         private async Task SetRefreshTokenAsync(RefreshToken newRefreshToken, UserIdentityX01 user)
