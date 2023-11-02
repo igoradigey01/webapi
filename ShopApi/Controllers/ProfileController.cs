@@ -118,10 +118,11 @@ namespace ShopAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Model is not valid");
 
-                if(String.IsNullOrEmpty(resetPasswordDto.Email))
-            return BadRequest("Email null or empty");
+                if(String.IsNullOrEmpty(resetPasswordDto.Email)||String.IsNullOrEmpty(resetPasswordDto.Phone))
+            return BadRequest("Email or Phone is null or empty");
 
-            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+            UserIdentityX01? user=await _userManager.GetUserAsync(HttpContext.User);
+            
             if (user == null)
                 return BadRequest("Invalid Request");
               
@@ -147,10 +148,10 @@ namespace ShopAPI.Controllers
 
             if (user == null)
                 return BadRequest("User Not Found");
-                if(!String.IsNullOrEmpty( user.Email))
-                 return  BadRequest("Email Not Found");
-            if(!user.Email!.Equals(id))
-                return BadRequest("this mail not for user account");
+
+            
+            if(!user.Email!.Equals(id) ||!user.PhoneNumber!.Equals(id))
+                return BadRequest("this mail or phone not for user account");
             var resetPassResult = await _userManager.DeleteAsync(user);
 
                 if (!resetPassResult.Succeeded)

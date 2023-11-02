@@ -12,8 +12,9 @@ namespace ShopApi.Model.Identity
         [Compare("NewPassword", ErrorMessage = "The password and confirmation password do not match.")]
         public string? ConfirmPassword { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]        
-        public required string Email { get; set; }
+              
+        public  string? Email { get; set; }
+        public  string? Phone { get; set; }
         
     }
 }
