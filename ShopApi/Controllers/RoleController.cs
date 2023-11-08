@@ -26,7 +26,7 @@ namespace ShopAPI.Controllers
 
         // GET api/role
         [HttpGet]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<IEnumerable<string>> Get()
         {
             var userId = User.FindFirstValue(ClaimTypes.Name);

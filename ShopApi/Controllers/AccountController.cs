@@ -13,7 +13,8 @@ using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 
 namespace ShopAPI.Controllers
 {
@@ -239,9 +240,9 @@ namespace ShopAPI.Controllers
 
         [HttpPost("GoogleExternalLogin")]
         [AllowAnonymous]
-        public async Task<IActionResult> GoogleExternalLogin( ExternalGoogleDto externalAuth)
+        public async Task<IActionResult> GoogleExternalLogin([FromBody] ExternalGoogleDto externalAuth)
         {
-            Console.WriteLine("gooleSpaId" +externalAuth.SpaId);
+            Console.WriteLine("gooleSpaId" +externalAuth.IdSpa);
 
               if (!ModelState.IsValid)
             {
@@ -270,7 +271,7 @@ namespace ShopAPI.Controllers
                         FirstName = payload.FamilyName,
                         LastName = payload.Name,
                         Address = "",
-                        SpaId=externalAuth.SpaId
+                        SpaId=externalAuth.IdSpa
 
                     };
                     await _userManager.CreateAsync(user);
@@ -294,9 +295,11 @@ namespace ShopAPI.Controllers
             var accessToken = GenerateTokenAsync(user).Result;
             var refreshToken = GenerateRefreshToken();
            await SetRefreshTokenAsync(refreshToken, user);
+             //await HttpContext.User
 
 
             return Ok(new TokenModelDto { Access_token = accessToken });
+         
         }
 
 
