@@ -59,15 +59,15 @@ namespace ShopAPI.Controllers
             {
                 //   var idUser = Guid.Parse(idUserClaim.Value);
                 // var user = await this._userManager.FindByIdAsync(userId.Claims[]);                                     //_repository.GetUserId(idUser);
-                UserProfileDto userSerialize = new UserProfileDto();
-                userSerialize.FirstName = user.FirstName;
-                userSerialize.LastName = user.LastName;
-                userSerialize.Address = user.Address;
-                userSerialize.Email = user.Email;
-                userSerialize.Phone = user.Phone;
+                UserProfileDto userDto = new UserProfileDto();
+                userDto.FirstName = user.FirstName;
+                userDto.LastName = user.LastName;
+                userDto.Address = user.Address;
+                userDto.Email = user.Email;
+                userDto.Phone = user.Phone;
 
 
-                return Ok(userSerialize);
+                return Ok(userDto);
             }
             else
             {
