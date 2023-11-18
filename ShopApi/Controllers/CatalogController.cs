@@ -63,6 +63,7 @@ namespace ShopAPI.Controllers
 
         // (post) создать
         [HttpPost]
+         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<CatalogDto>> Create(Catalog item)
         {
             
@@ -93,6 +94,7 @@ namespace ShopAPI.Controllers
 
         //  (put) -изменить
         [HttpPut("{id}")]
+         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> Update(int id, Catalog item)
         {
            
@@ -129,6 +131,7 @@ namespace ShopAPI.Controllers
 
         
         [HttpDelete("{id}")]
+         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> Delete(int id)
         {
           
