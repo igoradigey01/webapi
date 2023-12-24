@@ -95,6 +95,7 @@ namespace ShopAPI.Controllers
         
         //  (post) создать
         [HttpPost]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<ArticleDto>> Create(Article item)
         {
             if (!ModelState.IsValid)
@@ -128,6 +129,7 @@ namespace ShopAPI.Controllers
 
         // (put) -изменить
         [HttpPut("{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> Update(int id, Article item)
         {
 
@@ -165,6 +167,7 @@ namespace ShopAPI.Controllers
         }
       
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<Article>> Delete(int id)
         {
 

@@ -24,6 +24,7 @@ public partial class ShopDbContext : DbContext
 
     public virtual DbSet<Color> Colors { get; set; } = null!;
 
+    public virtual DbSet<Product_type> Product_Types {get;set;}=null!;
 
     public virtual DbSet<Product> Products { get; set; } = null!;
 

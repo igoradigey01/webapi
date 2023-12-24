@@ -23,7 +23,33 @@ namespace ShopAPI.Controllers
 
         [HttpGet("{owner_id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<SubCatalogDto>>> GetAll(string owner_id, int catalog_id)
+        public async Task<ActionResult<IEnumerable<SubCatalogDto>>> GetAll(string owner_id)
+        {
+            var Subcatalogs = await (from b in _db.SubCatalogs!
+                                     where b.OwnerId == owner_id 
+                                     select new SubCatalogDto()
+                                     {
+                                         Id = b.Id,
+                                         OwnerId = b.OwnerId,
+                                         CatalogId = b.CatalogId,
+                                         GoogleTypeId = b.GoogleTypeId,
+
+                                         Name = b.Name,
+                                         Hidden = b.Hidden,
+                                         DecriptSeo = b.DecriptSeo
+                                     }).ToListAsync();
+            if (Subcatalogs == null) return NotFound();
+
+
+            return Ok(Subcatalogs);
+        }
+
+
+       
+
+        [HttpGet("{owner_id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<SubCatalogDto>>> GetForCatalog(string owner_id, int catalog_id)
         {
             var Subcatalogs = await (from b in _db.SubCatalogs!
                                      where b.OwnerId == owner_id && b.CatalogId == catalog_id
@@ -69,6 +95,7 @@ namespace ShopAPI.Controllers
 
          // (post) создать
         [HttpPost]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<SubCatalogDto>> Create(SubCatalog item)
         {
             
@@ -100,6 +127,7 @@ namespace ShopAPI.Controllers
         }
 
          [HttpPut("{id}")]
+         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> Update(int id, SubCatalog item)
         {
            
@@ -136,6 +164,7 @@ namespace ShopAPI.Controllers
 
 
          [HttpDelete("{id}")]
+         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> Delete(int id)
         {
           
