@@ -36,7 +36,7 @@ namespace ShopAPI.Controllers
                                        OwnerId=b.OwnerId,
                                       Name = b.Name,
                                      // PostavchikId = b.PostavchikId,
-                                      Product_type_id = b.Product_typeId,
+                                      Product_typeId = b.Product_typeId,
                                       Hidden = b.Hidden
                                   }).ToListAsync();
              if (brands == null)return NotFound();
@@ -57,7 +57,7 @@ namespace ShopAPI.Controllers
                                       Id = item.Id,
                                        OwnerId=item.OwnerId,
                                       Name = item.Name,                                     
-                                      Product_type_id = item.Product_typeId,
+                                      Product_typeId = item.Product_typeId,
                                       Hidden = item.Hidden
                                   }).ToListAsync();
             if (barnds == null)return NotFound();
@@ -76,7 +76,7 @@ namespace ShopAPI.Controllers
                  OwnerId=d.OwnerId,
                 Name = d.Name,
                 
-                Product_type_id = d.Product_typeId,
+                Product_typeId = d.Product_typeId,
                 Hidden = d.Hidden
             }
             )
@@ -90,7 +90,8 @@ namespace ShopAPI.Controllers
 
       
         //  (post) создать
-        [HttpPost]
+         [HttpPost]
+         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<BrandDto>> Create(Brand item)
         {
               if (!ModelState.IsValid)
@@ -110,7 +111,7 @@ namespace ShopAPI.Controllers
                 Id = item.Id,
                  OwnerId=item.OwnerId,
                 Name = item.Name,               
-                Product_type_id = item.Product_typeId,
+                Product_typeId = item.Product_typeId,
                 Hidden = item.Hidden
             };
 
@@ -121,6 +122,7 @@ namespace ShopAPI.Controllers
 
         //  (put) -изменить
         [HttpPut("{id}")]
+         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> Update(int id, Brand item)
         {
 
@@ -158,6 +160,7 @@ namespace ShopAPI.Controllers
 
            
         [HttpDelete("{id}")]
+         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> Delete(int id)
         {
           

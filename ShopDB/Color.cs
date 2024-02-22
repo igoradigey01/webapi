@@ -16,7 +16,7 @@ public partial class Color
 
     public bool Hidden { get; set; }
 
-    public virtual Product_type Product_Type { get; set; }=null!;
+    public virtual Product_type? Product_Type { get; set; }
     
      public virtual ICollection<Product> Product { get; set; } = new List<Product>();
 }
