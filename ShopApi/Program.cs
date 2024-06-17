@@ -15,9 +15,6 @@ using OrderDB;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-
 var emailConfig = builder.Configuration.
  GetSection("EmailConfiguration")
                 .Get<EmailConfiguration>();
