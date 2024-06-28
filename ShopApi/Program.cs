@@ -57,7 +57,7 @@ if (builder.Environment.IsDevelopment())
 
 }
 
-var connectStringShop = connectString + "database=ShopDB2;";
+var connectStringShop = connectString + "database=ShopDB;";
 var connectStringOrder = connectString + "database=OrderDB;";
 var connectStringAppIdentity = connectString + "database=AppIdentityDB;";
 builder.Services.AddDbContext<AppIdentityDbContext>(
