@@ -1,0 +1,65 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+dist
+tmp
+/out-tsc
+
+# dependencies
+node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+.angular
+*.txt
+appsettings.Production.json
+
+.angular
+.nx/workspace-data
+appsettings.json
+appsettings.Production.json
+my-little-secret.txt
+*.txt
+.env
+ShopApi/published/
+images/
+bin/*
+obj/*
+
+SkladDB/bin/Debug/net8.0/SkladDB.dll
+SkladDB/bin/Debug/net8.0/SkladDB.pdb
+SkladDB/obj/Debug/net8.0/SkladDB.AssemblyInfo.cs
+SkladDB/obj/Debug/net8.0/SkladDB.AssemblyInfoInputs.cache
+SkladDB/obj/Debug/net8.0/SkladDB.dll
+SkladDB/obj/Debug/net8.0/SkladDB.pdb
+SkladDB/obj/Debug/net8.0/SkladDB.sourcelink.json
+SkladDB/obj/Debug/net8.0/ref/SkladDB.dll
+SkladDB/obj/Debug/net8.0/refint/SkladDB.dll
