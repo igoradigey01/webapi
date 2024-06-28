@@ -25,10 +25,10 @@ services:
         - ./images:/app/wwwroot/images
     environment:
        ASPNETCORE_ENVIRONMENT: Production
-       ASPNETCORE_URLS: http://+:80
+       ASPNETCORE_URLS: http://+:84
       
     ports:
-      - 80
+      - 84
     restart: always
     
  

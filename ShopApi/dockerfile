@@ -7,6 +7,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 #COPY ./bin/Debug/net5.0 .
 COPY  ./published .
-EXPOSE 80
+EXPOSE 84
 
 ENTRYPOINT ["dotnet", "ShopApi.dll"]
