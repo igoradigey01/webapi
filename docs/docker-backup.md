@@ -1,8 +1,8 @@
 ## Backup
 - https://netpoint-dc.com/blog/sohranenie-i-zagruzka-obrazov-kontejnerov-docker/
 - https://4sysops.com/archives/docker-backup-container-commands-commit-save-and-export-container-images/
-- docker commit 8bad46d2d881 vs_prodject_v1_shopapi:v1
-- docker save -o E:\Backup\Backup_VS_Prodject_v1\vs_prodject_v1_shopapi.tar vs_prodject_v1_shopapi:v1
+- docker commit 8ba    shopapi:v2.3
+-  docker save   -o /backup/Docker/shopapi_v2.3.tar  shopapi:v2.3
 - docker export  8bad46d2d881  > E:\Backup\Backup_VS_Prodject_v1\vs_prodject_v1_shopapi_backup_1.tar 
 
 ```

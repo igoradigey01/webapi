@@ -47,6 +47,10 @@ builder.Services.AddTransient<ImageRepository>();
 
 string connectString = String.Empty;
 
+connectString = builder.Configuration.GetSection("ConnectString").Value!;
+
+
+/*
 if (builder.Environment.IsDevelopment())
 {
     connectString = builder.Configuration["ConnectionStrings:DeveloperX01"]!;
@@ -56,13 +60,16 @@ if (builder.Environment.IsDevelopment())
 
 
 }
+*/
 
-var connectStringShop = connectString + "database=ShopDB;";
+var connectStringShop = connectString + "database=ShopDBV2;";
 var connectStringOrder = connectString + "database=OrderDB;";
 var connectStringAppIdentity = connectString + "database=AppIdentityDB;";
 builder.Services.AddDbContext<AppIdentityDbContext>(
     options => options.UseMySql(connectStringAppIdentity, Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.33-mysql"))
 );
+
+//Console.WriteLine(connectStringShop);
 
 builder.Services.AddDbContext<ShopDbContext>(
     options => options
