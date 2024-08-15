@@ -38,6 +38,7 @@ namespace ShopAPI.Controllers
                                   {
                                       Id = item.Id,
                                       Guid = item.Guid,
+                                       Hidden=item.Hidden,
                                       OwnerId = item.OwnerId,
                                       Product_typeId = item.Product_typeId,
                                       Title = item.Title,
@@ -79,6 +80,7 @@ namespace ShopAPI.Controllers
                                       Id = item.Id,
                                       Guid = item.Guid,
                                       OwnerId = item.OwnerId,
+                                       Hidden=item.Hidden,
                                       Product_typeId = item.Product_typeId,
                                       Title = item.Title,
 
@@ -119,6 +121,7 @@ namespace ShopAPI.Controllers
                                   {
                                       Id = item.Id,
                                       Guid = item.Guid,
+                                      Hidden=item.Hidden,
                                       OwnerId = item.OwnerId,
                                       Product_typeId = item.Product_typeId,
                                       Title = item.Title,
@@ -161,6 +164,7 @@ namespace ShopAPI.Controllers
                                  {
                                      Id = item.Id,
                                      Guid = item.Guid!,
+                                      Hidden=item.Hidden,
                                      OwnerId = item.OwnerId,
                                      Product_typeId = item.Product_typeId,
                                      Title = item.Title,
@@ -196,55 +200,91 @@ namespace ShopAPI.Controllers
 
 
         [HttpPost] // (post) создать из [FromBody]        
-        public async Task<ActionResult<ProductDto>> Create([FromForm] ProductRequestDto item)
+        [AllowAnonymous]
+        public async Task<ActionResult<ProductDto>> Create()
         {
             // throw new NotImplementedException();
 
-            if (!ModelState.IsValid)
+     
+    
+            IFormCollection form = await Request.ReadFormAsync();
+            if (form == null)
             {
-                return BadRequest(ModelState);
-            }
+                return BadRequest("form data ==null");
+            } 
 
-            if (item.File!.Length <= 0)
-                return BadRequest("Пустой файл Фото");
-                
-            if(ProductNameExist(item.OwnerId,item.Title))
-                return BadRequest("Такое имя товара уже существует!");
+          
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8604 // Possible null reference argument.
             Product product = new()
             {
                 Id = 0,
                 Guid = Guid.NewGuid().ToString(),
-                Hidden=item.Hidden,
-                OwnerId = item.OwnerId,
-                Product_typeId = item.Product_typeId,
-                Title = item.Title,
+                Hidden=bool.Parse(form["hidden"]),
+                OwnerId = form["ownerId"],
+                Product_typeId = int.Parse(form["product_typeId"]),
+                Title =  form["title"],
 
-                SubCatalogId = item.SubCatalogId,
-                ColorId = item.ColorId,
-                BrandId = item.BrandId,
-                ArticleId = item.ArticleId,
+                SubCatalogId =int.Parse(form["subCatalogId"]),
+                ColorId = int.Parse(form["colorId"]),
+                BrandId = int.Parse(form["brandId"]),
+                ArticleId =int.Parse(form["articleId"]),
 
-                Position = item.Position,
+                Position = int.Parse(form["position"]),
 
-                InStock = item.InStock,
-                Sale = item.Sale,
+                InStock =bool.Parse(form["inStock"]),
+                Sale =bool.Parse(form["sale"]),
 
-                Price = item.Price,
+                Price =int.Parse(form["price"]),
 
-                Markup = item.Markup,
+                Markup =int.Parse(form["markup"]),
 
-                Description = item.Description,
-                DescriptionSeo = item.DescriptionSeo
+                Description =form["description"],
+                DescriptionSeo =    form["descriptionSeo"]
 
 
 
             };
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8601 // Possible null reference assignment.
+
+
+
+
+            if (form.Files.Count > 0)
+            {
+                var file = form.Files[0] as IFormFile;
+                if (file == null) return BadRequest("Пустой файл Фото"); ;
+                var guid = _imageRepository.RamdomName;
+
+                _imageRepository.Save(guid, file.OpenReadStream());
+
+               product.Guid = guid;
+            }
+            else
+            {
+              return BadRequest("form IFormFile ==null");
+
+            }
+
+
+
+            // Console.WriteLine("Task< ActionResult<Katalog>> Post(Katalog item)----"+item.Name +"-"+item.Id+"-"+item.Model);
+          
+
+      
+       
+
+#pragma warning disable CS8604 // Possible null reference argument.
+            if (ProductNameExist(product.OwnerId,product.Title))
+                return BadRequest("Такое имя товара уже существует!");
+#pragma warning restore CS8604 // Possible null reference argument.
 
             _db.Products.Add(product);
             await _db.SaveChangesAsync();
 
 
-            _imageRepository.Save(product.Guid, item.File.OpenReadStream());
+         
 
 
 
@@ -253,6 +293,7 @@ namespace ShopAPI.Controllers
 
                 Id = product.Id,
                 Guid = product.Guid,
+                 Hidden=product.Hidden,
                 OwnerId = product.OwnerId,
                 Product_typeId = product.Product_typeId,
                 Title = product.Title,

@@ -17,7 +17,7 @@ services:
 
   webapi:
     depends_on:
-      - db2
+      - db
     build:
       context: .
       dockerfile: dockerfile
@@ -33,7 +33,7 @@ services:
     
  
 
-  db2:
+  db:
     image: mysql:8.0
     restart: always
     volumes:
