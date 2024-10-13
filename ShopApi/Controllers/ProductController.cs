@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using ShopDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.Features;
+using ImageMagick;
 
 namespace ShopAPI.Controllers
 {
@@ -199,8 +200,8 @@ namespace ShopAPI.Controllers
 
 
 
-        [HttpPost] // (post) создать из [FromBody]        
-        [AllowAnonymous]
+        [HttpPost] // (post) создать из [FromBody]  
+           [Authorize(AuthenticationSchemes = "Bearer")]  
         public async Task<ActionResult<ProductDto>> Create()
         {
             // throw new NotImplementedException();
@@ -331,64 +332,76 @@ namespace ShopAPI.Controllers
 
 
         [HttpPut("{id}")] //  (put) -изменитьиз [FromBody]
-        public async Task<ActionResult> Update(int id, [FromForm] ProductRequestDto item_c)
+           [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult> Update(int id)
         {
-            if (!ModelState.IsValid)
+
+
+            IFormCollection form = await Request.ReadFormAsync();
+            if (form == null)
             {
-                return BadRequest(ModelState);
+                return BadRequest("form data ==null");
+            } 
+            #pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8604 // Possible null reference argument.
+     
+        var flagGuid = Guid.TryParse(form["guid"], out var  guid);
+            if (!flagGuid)
+            {
+                return BadRequest(" Неверный формат  GUID  или не задан .Собщите администратору ресурса");
             }
-
-            if (id != item_c.Id)
-            {
-                return BadRequest();
-            }
-
-            if (item_c.File.Length <= 0)
-                return BadRequest("Пустой файл Фото");
-
-            if(ProductNameExist(item_c.OwnerId,item_c.Title))
-                return BadRequest("Такое имя товара уже существует!");    
-
-             var guid = await (from puducts in _db.Products
-                              where puducts.Id == id && puducts.Guid == item_c.Guid
-                              select puducts.Guid).FirstOrDefaultAsync();
-
-            if (String.IsNullOrEmpty(guid))
-            {
-
-                return BadRequest("guid неравны");
-
-            }    
+           
 
             Product product = new()
             {
-                Id = item_c.Id,
-                Guid = item_c.Guid!,
-                Hidden=item_c.Hidden,
-                OwnerId = item_c.OwnerId,
-                Product_typeId = item_c.Product_typeId,
-                Title = item_c.Title,
+                Id =  int.Parse(form["id"]),
+                Guid = form["guid"]  ,
+                Hidden=bool.Parse(form["hidden"]),
+                OwnerId = form["ownerId"],
+                Product_typeId = int.Parse(form["product_typeId"]),
+                Title =  form["title"],
 
-                SubCatalogId = item_c.SubCatalogId,
-                ColorId = item_c.ColorId,
-                BrandId = item_c.BrandId,
-                ArticleId = item_c.ArticleId,
+                SubCatalogId =int.Parse(form["subCatalogId"]),
+                ColorId = int.Parse(form["colorId"]),
+                BrandId = int.Parse(form["brandId"]),
+                ArticleId =int.Parse(form["articleId"]),
 
-                Position = item_c.Position,
+                Position = int.Parse(form["position"]),
 
-                InStock = item_c.InStock,
-                Sale = item_c.Sale,
+                InStock =bool.Parse(form["inStock"]),
+                Sale =bool.Parse(form["sale"]),
 
-                Price = item_c.Price,
+                Price =int.Parse(form["price"]),
 
-                Markup = item_c.Markup,
+                Markup =int.Parse(form["markup"]),
 
-                Description = item_c.Description,
-                DescriptionSeo = item_c.DescriptionSeo
+                Description =form["description"],
+                DescriptionSeo =    form["descriptionSeo"]
 
 
 
             };
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8601 // Possible null reference assignment.
+
+       
+
+            if (id != product.Id)
+            {
+                return BadRequest("HttpPut(id)  != form data.id");
+            }
+
+            if (form.Files.Count <= 0)
+                return BadRequest("Пустой файл Фото");
+
+
+#pragma warning disable CS8604 // Possible null reference argument.
+            _imageRepository.Save(product.Guid, form.Files[0].OpenReadStream());
+#pragma warning restore CS8604 // Possible null reference argument.
+
+
+
+
 
 
 
@@ -411,7 +424,7 @@ namespace ShopAPI.Controllers
             }
 
 
-            _imageRepository.Save(item_c.Guid!, item_c.File.OpenReadStream());
+         
 
 
 
@@ -423,22 +436,71 @@ namespace ShopAPI.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateIgnoreImg(int id, Product item)
+       //  [AllowAnonymous]
+          [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult> UpdateIgnoreImg(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
-            if (id != item.Id)
+              IFormCollection form = await Request.ReadFormAsync();
+            if (form == null)
+            {
+                return BadRequest("form data ==null");
+            } 
+            #pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8604 // Possible null reference argument.
+     
+        var flagGuid = Guid.TryParse(form["guid"], out var  guid);
+            if (!flagGuid)
+            {
+                return BadRequest(" Неверный формат  GUID  или не задан .Собщите администратору ресурса");
+            }
+           
+
+            Product product = new()
+            {
+                Id =  int.Parse(form["id"]),
+                Guid = form["guid"]  ,
+                Hidden=bool.Parse(form["hidden"]),
+                OwnerId = form["ownerId"],
+                Product_typeId = int.Parse(form["product_typeId"]),
+                Title =  form["title"],
+
+                SubCatalogId =int.Parse(form["subCatalogId"]),
+                ColorId = int.Parse(form["colorId"]),
+                BrandId = int.Parse(form["brandId"]),
+                ArticleId =int.Parse(form["articleId"]),
+
+                Position = int.Parse(form["position"]),
+
+                InStock =bool.Parse(form["inStock"]),
+                Sale =bool.Parse(form["sale"]),
+
+                Price =int.Parse(form["price"]),
+
+                Markup =int.Parse(form["markup"]),
+
+                Description =form["description"],
+                DescriptionSeo =    form["descriptionSeo"]
+
+
+
+            };
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8601 // Possible null reference assignment.
+
+           
+
+            if (id !=product.Id)
             {
                 return BadRequest();
             }
 
-            if(ProductNameExist(item.OwnerId,item.Title))
+#pragma warning disable CS8604 // Possible null reference argument.
+            if (ProductNameExist(product.OwnerId,product.Title))
                 return BadRequest("Такое имя товара уже существует!");
+#pragma warning restore CS8604 // Possible null reference argument.
 
-            _db.Entry(item).State = EntityState.Modified;
+            _db.Entry(product).State = EntityState.Modified;
 
             try
             {
@@ -461,37 +523,51 @@ namespace ShopAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateOnlyImg(int id, [FromForm] PhotoRequestDto item)
+      //   [AllowAnonymous]
+         [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult> UpdateOnlyImg(int id)
         {
 
-            if (!ModelState.IsValid)
+                IFormCollection form = await Request.ReadFormAsync();
+            if (form == null)
             {
-                return BadRequest(ModelState);
+                return BadRequest("form data ==null");
             }
+#pragma warning disable CS8604 // Possible null reference argument.
+            var _id =  int.Parse(form["id"]);
+#pragma warning restore CS8604 // Possible null reference argument.
+            var     _guid = form["guid"]  ;
 
-            if (id != item.IdProduct)
+            if (id !=_id)
             {
                 return BadRequest("id товара неравны");
             }
+            var flagGuid = Guid.TryParse(form["guid"], out var  guid_);
+            if (!flagGuid)
+            {
+                return BadRequest(" Неверный формат  GUID  или не задан .Собщите администратору ресурса");
+            }
 
             var guid = await (from puducts in _db.Products
-                              where puducts.Id == id && puducts.Guid == item.Guid
+                              where puducts.Id == id && puducts.Guid == guid_.ToString()
                               select puducts.Guid).FirstOrDefaultAsync();
 
             if (String.IsNullOrEmpty(guid))
             {
 
-                return BadRequest("guid неравны");
+                return BadRequest(" form data.guid != sql.guid ");
 
             }
 
-            _imageRepository.Save(item.Guid!, item.File.OpenReadStream());
+            _imageRepository.Save(_guid!, form.Files[0].OpenReadStream());
             return NoContent(); //204
 
         }
 
         // DELETE api/<CategoriaController>/5       
         [HttpDelete("{id}")]
+             // [AllowAnonymous]
+                [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> Delete(int id)
         {
             Product? item = await _db.Products.FindAsync(id);
