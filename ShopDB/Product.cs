@@ -7,7 +7,7 @@ public partial class Product
     public int Id { get; set; }
     public required string Guid { get; set; }
 
-    public bool Hidden { get; set; }
+    public bool Hidden { get; set; }=false;
 
     public required string OwnerId { get; set; }
 

@@ -12,7 +12,7 @@ public partial class Product_type  // корпус forniture  , мягкая for
     public required string Name { get; set; }
     
 
-    public bool Hidden { get; set; }
+    public bool Hidden { get; set; }=   false;
 
      public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 

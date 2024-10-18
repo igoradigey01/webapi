@@ -17,7 +17,7 @@ services:
 
   webapi:
     depends_on:
-      - db
+      - msdb
     build:
       context: .
       dockerfile: dockerfile
@@ -30,22 +30,34 @@ services:
     ports:
       - 84
     restart: always
+
+  msdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: always
+    #volumes:
+     # - ./mssql: /usr/sbin/mssql       
+      
+    environment:  
+        ACCEPT_EULA: Y         
+        MSSQL_SA_PASSWORD:  ${MSSQL_SA_PASSWORD}
+    ports:
+    - 1433:1433   
     
  
 
-  db:
-    image: mysql:8.0
-    restart: always
-    volumes:
-      - ./mysql:/usr/sbin/mysql
+  # db:
+  #   image: mysql:8.0
+  #   restart: always
+  #   volumes:
+  #     - ./mysql:/usr/sbin/mysql
       
-    environment:   
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  #   environment:   
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
         
-        # cm file .emv
+  #       # cm file .emv
    
-    ports:
-      - 3306:3306
+  #   ports:
+  #     - 3306:3306
          
  
            

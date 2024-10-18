@@ -38,21 +38,21 @@ public partial class ShopDbContext : DbContext
     {
 
         Console.WriteLine("MyshopContext ---------------------- statr60.05.21");
-        Database.SetCommandTimeout(300);
-        //Database.EnsureDeleted();  //03.13.20
+     //   Database.SetCommandTimeout(300);
+       // Database.EnsureDeleted();  //03.13.20
         Database.EnsureCreated();
 
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .UseCollation("utf8mb4_0900_ai_ci")
-            .HasCharSet("utf8mb4");
+      //  modelBuilder
+           // .UseCollation("utf8mb4_0900_ai_ci")
+           // .HasCharSet("utf8mb4");
 
         modelBuilder.Entity<Catalog>(entity =>
        {
-           entity.HasKey(e => e.Id).HasName("PRIMARY");
+           entity.HasKey(e => e.Id);
 
            entity.ToTable("Catalog");
 
@@ -66,32 +66,32 @@ public partial class ShopDbContext : DbContext
            entity.Property(e => e.Name)
                .IsRequired()
                .HasMaxLength(50)
-               .HasColumnName("name")
-               .UseCollation("utf8mb4_0900_ai_ci")
-               .HasCharSet("utf8mb4");
+               .HasColumnName("name");
+              // .UseCollation("utf8mb4_0900_ai_ci")
+              // .HasCharSet("utf8mb4");
 
            entity.Property(e => e.OwnerId)
                .IsRequired()
                .HasMaxLength(50)
-               .HasColumnName("Owner_id")
-               .UseCollation("utf8mb4_0900_ai_ci")
-               .HasCharSet("utf8mb4");
+               .HasColumnName("Owner_id");
+              // .UseCollation("utf8mb4_0900_ai_ci")
+              //// .HasCharSet("utf8mb4");
 
 
 
-           entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
-
+         //entity.Property(p => p.Hidden) .HasDefaultValue(false);
+           entity.Property(p => p.Hidden);
            entity.Property(e => e.DecriptSeo)
-               .HasColumnName("decriptSEO")
-               .UseCollation("utf8mb4_0900_ai_ci")
-               .HasCharSet("utf8mb4");
+               .HasColumnName("decriptSEO") ;
+              // .UseCollation("utf8mb4_0900_ai_ci")
+              // .HasCharSet("utf8mb4");
 
 
        });
 
         modelBuilder.Entity<Product_type>(entity =>
      {
-         entity.HasKey(e => e.Id).HasName("PRIMARY");
+         entity.HasKey(e => e.Id) ;   //.HasName("PRIMARY");
 
          entity.ToTable("Product_Type");
 
@@ -101,16 +101,16 @@ public partial class ShopDbContext : DbContext
          entity.Property(e => e.Name)
              .IsRequired()
              .HasMaxLength(50)
-             .HasColumnName("name")
-             .UseCollation("utf8mb4_0900_ai_ci")
-             .HasCharSet("utf8mb4");
+             .HasColumnName("name") ;
+            //// .UseCollation("utf8mb4_0900_ai_ci")
+            // .HasCharSet("utf8mb4");
 
 
 
 
 
-         entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(0);
-
+        // entity.Property(p => p.Hidden).HasDefaultValue(false);
+         entity.Property(p => p.Hidden);
 
 
 
@@ -118,7 +118,7 @@ public partial class ShopDbContext : DbContext
 
         modelBuilder.Entity<SubCatalog>(entity =>
        {
-           entity.HasKey(e => e.Id).HasName("PRIMARY");
+           entity.HasKey(e => e.Id)   ;       //.HasName("PRIMARY");
 
            entity.ToTable("SubCatalog");
 
@@ -130,26 +130,25 @@ public partial class ShopDbContext : DbContext
            entity.Property(e => e.OwnerId)
               .IsRequired()
               .HasMaxLength(50)
-              .HasColumnName("Owner_id")
-              .UseCollation("utf8mb4_0900_ai_ci")
-              .HasCharSet("utf8mb4");
+              .HasColumnName("Owner_id");
+             //// .UseCollation("utf8mb4_0900_ai_ci")
+             // .HasCharSet("utf8mb4");
 
            entity.Property(e => e.DecriptSeo)
-               .HasColumnName("decriptSEO")
-               .UseCollation("utf8mb4_0900_ai_ci")
-               .HasCharSet("utf8mb4");
+               .HasColumnName("decriptSEO");              // .UseCollation("utf8mb4_0900_ai_ci")
+              // .HasCharSet("utf8mb4");
            entity.Property(e => e.GoogleTypeId)
                .HasMaxLength(20)
-               .HasColumnName("google_type_id")
-               .UseCollation("utf8mb4_0900_ai_ci")
-               .HasCharSet("utf8mb4");
+               .HasColumnName("google_type_id"); 
+              // .UseCollation("utf8mb4_0900_ai_ci")
+              // .HasCharSet("utf8mb4");
            entity.Property(e => e.CatalogId).HasColumnName("katalog_id");
            entity.Property(e => e.Name)
                .IsRequired()
                .HasMaxLength(45)
-               .HasColumnName("name")
-               .UseCollation("utf8mb4_0900_ai_ci")
-               .HasCharSet("utf8mb4");
+               .HasColumnName("name")   ;
+              // .UseCollation("utf8mb4_0900_ai_ci")
+              // .HasCharSet("utf8mb4");
 
            entity.HasOne(d => d.Catalog).WithMany(p => p.SubCatalogs)
                .HasForeignKey(d => d.CatalogId)
@@ -159,7 +158,7 @@ public partial class ShopDbContext : DbContext
 
         modelBuilder.Entity<Article>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => e.Id);
 
             entity.ToTable("Article");
 
@@ -169,20 +168,20 @@ public partial class ShopDbContext : DbContext
             entity.Property(e => e.OwnerId)
                           .IsRequired()
                           .HasMaxLength(50)
-                          .HasColumnName("Owner_id")
-                          .UseCollation("utf8mb4_0900_ai_ci")
-                          .HasCharSet("utf8mb4");
+                          .HasColumnName("Owner_id");
+                         // .UseCollation("utf8mb4_0900_ai_ci")
+                         // .HasCharSet("utf8mb4");
 
 
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100)
-                .HasColumnName("name")
-                .UseCollation("utf8mb4_0900_ai_ci")
-                .HasCharSet("utf8mb4");
+                .HasColumnName("name");
+               // .UseCollation("utf8mb4_0900_ai_ci")
+               // .HasCharSet("utf8mb4");
             entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
 
-            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(0);
+            entity.Property(p => p.Hidden);
 
             entity.HasOne(d => d.Product_Type).WithMany(p => p.Articles)
               .HasForeignKey(d => d.Product_typeId)
@@ -192,7 +191,7 @@ public partial class ShopDbContext : DbContext
 
         modelBuilder.Entity<Brand>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => e.Id);
 
             entity.ToTable("Brand");
 
@@ -202,20 +201,20 @@ public partial class ShopDbContext : DbContext
             entity.Property(e => e.OwnerId)
                           .IsRequired()
                           .HasMaxLength(50)
-                          .HasColumnName("Owner_id")
-                          .UseCollation("utf8mb4_0900_ai_ci")
-                          .HasCharSet("utf8mb4");
+                          .HasColumnName("Owner_id");
+                         // .UseCollation("utf8mb4_0900_ai_ci")
+                         // .HasCharSet("utf8mb4");
 
 
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100)
-                .HasColumnName("name")
-                .UseCollation("utf8mb4_0900_ai_ci")
-                .HasCharSet("utf8mb4");
+                .HasColumnName("name");
+               // .UseCollation("utf8mb4_0900_ai_ci")
+               // .HasCharSet("utf8mb4");
             entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
 
-            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(1);
+            entity.Property(p => p.Hidden);
 
             entity.HasOne(d => d.Product_Type).WithMany(p => p.Brands)
               .HasForeignKey(d => d.Product_typeId)
@@ -225,7 +224,7 @@ public partial class ShopDbContext : DbContext
 
         modelBuilder.Entity<Color>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => e.Id);
 
             entity.ToTable("Color");
 
@@ -236,18 +235,18 @@ public partial class ShopDbContext : DbContext
             entity.Property(e => e.OwnerId)
               .IsRequired()
               .HasMaxLength(50)
-              .HasColumnName("Owner_id")
-              .UseCollation("utf8mb4_0900_ai_ci")
-              .HasCharSet("utf8mb4");
+              .HasColumnName("Owner_id");
+             // .UseCollation("utf8mb4_0900_ai_ci")
+             // .HasCharSet("utf8mb4");
 
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(100)
-                .HasColumnName("name")
-                .UseCollation("utf8mb4_0900_ai_ci")
-                .HasCharSet("utf8mb4");
+                .HasColumnName("name");
+               // .UseCollation("utf8mb4_0900_ai_ci")
+               // .HasCharSet("utf8mb4");
             entity.Property(e => e.Product_typeId).HasColumnName("TypeProduct_id");
-            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(0);
+            entity.Property(p => p.Hidden);
 
             entity.HasOne(d => d.Product_Type).WithMany(p => p.Colors)
             .HasForeignKey(d => d.Product_typeId)
@@ -257,7 +256,7 @@ public partial class ShopDbContext : DbContext
 
         modelBuilder.Entity<Photo>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => e.Id);
 
             entity.ToTable("Photo");
 
@@ -269,9 +268,9 @@ public partial class ShopDbContext : DbContext
             entity.Property(e => e.Guid)
                 .IsRequired()
                 .HasMaxLength(45)
-                .HasColumnName("guid")
-                .UseCollation("utf8mb4_0900_ai_ci")
-                .HasCharSet("utf8mb4");
+                .HasColumnName("guid");
+               // .UseCollation("utf8mb4_0900_ai_ci")
+               // .HasCharSet("utf8mb4");
             entity.Property(e => e.ProductId).HasColumnName("Product_id");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Photos)
@@ -283,7 +282,7 @@ public partial class ShopDbContext : DbContext
         modelBuilder.Entity<Product>(entity =>
         {
 
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => e.Id);
 
             entity.ToTable("Product");
 
@@ -301,15 +300,15 @@ public partial class ShopDbContext : DbContext
             entity.Property(e => e.Guid)
                 .IsRequired()
                 .HasMaxLength(36)
-                .HasColumnName("guid")
-                .UseCollation("utf8mb4_0900_ai_ci")
-                .HasCharSet("utf8mb4");
+                .HasColumnName("guid");
+               // .UseCollation("utf8mb4_0900_ai_ci")
+               // .HasCharSet("utf8mb4");
             //    .HasDefaultValueSql("UUID()");
 
             entity.Property(e => e.Product_typeId).HasColumnName("product_type_id");
 
 
-            entity.Property(p => p.Hidden).HasColumnType("tinyint(1)").HasDefaultValue(0);
+            entity.Property(p => p.Hidden);
 
             entity.Property(e => e.SubCatalogId).HasColumnName("sub_catalog_id");
 
@@ -320,18 +319,18 @@ public partial class ShopDbContext : DbContext
             entity.Property(e => e.Title)
                 .IsRequired()
                 .HasMaxLength(200)
-                .HasColumnName("title")
-                .UseCollation("utf8mb4_0900_ai_ci")
-                .HasCharSet("utf8mb4");
+                .HasColumnName("title");
+               // .UseCollation("utf8mb4_0900_ai_ci")
+               // .HasCharSet("utf8mb4");
 
 
 
             entity.Property(e => e.OwnerId)
             .IsRequired()
             .HasMaxLength(20)
-            .HasColumnName("owner_id")
-            .UseCollation("utf8mb4_0900_ai_ci")
-            .HasCharSet("utf8mb4");
+            .HasColumnName("owner_id");
+           // .UseCollation("utf8mb4_0900_ai_ci")
+           // .HasCharSet("utf8mb4");
 
             entity.HasOne(d => d.Product_type)
                   .WithMany(p => p.Products)
@@ -365,8 +364,8 @@ public partial class ShopDbContext : DbContext
               .HasConstraintName("fk_Product_Brand1");
 
 
-            entity.Property(p => p.Sale).HasColumnName("sale").HasColumnType("tinyint(1)").HasDefaultValue(0);
-            entity.Property(p => p.InStock).HasColumnName("inStock").HasColumnType("tinyint(1)").HasDefaultValue(1);
+            entity.Property(p => p.Sale).HasColumnName("sale").HasColumnType("bit").HasDefaultValue(0);
+            entity.Property(p => p.InStock).HasColumnName("inStock").HasColumnType("bit").HasDefaultValue(1);
 
             entity.Property(e => e.Markup)
                 .HasComment("торговая наценка")
@@ -378,21 +377,21 @@ public partial class ShopDbContext : DbContext
 
             entity.Property(e => e.Description)
                .HasMaxLength(500)
-               .HasColumnName("description")
-               .UseCollation("utf8mb4_0900_ai_ci")
-               .HasCharSet("utf8mb4");
+               .HasColumnName("description");
+              // .UseCollation("utf8mb4_0900_ai_ci")
+              // .HasCharSet("utf8mb4");
 
             entity.Property(e => e.DescriptionSeo)
               .HasMaxLength(500)
-              .HasColumnName("description_seo")
-              .UseCollation("utf8mb4_0900_ai_ci")
-              .HasCharSet("utf8mb4");
+              .HasColumnName("description_seo");
+             // .UseCollation("utf8mb4_0900_ai_ci")
+             // .HasCharSet("utf8mb4");
 
         });
 
         modelBuilder.Entity<ProductNomenclature>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => e.Id);
 
             entity.ToTable("ProductNomenclature");
 

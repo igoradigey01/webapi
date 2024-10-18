@@ -12,7 +12,7 @@ public partial class Catalog
 
     public required string Name { get; set; }
 
-    public bool Hidden { get; set; }
+    public bool Hidden { get; set; }=false;
 
     public string? DecriptSeo { get; set; }
 

@@ -47,8 +47,9 @@ builder.Services.AddTransient<ImageRepository>();
 
 string connectString = String.Empty;
 
-connectString = builder.Configuration.GetSection("ConnectString").Value!;
+// connectString = builder.Configuration.GetSection("ConnectString").Value!;  // MySQl 
 
+ connectString = builder.Configuration.GetSection("ConnectStringMSSQL").Value!;  // MSSQl 
 
 /*
 if (builder.Environment.IsDevelopment())
@@ -65,7 +66,8 @@ if (builder.Environment.IsDevelopment())
 var connectStringShop = connectString + "database=ShopDBV2;";
 var connectStringOrder = connectString + "database=OrderDB;";
 var connectStringAppIdentity = connectString + "database=AppIdentityDB;";
-builder.Services.AddDbContext<AppIdentityDbContext>(
+/*  Connection to MySQL
+ builder.Services.AddDbContext<AppIdentityDbContext>(
     options => options.UseMySql(connectStringAppIdentity, Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.33-mysql"))
 );
 
@@ -81,7 +83,11 @@ builder.Services.AddDbContext<OrderDbContext>(
     options => options
         .UseMySql(connectStringOrder, new MySqlServerVersion(new Version(8, 0, 11)))
 
-);
+); */
+builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(connectStringAppIdentity));
+builder.Services.AddDbContext<ShopDbContext>(options => options.UseSqlServer(connectStringShop));
+builder.Services.AddDbContext<OrderDbContext>(options => options.UseSqlServer(connectStringOrder));
+
 
 
 builder.Services.AddIdentity<UserIdentityX01, IdentityRole>()
