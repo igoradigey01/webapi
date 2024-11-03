@@ -20,7 +20,7 @@ public partial class OrderDbContext : DbContext
     {
 
         Console.WriteLine("MyshopContext ---------------------- statr60.05.21");
-        Database.SetCommandTimeout(300);
+      //  Database.SetCommandTimeout(300);
         //Database.EnsureDeleted();  //03.13.20
         Database.EnsureCreated();
 
@@ -29,14 +29,14 @@ public partial class OrderDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .UseCollation("utf8mb4_0900_ai_ci")
-            .HasCharSet("utf8mb4");
+        // modelBuilder
+        //     //
+        //    //
 
 
         modelBuilder.Entity<OrderState>(entity =>
     {
-        entity.HasKey(e => e.Id).HasName("PRIMARY");
+        entity.HasKey(e => e.Id) ;
 
         entity.ToTable("OrderState");
 
@@ -46,31 +46,31 @@ public partial class OrderDbContext : DbContext
         entity.Property(e => e.StateName)
             .IsRequired()
             .HasMaxLength(50)
-            .HasColumnName("name_state")
-            .UseCollation("utf8mb4_0900_ai_ci")
-            .HasCharSet("utf8mb4");
+            .HasColumnName("name_state");
+            // //
+            // .HasCharSet("utf8mb4");
 
 
         entity.Property(e => e.SmallName)
             .IsRequired()
             .HasMaxLength(50)
-            .HasColumnName("small_name")
-            .UseCollation("utf8mb4_0900_ai_ci")
-            .HasCharSet("utf8mb4");
+            .HasColumnName("small_name");
+            //
+           //
 
         entity.Property(e => e.Description)
            .IsRequired()
            .HasMaxLength(100)
-           .HasColumnName("description")
-           .UseCollation("utf8mb4_0900_ai_ci")
-           .HasCharSet("utf8mb4");
+           .HasColumnName("description");
+           //
+          //
 
     });
 
 
         modelBuilder.Entity<PaymentState>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => e.Id) ;
 
             entity.ToTable("PaymentState");
 
@@ -80,24 +80,23 @@ public partial class OrderDbContext : DbContext
             entity.Property(e => e.StateName)
                 .IsRequired()
                 .HasMaxLength(50)
-                .HasColumnName("name_state")
-                .UseCollation("utf8mb4_0900_ai_ci")
-                .HasCharSet("utf8mb4");
+                .HasColumnName("name_state");
+               
 
 
             entity.Property(e => e.SmallName)
             .IsRequired()
             .HasMaxLength(50)
-            .HasColumnName("small_name")
-            .UseCollation("utf8mb4_0900_ai_ci")
-            .HasCharSet("utf8mb4");
+            .HasColumnName("small_name");
+            //
+           //
 
             entity.Property(e => e.Description)
            .IsRequired()
            .HasMaxLength(100)
-           .HasColumnName("description")
-           .UseCollation("utf8mb4_0900_ai_ci")
-           .HasCharSet("utf8mb4");
+           .HasColumnName("description");
+           //
+          //
 
         });
 
@@ -106,7 +105,7 @@ public partial class OrderDbContext : DbContext
        {
 
 
-           entity.HasKey(e => e.Id).HasName("PRIMARY");
+           entity.HasKey(e => e.Id) ;
 
            entity.ToTable("Order");
 
@@ -127,24 +126,24 @@ public partial class OrderDbContext : DbContext
            entity.Property(e => e.OrderNo)
            .IsRequired()
            .HasMaxLength(50)
-           .HasColumnName("order_number")
-           .UseCollation("utf8mb4_0900_ai_ci")
-           .HasCharSet("utf8mb4");
+           .HasColumnName("order_number");
+           //
+          //
           //  .HasDefaultValueSql("CONCAT(123,456)");;
 
            entity.Property(e => e.OwnerId)
            .IsRequired()
            .HasMaxLength(20)
-           .HasColumnName("owner_id")
-           .UseCollation("utf8mb4_0900_ai_ci")
-           .HasCharSet("utf8mb4");
+           .HasColumnName("owner_id");
+           //
+          //
 
            entity.Property(e => e.OwnerPhone)
            .IsRequired()
            .HasMaxLength(20)
-           .HasColumnName("name_state")
-           .UseCollation("utf8mb4_0900_ai_ci")
-           .HasCharSet("utf8mb4");
+           .HasColumnName("name_state");
+           //
+          //
 
 
 
@@ -162,51 +161,51 @@ public partial class OrderDbContext : DbContext
            entity.Property(e => e.OrderAdress)
           .IsRequired()
           .HasMaxLength(200)
-          .HasColumnName("order_adress")
-          .UseCollation("utf8mb4_0900_ai_ci")
-          .HasCharSet("utf8mb4");
+          .HasColumnName("order_adress");
+          //
+         //
 
 
            entity.Property(p => p.OrderPickup)
-           .HasColumnType("tinyint(1)")
+           .HasColumnType(" bit")
            .HasColumnName("order_pickup")
            .HasDefaultValue(0);
 
            entity.Property(e => e.OrderNote)
           .IsRequired()
           .HasMaxLength(500)
-          .HasColumnName("order_note")
-          .UseCollation("utf8mb4_0900_ai_ci")
-          .HasCharSet("utf8mb4");
+          .HasColumnName("order_note");
+          //
+         //
 
 
            entity.Property(e => e.CustomerFullName)
           .IsRequired()
           .HasMaxLength(100)
-          .HasColumnName("customer_full_name")
-          .UseCollation("utf8mb4_0900_ai_ci")
-          .HasCharSet("utf8mb4");
+          .HasColumnName("customer_full_name");
+          //
+         //
 
            entity.Property(e => e.CustomerId)
            .IsRequired()
            .HasMaxLength(50)
-           .HasColumnName("customer_id")
-           .UseCollation("utf8mb4_0900_ai_ci")
-           .HasCharSet("utf8mb4");
+           .HasColumnName("customer_id");
+           //
+          //
 
            entity.Property(e => e.CustomerPhone)
            .IsRequired()
            .HasMaxLength(50)
-           .HasColumnName("customer_phone")
-           .UseCollation("utf8mb4_0900_ai_ci")
-           .HasCharSet("utf8mb4");
+           .HasColumnName("customer_phone");
+           //
+          //
 
            entity.Property(e => e.CustomerMail)
            .IsRequired()
            .HasMaxLength(50)
-           .HasColumnName("customer_mail")
-           .UseCollation("utf8mb4_0900_ai_ci")
-           .HasCharSet("utf8mb4");
+           .HasColumnName("customer_mail");
+           //
+          //
 
            entity.Property(e => e.Payment_total).HasColumnName("payment_total");
 
@@ -240,7 +239,7 @@ public partial class OrderDbContext : DbContext
      {
 
 
-         entity.HasKey(e => e.Id).HasName("PRIMARY");
+         entity.HasKey(e => e.Id) ;
 
          entity.ToTable("OrderDetail");
          entity.Property(e => e.Id).HasColumnName("id");
@@ -249,17 +248,16 @@ public partial class OrderDbContext : DbContext
          entity.Property(e => e.NomenclatureName)
                      .IsRequired()
                       .HasMaxLength(200)
-                      .HasColumnName("nomenclature_name")
-                      .UseCollation("utf8mb4_0900_ai_ci")
-                      .HasCharSet("utf8mb4");
+                      .HasColumnName("nomenclature_name");
+                      //
+                     //
 
 
          entity.Property(e => e.NomenclatureGuid)
                  .IsRequired()
                 .HasMaxLength(36)
                 .HasColumnName("title")
-                .UseCollation("utf8mb4_0900_ai_ci")
-                .HasCharSet("utf8mb4");
+               ;
 
 
 
@@ -281,16 +279,16 @@ public partial class OrderDbContext : DbContext
      {
 
 
-         entity.HasKey(e => e.Id).HasName("PRIMARY");
+         entity.HasKey(e => e.Id) ;
 
          entity.ToTable("Sequence");
          entity.Property(e => e.Id).HasColumnName("id");
           entity.Property(e => e.OwnerId)
            .IsRequired()
            .HasMaxLength(20)
-           .HasColumnName("owner_id")
-           .UseCollation("utf8mb4_0900_ai_ci")
-           .HasCharSet("utf8mb4");
+           .HasColumnName("owner_id");
+           //
+          //
          entity.Property(e => e.NoOrder).HasColumnName("no_order");
         
 

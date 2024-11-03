@@ -8,6 +8,7 @@ using ShopAPI.Model;
 using ShopApi.Model.Identity;
 using System.Data;
 using System.Security.Claims;
+using Microsoft.Data.SqlClient;
 
 
 
@@ -16,7 +17,7 @@ namespace ShopAPI.Controllers
 
 
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]/[action]")]
     public class OrderController : ControllerBase
     {
@@ -29,7 +30,7 @@ namespace ShopAPI.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = X01Roles.Admin)]
+        [Authorize(Roles = X01Roles.Admin + "," + X01Roles.Manager)]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetAll()
         {
             var orders = await (from o in _db.Orders
@@ -71,6 +72,13 @@ namespace ShopAPI.Controllers
         [Authorize(Roles = X01Roles.Admin + "," + X01Roles.Manager)]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetAll(string owner_id, DateTime start)
         {
+
+             var time_min=DateTime.Parse("1753-01-01T00:00:00") ;  // for mssql  min datetime
+            if (  start< time_min)
+            {
+                            start=time_min;
+                        }
+
             // int i = 0;
             var orders = await (from item in _db.Orders!
                                 where item.OwnerId == owner_id && item.CreatedAt >= start
@@ -303,10 +311,11 @@ namespace ShopAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
+            
             string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var cloneItemOrder = item.OrderDetails.ToArray().Clone();
+            //var cloneItemOrder = item.OrderDetails.ToArray().Clone();
             // item.OrderDetails.Clear();
-            var products = item.OrderDetails;
+            /* var products = item.OrderDetails;
             if (products.Count > 0)
             {
                 int id_last = GetLastIdOrderDetails();
@@ -314,20 +323,23 @@ namespace ShopAPI.Controllers
                 {
                     p.Id = ++id_last;
                 }
-            }
+            } */
             item.CustomerId = userId;
             item.CreatedAt = DateTime.Now;
-            item.ClosedAt = DateTime.MinValue;
+            item.ClosedAt =     DateTime.Parse("1753-01-01T00:00:00");      // DateTime.MinValue;  for MsSql  min var  1753-1-1
             //  "closedAt": "0001-01-01T00:00:00",
 
 
             GetOrdrNO(item.OwnerId, out int count);
             item.OrderNo = DateTime.Now.Day.ToString() + DateTime.Now.Month.ToString() + "-" + count.ToString();
             Console.WriteLine("Order_NO : " + item.OrderNo);
+        
 
-
+               item.PaymentStateId=1; //Платеж не принят  pay_total равен нулю
+               item.OrderStateId=1;//Ордер проверен на корректность, но еще не принят брокером
 
             //Console.WriteLine("id_last : "+id_last);
+      
 
             _db.Orders.Add(item);
             await _db.SaveChangesAsync();
@@ -400,18 +412,38 @@ namespace ShopAPI.Controllers
 
 
 
-        private void GetOrdrNO(string owner_id, out int no_order)
+        private void   GetOrdrNO(string owner_id, out int no_order)
         {
-            // if use using on con -- con.close() end error for ef
-
-            var con = _db.Database.GetDbConnection();
+           
+       string sqlExpression = "SELECT      MAX(no_order)   FROM  [dbo].[Sequence]  where    [dbo].[Sequence].[owner_id] = @owner_id  " ;
+       var con = _db.Database.GetDbConnection();
             var cmd = con.CreateCommand();
-            cmd.CommandText = "select  OrderDB.new_order_no('x-01');";
-            if (cmd.Connection!.State != ConnectionState.Open)
-            {
-                cmd.Connection.Open();
-            }
-            no_order = (int)cmd.ExecuteScalar()!;
+                SqlParameter name_owner_id = new()
+             {
+                    ParameterName = "@owner_id",
+                    Value =  owner_id
+                };
+                // добавляем параметр
+                cmd.Parameters.Add(name_owner_id);
+            cmd.CommandText = sqlExpression;
+         /*     cmd.CommandType = CommandType.StoredProcedure;
+             SqlParameter name_owner_id = new()
+             {
+                    ParameterName = "@owner_id",
+                    Value =  owner_id
+                };
+                // добавляем параметр
+                cmd.Parameters.Add(name_owner_id); */
+        con.Open();
+            var no_last_order = (int?) cmd.ExecuteScalar() ;
+     
+            var  no_new_order=0;
+          if(no_last_order != null){ no_new_order = (int)(no_last_order + 1); }
+          
+         var item=new Sequence{NoOrder=no_new_order,OwnerId=owner_id};
+         _db.Sequences.Add(item);
+          _db.SaveChanges(); /// ???? error ???
+           no_order = no_new_order;
             // cmd.Connection.Close();
 
         }
@@ -424,7 +456,7 @@ namespace ShopAPI.Controllers
 
             var con = _db.Database.GetDbConnection();
             var cmd = con.CreateCommand();
-            cmd.CommandText = "select OrderDB.last_id_order_detail();";
+            cmd.CommandText =  "  EXEC  [dbo]. last_id_order_detail ;";                                      // "select OrderDB.last_id_order_detail();";  for  mysql
 
             if (cmd.Connection!.State != ConnectionState.Open)
             {

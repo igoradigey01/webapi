@@ -18,9 +18,11 @@ services:
   webapi:
     depends_on:
       - msdb
-    build:
-      context: .
-      dockerfile: dockerfile
+
+    image:  shopapi:v2.8
+    # build:
+     #  context: .
+       #dockerfile: dockerfile
     volumes:
         - ./images:/app/wwwroot/images
     environment:
